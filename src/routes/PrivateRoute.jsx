@@ -5,18 +5,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 export const PrivateRoute = ({ children }) => {
   const navigate = useNavigate();
-  // const { accessToken } = useSelector((state) => state.auth);
+  const { accessToken } = useSelector((state) => state.auth);
   const currentUrl = useLocation().pathname;
 
-  // useEffect(() => {
-  //   if (!accessToken) {
-  //     navigate(`/auth/login?redirectTo=${currentUrl}`);
-  //   }
-  // }, [accessToken, currentUrl, navigate]);
-  return <React.Fragment>{children}</React.Fragment>;
-  // return accessToken ? (
-  //   <React.Fragment>{children}</React.Fragment>
-  // ) : (
-  //   <AuthRoute />
-  // );
+  useEffect(() => {
+    if (accessToken && currentUrl.startsWith("/auth")) {
+      navigate("/");
+    }
+  }, [accessToken, currentUrl, navigate]);
+
+  return accessToken && currentUrl.startsWith("/auth") ? null : (
+    // Cho phép truy cập các trang không yêu cầu AccessToken
+    <React.Fragment>{children}</React.Fragment>
+  );
 };

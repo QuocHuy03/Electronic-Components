@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 // import Loading from "../Loading";
 import { URL_CONSTANTS } from "../../constants/url.constants";
@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 
 export default function HeaderBottom() {
   // const location = useLocation();
+  const dropdownRef = useRef();
   const [dropdownStates, setDropdownStates] = useState({
     categories: false,
   });
@@ -16,12 +17,20 @@ export default function HeaderBottom() {
     newDropdownStates[item] = !newDropdownStates[item];
     setDropdownStates(newDropdownStates);
   };
-  const handleMouseDown = (event) => {
-    if (event.target === event.currentTarget) {
-      console.log(122222222222);
-      setDropdownStates({ categories: false });
-    }
-  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownStates({ categories: false });
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   // const [activeCategoryID, setActiveCategoryID] = useState(null);
   // const { carts } = useContext(AppContext);
@@ -77,9 +86,10 @@ export default function HeaderBottom() {
       <div className="max-w-6xl mx-auto h-full">
         <div className="w-full h-full relative">
           <div className="w-full h-full flex justify-between items-center">
-            <div onMouseDown={handleMouseDown} className="category-and-nav flex xl:space-x-7 space-x-3 items-center">
+            <div className="category-and-nav flex xl:space-x-7 space-x-3 items-center">
               <div className="category w-[270px] h-[53px] bg-white px-5 rounded-t-md mt-[6px] relative">
                 <button
+                  ref={dropdownRef}
                   onClick={() => toggleMenu("categories")}
                   type="button"
                   className="w-full h-full flex justify-between items-center"
