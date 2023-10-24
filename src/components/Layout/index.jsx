@@ -6,9 +6,8 @@ export default function Layout({ children }) {
   return (
     <React.Fragment>
       <div className="w-full overflow-x-hidden">
-        
         <Header />
-        {children}
+        <div className="w-full  pt-[30px] pb-[60px]">{children}</div>
         <Footer />
       </div>
     </React.Fragment>
