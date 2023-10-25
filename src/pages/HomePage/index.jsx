@@ -1,7 +1,20 @@
 import React from "react";
 import Layout from "../../components/Layout";
+import { useQuery } from "@tanstack/react-query";
+import { productService } from "../../services/product.service";
+import { Link } from "react-router-dom";
+import { URL_CONSTANTS } from "../../constants/url.constants";
 
 export default function HomePage() {
+  const { data, isloading } = useQuery(
+    ["product"],
+    () => productService.fetchAllProducts(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
+  console.log(data)
   return (
     <Layout>
       {/* Banner */}
@@ -262,7 +275,7 @@ export default function HomePage() {
                 </h1>
               </div>
               <div>
-                <a href="/all-products">
+                <Link to={URL_CONSTANTS.FILTER}>
                   <div className="flex space-x-2 items-center">
                     <p className="text-base font-600 text-qblack">View More</p>
                     <span className="animate-right-dir">
@@ -284,7 +297,7 @@ export default function HomePage() {
                       </svg>
                     </span>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="section-content">
