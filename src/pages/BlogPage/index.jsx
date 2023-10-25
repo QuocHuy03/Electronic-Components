@@ -4,8 +4,8 @@ import Layout from "../../components/Layout";
 export default function BlogPage() {
   return (
     <Layout>
-      <div className="w-full overflow-x-hidden">
-        <div className="w-full  pt-0 pb-0">
+      <div className="w-full  pt-[0px] pb-[0px]">
+
           <div className="blogs-wrapper w-full-width">
             <div className="title-bar">
               <div className="page-title-wrapper bg-[#FFFAEF] w-full h-[173px] py-10">
@@ -68,7 +68,6 @@ export default function BlogPage() {
                             sizes="100vw"
                             srcSet="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fblog-img-5.jpg&w=640&q=75"
                             src="/https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fblog-img-5.jpg&w=640&q=75"
-                           
                             decoding="async"
                             data-nimg="fill"
                             className="w-full h-full object-cover"
@@ -865,8 +864,9 @@ export default function BlogPage() {
           <div>
             <div data-aos="fade-up" className="aos-init aos-animate">
               <h1 className="sm:text-3xl text-xl font-700 text-qblack mb-2 text-center font-bold">
-                Get <span className="mx-1 text-amber-500 font-bold   ">20%</span> Off Discount
-                Coupon
+                Get{" "}
+                <span className="mx-1 text-amber-500 font-bold   ">20%</span>{" "}
+                Off Discount Coupon
               </h1>
               <p className="text-center sm:text-[18px] text-sm font-400">
                 by Subscribe our Newsletter
@@ -917,7 +917,7 @@ export default function BlogPage() {
             </div>
           </div>
         </div>
-      </div>
+
     </Layout>
   );
 }
