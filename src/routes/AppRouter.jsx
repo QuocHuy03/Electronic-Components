@@ -7,8 +7,6 @@ import ProfilePage from "../pages/ProfilePage";
 import BlogPage from "../pages/BlogPage";
 import ContactPage from "../pages/ContactPage";
 import BlogDetail from "../pages/BlogDetail";
-import ProductDetailsPage from "../pages/ProductDetailsPage";
-
 import CartPage from "../pages/CartPage";
 import CheckoutPage from "../pages/CheckoutPage";
 import DetailProductPage from "../pages/DetailProductPage";
