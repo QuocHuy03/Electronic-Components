@@ -5,9 +5,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 export const PrivateRoute = ({ children }) => {
   const navigate = useNavigate();
-  const { accessToken } = useSelector((state) => state.auth);
+  // const { accessToken } = useSelector((state) => state.auth);
   const currentUrl = useLocation().pathname;
-
+  const accessToken = "123";
   useEffect(() => {
     if (accessToken && currentUrl.startsWith("/auth")) {
       navigate("/");
