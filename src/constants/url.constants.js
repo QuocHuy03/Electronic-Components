@@ -16,5 +16,6 @@ export const URL_CONSTANTS = {
     PROFILE: "/profile",
     CHECKOUT: "/checkout/:code",
     ORDER: "/order",
+    CONTACT: "/contact",
 
 };
