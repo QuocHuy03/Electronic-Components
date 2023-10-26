@@ -317,7 +317,10 @@ export default function NotFoundPage() {
                     </h1>
                     <div className="flex justify-center w-full ">
                       <div className="w-[180px] h-[50px] ">
-                        <span type="button" className="yellow-btn">
+                        <span
+                          type="button"
+                          className="bg-yellow-400 flex items-center justify-center h-full w-full opacity-1 leading-0"
+                        >
                           Back to Shop
                         </span>
                       </div>
