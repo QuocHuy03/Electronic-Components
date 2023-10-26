@@ -1,6 +1,20 @@
-import { LOAD_CURRENT_LOGIN_USER_FAILED, LOAD_CURRENT_LOGIN_USER_REQUEST, LOAD_CURRENT_LOGIN_USER_SUCCESS, LOGIN_FAILED, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REFRESH_TOKEN_FAILED, REFRESH_TOKEN_SUCCESS, REGISTER_FAILED, REGISTER_REQUEST, REGISTER_SUCCESS } from "./types";
+import {
+  LOAD_CURRENT_LOGIN_USER_FAILED,
+  LOAD_CURRENT_LOGIN_USER_REQUEST,
+  LOAD_CURRENT_LOGIN_USER_SUCCESS,
+  LOGIN_FAILED,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGOUT,
+  REFRESH_TOKEN_FAILED,
+  REFRESH_TOKEN_SUCCESS,
+  REGISTER_FAILED,
+  REGISTER_REQUEST,
+  REGISTER_SUCCESS,
+} from "./types";
 
 const initialState = {
+  isAuthenticated: false,
   user: null,
   loading: false,
   accessToken: null,
@@ -16,6 +30,7 @@ const authenticationReducer = (state = initialState, action) => {
     case LOGIN_SUCCESS:
       return {
         ...state,
+        isAuthenticated: true,
         loading: false,
         error: null,
         accessToken: action.payload.accessToken || null,
@@ -24,6 +39,7 @@ const authenticationReducer = (state = initialState, action) => {
     case LOGIN_FAILED:
       return {
         ...state,
+        isAuthenticated: false,
         loading: false,
         accessToken: null,
         refreshToken: null,
@@ -35,6 +51,7 @@ const authenticationReducer = (state = initialState, action) => {
     case REGISTER_SUCCESS:
       return {
         ...state,
+        isAuthenticated: true,
         loading: false,
         error: null,
         accessToken: action.payload.accessToken || null,
@@ -43,17 +60,19 @@ const authenticationReducer = (state = initialState, action) => {
     case REGISTER_FAILED:
       return {
         ...state,
+        isAuthenticated: false,
         loading: false,
         accessToken: null,
         refreshToken: null,
         error: action.payload,
       };
     case LOAD_CURRENT_LOGIN_USER_REQUEST: {
-      return { ...state, loading: true };
+      return { ...state, isAuthenticated: true, loading: true };
     }
     case LOAD_CURRENT_LOGIN_USER_SUCCESS: {
       return {
         ...state,
+        isAuthenticated: true,
         loading: false,
         user: action.payload,
       };

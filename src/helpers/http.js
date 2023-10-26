@@ -57,7 +57,7 @@ class Http {
 
                 return this.huydev(originalRequest);
               } catch (error) {
-                history.push(URL_CONSTANTS.LOGIN);
+                history.push(`/auth` + URL_CONSTANTS.LOGIN);
               }
             } else {
               console.log("Refresh token not available.");
