@@ -11,9 +11,9 @@ const fetchAllOrders = async () => {
   }
 };
 
-const fetchOrderByID = async (id) => {
+const fetchOrderByUserID = async () => {
   try {
-    const response = await http.get(`/order/getOrderById/${id}`);
+    const response = await http.get(`/order/getOrderByUserID`);
     return response.result;
   } catch (error) {
     console.error(error);
@@ -31,6 +31,6 @@ const fetchPostOrder = async (method, data) => {
 
 export const orderService = {
   fetchAllOrders,
-  fetchOrderByID,
+  fetchOrderByUserID,
   fetchPostOrder,
 };
