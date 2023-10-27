@@ -320,7 +320,7 @@ export default function HomePage() {
                             className="product-card-img w-full h-[300px]"
                             style={{
                               background: `url(${item.images[0].imagePath}) center center no-repeat`,
-                              backgroundSize: "100%",
+                              backgroundSize: "80%",
                             }}
                           />
                         </Link>
