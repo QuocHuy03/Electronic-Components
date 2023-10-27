@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { productService } from "../../services/product.service";
 import { Link } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
-import { formatPrice } from "../../utils/fomatPrice";
+import { calculateDiscountPercentage, formatPrice } from "../../utils/fomatPrice";
 
 export default function HomePage() {
   const { data, isloading } = useQuery(
@@ -351,48 +351,14 @@ export default function HomePage() {
                             </button>
                           </div>
                           <div className="reviews flex space-x-[1px] mb-3">
-                            <span>
-                              <svg
-                                width={18}
-                                height={17}
-                                viewBox="0 0 18 17"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                  fill="#FFA800"
-                                />
-                              </svg>
-                            </span>
-                            <span>
-                              <svg
-                                width={18}
-                                height={17}
-                                viewBox="0 0 18 17"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                  fill="#FFA800"
-                                />
-                              </svg>
-                            </span>
-                            <span>
-                              <svg
-                                width={18}
-                                height={17}
-                                viewBox="0 0 18 17"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                  fill="#FFA800"
-                                />
-                              </svg>
-                            </span>
+                          <span className="text-sm italic">
+                            (Tiết kiệm:{" "}
+                            {calculateDiscountPercentage(
+                              item?.initial_price,
+                              item?.price_has_dropped
+                            )}
+                            )
+                          </span>
                           </div>
                           <Link
                           to={`/product/${item.slugProduct}`}
