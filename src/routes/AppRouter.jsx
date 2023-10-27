@@ -15,6 +15,7 @@ import { URL_CONSTANTS } from "../constants/url.constants";
 import { useSelector } from "react-redux";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
+import FilterPage from "../pages/FilterPage";
 
 const privateRoutes = [
   { path: URL_CONSTANTS.PROFILE, component: ProfilePage },
@@ -33,6 +34,7 @@ const publicRoutes = [
   { path: URL_CONSTANTS.NOTFOUND, component: NotFound },
   { path: URL_CONSTANTS.FORGOT_PASSWORD, component: ForgotPasswordPage },
   { path: URL_CONSTANTS.RESET_PASSWORD, component: ResetPasswordPage },
+  { path: URL_CONSTANTS.FILTER, component: FilterPage },
 ];
 const AppRouter = () => {
   const auth = useSelector((state) => state.auth);
