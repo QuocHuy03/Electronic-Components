@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../stores/authentication/actions";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
