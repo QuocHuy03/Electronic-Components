@@ -13,6 +13,8 @@ import RegisterPage from "../pages/RegisterPage";
 import NotFound from "../pages/NotFoundPage";
 import { URL_CONSTANTS } from "../constants/url.constants";
 import { useSelector } from "react-redux";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
 
 const privateRoutes = [
   { path: URL_CONSTANTS.PROFILE, component: ProfilePage },
@@ -29,6 +31,8 @@ const publicRoutes = [
   { path: URL_CONSTANTS.BLOG_DETAIL, component: BlogDetail },
   { path: URL_CONSTANTS.DETAIL, component: DetailProductPage },
   { path: URL_CONSTANTS.NOTFOUND, component: NotFound },
+  { path: URL_CONSTANTS.FORGOT_PASSWORD, component: ForgotPasswordPage },
+  { path: URL_CONSTANTS.RESET_PASSWORD, component: ResetPasswordPage },
 ];
 const AppRouter = () => {
   const auth = useSelector((state) => state.auth);
