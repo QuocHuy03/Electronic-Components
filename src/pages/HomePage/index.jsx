@@ -299,7 +299,7 @@ export default function HomePage() {
                     </span>
                   </div>
                 </Link>
-              </div>
+               </div>
             </div>
             <div className="section-content">
               <div className="products-section w-full">
