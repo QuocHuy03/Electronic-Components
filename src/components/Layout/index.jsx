@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../Header";
 import Footer from "../Footer";
+import Discount from "../Discount";
 
 export default function Layout({ children }) {
   return (
@@ -8,6 +9,7 @@ export default function Layout({ children }) {
       <div className="w-full overflow-x-hidden">
         <Header />
         <div className="w-full  pt-[30px] pb-[60px]">{children}</div>
+        <Discount/>
         <Footer />
       </div>
     </React.Fragment>

@@ -1,46 +1,73 @@
-import React, { useEffect, useState } from 'react'
-import Layout from '../../components/Layout'
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import Layout from "../../components/Layout";
+import { useLocation } from "react-router-dom";
+import { userService } from "../../services/user.service";
+import createNotification from "../../utils/notification";
 
 export default function ResetPasswordPage() {
-    const location = useLocation();
-    const [isForgotPasswordToken, setIsForgotPasswordToken] = useState(null);
-    useEffect(() => {
-      const searchParams = new URLSearchParams(location.search);
-      const forgotPasswordToken = searchParams.get("forgot_password_token");
-      setIsForgotPasswordToken(forgotPasswordToken);
-    }, [location.search]);
-    const [passwordVisible, setPasswordVisible] = useState(false);
-    const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false);
-    const togglePasswordVisibility = () => {
-      setPasswordVisible(!passwordVisible);
+  const location = useLocation();
+  const [isForgotPasswordToken, setIsForgotPasswordToken] = useState(null);
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const forgotPasswordToken = searchParams.get("forgot_password_token");
+    setIsForgotPasswordToken(forgotPasswordToken);
+  }, [location.search]);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false);
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+  const togglePasswordConfirmVisibility = () => {
+    setPasswordConfirmVisible(!passwordConfirmVisible);
+  };
+  const [isPassword, setIsPassword] = useState("");
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState("");
+
+  const [validationErrors, setValidationErrors] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
+  const [inputs, setInputs] = useState({
+    password: "",
+    confirm_password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "password") {
+      setIsPassword(value);
+    } else if (name === "confirm_password") {
+      setIsPasswordConfirm(value);
+    }
+    setInputs((inputs) => ({ ...inputs, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    let data = {
+      forgot_password_token: isForgotPasswordToken,
+      password: inputs.password,
+      confirm_password: inputs.confirm_password,
     };
-    const togglePasswordConfirmVisibility = () => {
-      setPasswordConfirmVisible(!passwordConfirmVisible);
-    };
-    const [isPassword, setIsPassword] = useState("");
-    const [isPasswordConfirm, setIsPasswordConfirm] = useState("");
-  
-    const [validationErrors, setValidationErrors] = useState([]);
-    const [submitted, setSubmitted] = useState(false);
-    const [inputs, setInputs] = useState({
-      password: "",
-      confirm_password: "",
-    });
-  
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      if (name === "password") {
-        setIsPassword(value);
-      } else if (name === "confirm_password") {
-        setIsPasswordConfirm(value);
+    try {
+      const response = await userService.resetPassword(data);
+      if (response.status === true) {
+        setValidationErrors([]);
+        createNotification("success", "topRight", response.message);
+      } else {
+        if (response?.status === false) {
+          setValidationErrors([]);
+          createNotification("error", "topRight", response.message);
+        }
+        setValidationErrors(response.errors);
       }
-      setInputs((inputs) => ({ ...inputs, [name]: value }));
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout>
-        <div className="w-full  pt-0 pb-0">
+      <div className="w-full  pt-0 pb-0">
         <div className="login-page-wrapper w-full py-10">
           <div className="max-w-6xl mx-auto">
             <div className="lg:flex items-center relative">
@@ -65,8 +92,8 @@ export default function ResetPasswordPage() {
                       </svg>
                     </div>
                   </div>
-                  <div className="input-area">
-                  <div className="input-item mb-5">
+                  <form className="input-area" onSubmit={handleSubmit}>
+                    <div className="input-item mb-5">
                       <div className="input-com w-full h-full">
                         <label
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
@@ -232,33 +259,29 @@ export default function ResetPasswordPage() {
                           )}
                       </div>
                     </div>
-                    
-                    
+
                     <div className="forgot-password-area flex justify-between items-center mb-7">
                       <div className="remember-checkbox flex items-center space-x-2.5">
                         <button
                           type="button"
-                          className="w-5 h-5 text-qblack flex justify-center items-center border border-light-gray"
+                          className="w-5 h-5 text-black flex justify-center items-center border border-light-gray"
                         />
                         <span className="text-base text-black">
                           Remember Me
                         </span>
                       </div>
-                      
                     </div>
                     <div className="signin-area mb-3.5">
                       <div className="flex justify-center">
                         <button
-                          type="button"
+                          type="submit"
                           className="bg-black  mb-6 text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center"
                         >
                           <span>Reset Password</span>
                         </button>
                       </div>
-                      
                     </div>
-                    
-                  </div>
+                  </form>
                 </div>
               </div>
               <div className="flex-1 lg:flex hidden transform scale-60 xl:scale-100 xl:justify-center ">
@@ -679,5 +702,5 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </Layout>
-  )
+  );
 }

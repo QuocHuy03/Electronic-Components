@@ -2,9 +2,9 @@ import Http from "../helpers/http";
 
 const http = new Http();
 
-const fetchCartByUserID = async (id) => {
+const fetchCartByUserID = async () => {
   try {
-    const response = await http.get(`/cart/getCartByUserId/${id}`);
+    const response = await http.get(`/cart/getCartByUserId`);
     return response;
   } catch (error) {
     console.error(error);

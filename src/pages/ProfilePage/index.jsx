@@ -11,6 +11,7 @@ import formatDate from "../../utils/fomatDate";
 import { useQuery } from "@tanstack/react-query";
 import OrderStatus from "../../types/order.type"
 import { formatPrice } from "../../utils/fomatPrice";
+import { persistor } from "../../stores/app.store";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ export default function ProfilePage() {
   };
   const handleLogout = async (item) => {
     setActiveTab(item);
+    persistor.purge();
     await dispatch(logout(refreshToken));
   };
 
@@ -36,7 +38,6 @@ export default function ProfilePage() {
       retryDelay: 1000,
     }
   );
-  console.log(isOrders);
 
   // change-password
 

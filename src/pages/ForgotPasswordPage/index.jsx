@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
+import { userService } from "../../services/user.service";
+import createNotification from "../../utils/notification";
 
 export default function ForgotPasswordPage() {
   const [validationErrors, setValidationErrors] = useState([]);
@@ -29,11 +31,8 @@ export default function ForgotPasswordPage() {
           setValidationErrors([]);
           createNotification("error", "topRight", response.message);
         }
-        setValidationErrors(
-          Object.values(response.errors).map((error) => error.msg)
-        );
+        setValidationErrors(response.errors);
       }
-      // setSubmitted(false);
     } catch (error) {
       console.log(error);
     }
@@ -65,7 +64,7 @@ export default function ForgotPasswordPage() {
                       </svg>
                     </div>
                   </div>
-                  <div className="input-area" onSubmit={handleSubmit}>
+                  <form className="input-area" onSubmit={handleSubmit}>
                     <div className="input-item mb-5">
                       <div className="input-com w-full h-full">
                         <label
@@ -80,13 +79,18 @@ export default function ForgotPasswordPage() {
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                             type="email"
                             id="email"
+                            name="email"
                             onChange={handleChange}
-                            defaultValue
                           />
                         </div>
+                        {validationErrors && validationErrors.email && (
+                          <p className="mt-1 text-red-500">
+                            <li>{validationErrors.email.msg}</li>
+                          </p>
+                        )}
                       </div>
                     </div>
-                    
+
                     <div className="forgot-password-area flex justify-between items-center mb-7">
                       <div className="remember-checkbox flex items-center space-x-2.5">
                         <button
@@ -97,32 +101,19 @@ export default function ForgotPasswordPage() {
                           Remember Me
                         </span>
                       </div>
-                      
                     </div>
-                    {submitted && validationErrors && (
-                <p
-                  className="mt-1 red"
-                  id="js-popup-login-note"
-                  style={{ whiteSpace: "pre-line" }}
-                >
-                  {validationErrors.map((error, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                </p>
-              )}
+
                     <div className="signin-area mb-3.5">
                       <div className="flex justify-center">
                         <button
-                          type="button"
+                          type="submit"
                           className="bg-black  mb-6 text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center"
                         >
                           <span>Forgot Password</span>
                         </button>
                       </div>
-                      
                     </div>
-                    
-                  </div>
+                  </form>
                 </div>
               </div>
               <div className="flex-1 lg:flex hidden transform scale-60 xl:scale-100 xl:justify-center ">
