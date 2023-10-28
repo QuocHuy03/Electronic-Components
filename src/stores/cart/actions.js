@@ -26,7 +26,6 @@ export const getCart = (data) => {
 
     try {
       const response = await cartService.fetchCartByUserID(data);
-      console.log(response)
       if (response.status === true) {
         dispatch({
           type: GET_CART_SUCCESS,

@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
+import huydev from "../../json/address.json";
 import { logout } from "../../stores/authentication/actions";
+import { userService } from "../../services/user.service";
+import { LOAD_CURRENT_LOGIN_USER_SUCCESS } from "../../stores/authentication/types";
+import createNotification from "../../utils/notification";
+import { orderService } from "../../services/order.service";
+import formatDate from "../../utils/fomatDate";
+import { useQuery } from "@tanstack/react-query";
+import OrderStatus from "../../types/order.type"
+import { formatPrice } from "../../utils/fomatPrice";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -15,6 +24,401 @@ export default function ProfilePage() {
   const handleLogout = async (item) => {
     setActiveTab(item);
     await dispatch(logout(refreshToken));
+  };
+
+  // api order
+
+  const { data: isOrders, isloading: loadingOrder } = useQuery(
+    ["orders"],
+    () => orderService.fetchOrderByUserID(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
+  console.log(isOrders);
+
+  // change-password
+
+  const [inputChangePass, setInputChangePass] = useState({
+    old_password: "",
+    password: "",
+    confirm_password: "",
+  });
+
+  const handleChangePasswordInput = (e) => {
+    const { name, value } = e.target;
+    setInputChangePass((prevInputs) => ({
+      ...prevInputs,
+      [name]: value,
+    }));
+  };
+
+  const handleChangePassword = async (e) => {
+    let data = {
+      old_password: inputChangePass.old_password,
+      password: inputChangePass.password,
+      confirm_password: inputChangePass.confirm_password,
+    };
+    e.preventDefault();
+    try {
+      const response = await userService.changePassword(data);
+      if (response.status === true) {
+        setValidationErrors([]);
+        createNotification("success", "topRight", response.message);
+        await dispatch(logout(refreshToken));
+      } else {
+        if (response.status === false) {
+          setValidationErrors([]);
+          createNotification("error", "topRight", response.message);
+        }
+        setValidationErrors(response.errors);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    // Reset the form
+    setInputChangePass({
+      old_password: "",
+      password: "",
+      confirm_password: "",
+    });
+    setValidationErrors([]);
+  };
+
+  // update me
+
+  const UpdateProfile = ({ user }) => {
+    const isUserAvailable = user !== null;
+    const [provinces, setProvinces] = useState([]);
+    const [selectedProvince, setSelectedProvince] = useState("");
+    const [districts, setDistricts] = useState([]);
+    const [selectedDistrict, setSelectedDistrict] = useState("");
+    const [selectedCommune, setSelectedCommune] = useState("");
+    const [wards, setWards] = useState([]);
+
+    const initialInputValues = {
+      fullname: isUserAvailable ? user.fullname : "",
+      username: isUserAvailable ? user.username : "",
+      email: isUserAvailable ? user.email : "",
+      address: isUserAvailable ? user.address : "",
+      city: isUserAvailable ? user.city : "",
+      district: isUserAvailable ? user.district : "",
+      commune: isUserAvailable ? user.commune : "",
+      phone: isUserAvailable ? user.phone : "",
+    };
+
+    const [inputs, setInputs] = useState(initialInputValues);
+
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        [name]: value,
+      }));
+    };
+
+    useEffect(() => {
+      setProvinces(huydev.provinces);
+      setDistricts(huydev.districts);
+      setWards(huydev.wards);
+      if (isUserAvailable) {
+        setSelectedProvince(user.city);
+        setSelectedDistrict(user.district);
+        setSelectedCommune(user.commune);
+      }
+    }, [isUserAvailable]);
+
+    const handleSelectProvince = (e) => {
+      setSelectedProvince(e.target.value);
+
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        city: e.target.value,
+      }));
+    };
+
+    const handleSelectDistrict = (e) => {
+      setSelectedDistrict(e.target.value);
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        district: e.target.value,
+      }));
+    };
+
+    const handleSelectCommune = (e) => {
+      setSelectedCommune(e.target.value);
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        commune: e.target.value,
+      }));
+    };
+
+    const filteredDistricts = districts?.filter(
+      (district) => district.province_id === Number(selectedProvince)
+    );
+
+    const filteredWards = wards?.filter(
+      (ward) => ward.district_id === Number(selectedDistrict)
+    );
+    const handleSubmit = async (e) => {
+      let data = {
+        fullname: inputs.fullname,
+        username: inputs.username,
+        address: inputs.address,
+        city: Number(inputs.city),
+        district: Number(inputs.district),
+        commune: Number(inputs.commune),
+        phone: inputs.phone,
+      };
+      // console.log(data)
+      e.preventDefault();
+
+      try {
+        const response = await userService.updateMe(data);
+        dispatch({
+          type: LOAD_CURRENT_LOGIN_USER_SUCCESS,
+          payload: response.user,
+        });
+        if (response.status === true) {
+          createNotification("success", "topRight", response.message);
+        } else {
+          createNotification("error", "topRight", response.message);
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    };
+    return (
+      <form onSubmit={handleSubmit}>
+        <div className="flex space-x-8">
+          <div className="w-[570px] ">
+            <div className="input-item flex space-x-2.5 mb-8">
+              <div className="w-1/2 h-full">
+                <div className="input-com w-full h-full">
+                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
+                    Full Name*
+                  </label>
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                    <input
+                      placeholder="Nguyen Van A"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      type="text"
+                      name="fullname"
+                      onChange={handleChange}
+                      value={inputs.fullname}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="w-1/2 h-full">
+                <div className="input-com w-full h-full">
+                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
+                    User Name*
+                  </label>
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                    <input
+                      placeholder="Username"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      type="text"
+                      name="username"
+                      onChange={handleChange}
+                      value={inputs.username}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="input-item flex space-x-2.5 mb-8">
+              <div className="w-1/2 h-full">
+                <div className="input-com w-full h-full">
+                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
+                    Email*
+                  </label>
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                    <input
+                      placeholder="demoemial@gmail.com"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      type="email"
+                      name="email"
+                      onChange={handleChange}
+                      value={inputs.email}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="w-1/2 h-full">
+                <div className="input-com w-full h-full">
+                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
+                    Phone Number*
+                  </label>
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                    <input
+                      placeholder="012 3 *******"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      type="number"
+                      min={9}
+                      name="phone"
+                      onChange={handleChange}
+                      value={inputs.phone}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="input-item mb-8">
+              <div className="w-full">
+                <div className="input-com w-full h-full">
+                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
+                    Address*
+                  </label>
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                    <input
+                      placeholder="Address"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      type="text"
+                      name="address"
+                      onChange={handleChange}
+                      value={inputs.address}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="input-item mb-8">
+              <div className="w-full">
+                <div className="input-com w-full h-full">
+                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
+                    Tỉnh / TP*
+                  </label>
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                    <select
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      name="city"
+                      onChange={handleSelectProvince}
+                      value={selectedProvince}
+                      placeholder={`Vui lòng chọn Tỉnh / TP`}
+                    >
+                      <option value="">Vui lòng chọn Tỉnh / TP</option>
+                      {provinces?.map((province) => (
+                        <option key={province.id} value={province.id}>
+                          {province.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="input-item flex space-x-2.5 mb-8">
+              <div className="w-1/2 h-full">
+                <div className="input-com w-full h-full">
+                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
+                    Quận / Huyện*
+                  </label>
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                    <select
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      name="district"
+                      value={selectedDistrict}
+                      onChange={handleSelectDistrict}
+                      disabled={!selectedProvince}
+                      placeholder={`Vui Lòng Chọn Quận / Huyện ${selectedDistrict}`}
+                    >
+                      <option value="">Vui lòng chọn Quận / Huyện</option>
+                      {filteredDistricts?.map((district) => (
+                        <option key={district.id} value={district.id}>
+                          {district.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className="w-1/2 h-full">
+                <div className="input-com w-full h-full">
+                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
+                    Phường / Xã*
+                  </label>
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                    <select
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      name="commune"
+                      value={selectedCommune}
+                      onChange={handleSelectCommune}
+                      disabled={!selectedDistrict}
+                      placeholder="Vui Lòng Chọn Phường / Xã"
+                    >
+                      <option value="">Vui lòng chọn Phường / Xã</option>
+                      {filteredWards?.map((ward) => (
+                        <option key={ward.id} value={ward.id}>
+                          {ward.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex-1">
+            <div className="update-logo w-full mb-9">
+              <h1 className="text-xl tracking-wide font-bold text-black flex items-center mb-2">
+                Update Profile
+                <span className="ml-1">
+                  <svg
+                    width={20}
+                    height={20}
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10 0C4.47457 0 0 4.47791 0 10C0 15.5221 4.47791 20 10 20C15.5221 20 20 15.5221 20 10C19.9967 4.48126 15.5221 0.00669344 10 0ZM10 16.67C9.53815 16.67 9.16667 16.2985 9.16667 15.8367C9.16667 15.3748 9.53815 15.0033 10 15.0033C10.4618 15.0033 10.8333 15.3748 10.8333 15.8367C10.8333 16.2952 10.4618 16.67 10 16.67ZM11.6098 10.425C11.1078 10.7396 10.8132 11.2952 10.8333 11.8842V12.5033C10.8333 12.9652 10.4618 13.3367 10 13.3367C9.53815 13.3367 9.16667 12.9652 9.16667 12.5033V11.8842C9.14324 10.6861 9.76907 9.56827 10.8032 8.96586C11.4357 8.61781 11.7704 7.90161 11.6366 7.19545C11.5027 6.52276 10.9772 5.99732 10.3046 5.8668C9.40094 5.69946 8.5308 6.29853 8.36346 7.20214C8.34673 7.30254 8.33668 7.40295 8.33668 7.50335C8.33668 7.96519 7.9652 8.33668 7.50335 8.33668C7.0415 8.33668 6.67002 7.96519 6.67002 7.50335C6.67002 5.66265 8.16265 4.17001 10.0067 4.17001C11.8474 4.17001 13.34 5.66265 13.34 7.50669C13.3333 8.71821 12.674 9.83601 11.6098 10.425Z"
+                      fill="#374557"
+                      fillOpacity="0.6"
+                    />
+                  </svg>
+                </span>
+              </h1>
+              {/* <p className="text-sm text-qgraytwo mb-5 ">
+                                  Profile of at least Size
+                                  <span className="ml-1 text-qblack">
+                                    300x300
+                                  </span>
+                                  . Gifs work too.
+                                  <span className="ml-1 text-qblack">
+                                    Max 5mb
+                                  </span>
+                                  .
+                                </p> */}
+              <div className="flex xl:justify-center justify-start">
+                <div className="relative">
+                  <div className="sm:w-[198px] sm:h-[198px] w-[199px] h-[199px] rounded-full overflow-hidden relative">
+                    <img
+                      src={`https://ui-avatars.com/api/name=${user?.fullname}`}
+                      alt
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="action-area flex space-x-4 items-center">
+          <button
+            type="submit"
+            className="w-[164px] h-[50px] bg-black text-white text-sm"
+          >
+            Update Profile
+          </button>
+        </div>
+      </form>
+    );
   };
 
   return (
@@ -230,7 +634,7 @@ export default function ProfilePage() {
                           <div className="welcome-msg w-full">
                             <div>
                               <p className="text-qblack text-lg">
-                                Hello, Shovo
+                                Hello, {user?.fullname}
                               </p>
                               <h1 className="font-bold text-[24px] text-qblack">
                                 Welcome to your Profile
@@ -329,192 +733,7 @@ export default function ProfilePage() {
                           </div>
                         </React.Fragment>
                       ) : activeTab === 1 ? (
-                        <React.Fragment>
-                          <div className="flex space-x-8">
-                            <div className="w-[570px] ">
-                              <div className="input-item flex space-x-2.5 mb-8">
-                                <div className="w-1/2 h-full">
-                                  <div className="input-com w-full h-full">
-                                    <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                                      First Name*
-                                    </label>
-                                    <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                      <input
-                                        placeholder="Demo Name"
-                                        className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                        type="text"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="w-1/2 h-full">
-                                  <div className="input-com w-full h-full">
-                                    <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                                      Last Name*
-                                    </label>
-                                    <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                      <input
-                                        placeholder="Demo Name"
-                                        className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                        type="text"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="input-item flex space-x-2.5 mb-8">
-                                <div className="w-1/2 h-full">
-                                  <div className="input-com w-full h-full">
-                                    <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                                      Email*
-                                    </label>
-                                    <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                      <input
-                                        placeholder="demoemial@gmail.com"
-                                        className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                        type="email"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="w-1/2 h-full">
-                                  <div className="input-com w-full h-full">
-                                    <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                                      Phone Number*
-                                    </label>
-                                    <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                      <input
-                                        placeholder="012 3 *******"
-                                        className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                        type="text"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="input-item mb-8">
-                                <div className="w-full">
-                                  <div className="input-com w-full h-full">
-                                    <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                                      Country*
-                                    </label>
-                                    <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                      <input
-                                        placeholder="country"
-                                        className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                        type="text"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="input-item mb-8">
-                                <div className="w-full">
-                                  <div className="input-com w-full h-full">
-                                    <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                                      Address*
-                                    </label>
-                                    <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                      <input
-                                        placeholder="your address here"
-                                        className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                        type="text"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="input-item flex space-x-2.5 mb-8">
-                                <div className="w-1/2 h-full">
-                                  <div className="input-com w-full h-full">
-                                    <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                                      Town / City*
-                                    </label>
-                                    <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                      <input
-                                        placeholder
-                                        className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                        type="text"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="w-1/2 h-full">
-                                  <div className="input-com w-full h-full">
-                                    <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                                      Postcode / ZIP*
-                                    </label>
-                                    <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                      <input
-                                        placeholder
-                                        className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                        type="text"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex-1">
-                              <div className="update-logo w-full mb-9">
-                                <h1 className="text-xl tracking-wide font-bold text-qblack flex items-center mb-2">
-                                  Update Profile
-                                  <span className="ml-1">
-                                    <svg
-                                      width={20}
-                                      height={20}
-                                      viewBox="0 0 20 20"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M10 0C4.47457 0 0 4.47791 0 10C0 15.5221 4.47791 20 10 20C15.5221 20 20 15.5221 20 10C19.9967 4.48126 15.5221 0.00669344 10 0ZM10 16.67C9.53815 16.67 9.16667 16.2985 9.16667 15.8367C9.16667 15.3748 9.53815 15.0033 10 15.0033C10.4618 15.0033 10.8333 15.3748 10.8333 15.8367C10.8333 16.2952 10.4618 16.67 10 16.67ZM11.6098 10.425C11.1078 10.7396 10.8132 11.2952 10.8333 11.8842V12.5033C10.8333 12.9652 10.4618 13.3367 10 13.3367C9.53815 13.3367 9.16667 12.9652 9.16667 12.5033V11.8842C9.14324 10.6861 9.76907 9.56827 10.8032 8.96586C11.4357 8.61781 11.7704 7.90161 11.6366 7.19545C11.5027 6.52276 10.9772 5.99732 10.3046 5.8668C9.40094 5.69946 8.5308 6.29853 8.36346 7.20214C8.34673 7.30254 8.33668 7.40295 8.33668 7.50335C8.33668 7.96519 7.9652 8.33668 7.50335 8.33668C7.0415 8.33668 6.67002 7.96519 6.67002 7.50335C6.67002 5.66265 8.16265 4.17001 10.0067 4.17001C11.8474 4.17001 13.34 5.66265 13.34 7.50669C13.3333 8.71821 12.674 9.83601 11.6098 10.425Z"
-                                        fill="#374557"
-                                        fillOpacity="0.6"
-                                      />
-                                    </svg>
-                                  </span>
-                                </h1>
-                                {/* <p className="text-sm text-qgraytwo mb-5 ">
-                                  Profile of at least Size
-                                  <span className="ml-1 text-qblack">
-                                    300x300
-                                  </span>
-                                  . Gifs work too.
-                                  <span className="ml-1 text-qblack">
-                                    Max 5mb
-                                  </span>
-                                  .
-                                </p> */}
-                                <div className="flex xl:justify-center justify-start">
-                                  <div className="relative">
-                                    <div className="sm:w-[198px] sm:h-[198px] w-[199px] h-[199px] rounded-full overflow-hidden relative">
-                                      <img
-                                        src={`https://ui-avatars.com/api/name=concac`}
-                                        alt
-                                        className="object-cover w-full h-full"
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="action-area flex space-x-4 items-center">
-                            <button
-                              type="button"
-                              className="text-sm text-red-500 font-semibold"
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              type="button"
-                              className="w-[164px] h-[50px] bg-black text-white text-sm"
-                            >
-                              Update Profile
-                            </button>
-                          </div>
-                        </React.Fragment>
+                        <UpdateProfile user={user} />
                       ) : activeTab === 2 ? (
                         <React.Fragment>
                           <div className="relative w-full overflow-x-auto sm:rounded-lg">
@@ -537,216 +756,92 @@ export default function ProfilePage() {
                                     Action
                                   </td>
                                 </tr>
-                                <tr className="bg-white border-b hover:bg-gray-50">
-                                  <td className="text-center py-4">
-                                    <span className="text-lg text-qgray font-medium">
-                                      #354
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qgray whitespace-nowrap">
-                                      Fub 05,2021
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-sm rounded text-green-500 bg-green-100 p-2">
-                                      Complated
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qblack whitespace-nowrap px-2 ">
-                                      $757
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4">
-                                    <button
-                                      type="button"
-                                      className="w-[116px] h-[46px] bg-qyellow text-qblack font-bold"
+                                {isOrders?.map((item, index) => {
+                                  let statusClass =
+                                    "text-sm rounded p-2 ";
+                                  let statusText = "";
+
+                                  switch (item.orderStatus) {
+                                    case OrderStatus.DELIVERED:
+                                      statusClass += "text-green-500 bg-green-100";
+                                      statusText = "Đã Giao Hàng";
+                                      break;
+
+                                    case OrderStatus.PROCESSING:
+                                      statusClass += "text-blue-500 bg-blue-100";
+                                      statusText = "Đang Xử Lý";
+                                      break;
+
+                                    case OrderStatus.SHIPPED:
+                                    case OrderStatus.SHIPPED_CONFIRMED:
+                                      statusClass += "text-yellow-500 bg-yellow-100";
+                                      statusText = "Đang Giao Hàng";
+                                      break;
+
+                                    case OrderStatus.ON_HOLD:
+                                      statusClass += "text-orange-500 bg-orange-100";
+                                      statusText = "Tạm Giữ & Chậm Trễ";
+                                      break;
+
+                                    case OrderStatus.CANCELLED:
+                                      statusClass += "text-red-500 bg-red-100";
+                                      statusText = "Đã Hủy";
+                                      break;
+
+                                    case OrderStatus.BACKORDERED:
+                                      statusClass += "text-purple-500 bg-purple-100";
+                                      statusText = "Chờ Hàng Về Kho";
+                                      break;
+
+                                    case OrderStatus.REFUNDED:
+                                      statusClass += "text-gray-500 bg-gray-100";
+                                      statusText = "Đã Hoàn Tiền";
+                                      break;
+
+                                    default:
+                                      statusClass += "text-white bg-black";
+                                      statusText = "Lỗi";
+                                      break;
+                                  }
+
+                                  return (
+                                    <tr
+                                      className="bg-white border-b hover:bg-gray-50"
+                                      key={index}
                                     >
-                                      View Details
-                                    </button>
-                                  </td>
-                                </tr>
-                                <tr className="bg-white border-b hover:bg-gray-50">
-                                  <td className="text-center py-4">
-                                    <span className="text-lg text-qgray font-medium">
-                                      #354
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qgray whitespace-nowrap">
-                                      Fub 05,2021
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-sm rounded text-green-500 bg-green-100 p-2">
-                                      Complated
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qblack whitespace-nowrap px-2 ">
-                                      $757
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4">
-                                    <button
-                                      type="button"
-                                      className="w-[116px] h-[46px] bg-qyellow text-qblack font-bold"
-                                    >
-                                      View Details
-                                    </button>
-                                  </td>
-                                </tr>
-                                <tr className="bg-white border-b hover:bg-gray-50">
-                                  <td className="text-center py-4">
-                                    <span className="text-lg text-qgray font-medium">
-                                      #354
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qgray whitespace-nowrap">
-                                      Fub 05,2021
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-sm rounded text-green-500 bg-green-100 p-2">
-                                      Complated
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qblack whitespace-nowrap px-2 ">
-                                      $757
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4">
-                                    <button
-                                      type="button"
-                                      className="w-[116px] h-[46px] bg-qyellow text-qblack font-bold"
-                                    >
-                                      View Details
-                                    </button>
-                                  </td>
-                                </tr>
-                                <tr className="bg-white border-b hover:bg-gray-50">
-                                  <td className="text-center py-4">
-                                    <span className="text-lg text-qgray font-medium">
-                                      #354
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qgray whitespace-nowrap">
-                                      Fub 05,2021
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-sm rounded text-green-500 bg-green-100 p-2">
-                                      Complated
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qblack whitespace-nowrap px-2 ">
-                                      $757
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4">
-                                    <button
-                                      type="button"
-                                      className="w-[116px] h-[46px] bg-qyellow text-qblack font-bold"
-                                    >
-                                      View Details
-                                    </button>
-                                  </td>
-                                </tr>
-                                <tr className="bg-white border-b hover:bg-gray-50">
-                                  <td className="text-center py-4">
-                                    <span className="text-lg text-qgray font-medium">
-                                      #354
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qgray whitespace-nowrap">
-                                      Fub 05,2021
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-sm rounded text-green-500 bg-green-100 p-2">
-                                      Complated
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qblack whitespace-nowrap px-2 ">
-                                      $757
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4">
-                                    <button
-                                      type="button"
-                                      className="w-[116px] h-[46px] bg-qyellow text-qblack font-bold"
-                                    >
-                                      View Details
-                                    </button>
-                                  </td>
-                                </tr>
-                                <tr className="bg-white border-b hover:bg-gray-50">
-                                  <td className="text-center py-4">
-                                    <span className="text-lg text-qgray font-medium">
-                                      #354
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qgray whitespace-nowrap">
-                                      Fub 05,2021
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-sm rounded text-green-500 bg-green-100 p-2">
-                                      Complated
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qblack whitespace-nowrap px-2 ">
-                                      $757
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4">
-                                    <button
-                                      type="button"
-                                      className="w-[116px] h-[46px] bg-qyellow text-qblack font-bold"
-                                    >
-                                      View Details
-                                    </button>
-                                  </td>
-                                </tr>
-                                <tr className="bg-white border-b hover:bg-gray-50">
-                                  <td className="text-center py-4">
-                                    <span className="text-lg text-qgray font-medium">
-                                      #354
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qgray whitespace-nowrap">
-                                      Fub 05,2021
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-sm rounded text-green-500 bg-green-100 p-2">
-                                      Complated
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4 px-2">
-                                    <span className="text-base text-qblack whitespace-nowrap px-2 ">
-                                      $757
-                                    </span>
-                                  </td>
-                                  <td className="text-center py-4">
-                                    <button
-                                      type="button"
-                                      className="w-[116px] h-[46px] bg-qyellow text-qblack font-bold"
-                                    >
-                                      View Details
-                                    </button>
-                                  </td>
-                                </tr>
+                                      <td className="text-center py-4">
+                                        <span className="text-lg text-qgray font-medium">
+                                          #{index + 1}
+                                        </span>
+                                      </td>
+                                      <td className="text-center py-4 px-2">
+                                        <span className="text-base text-qgray whitespace-nowrap">
+                                          {formatDate(item.createdAt)}
+                                        </span>
+                                      </td>
+                                      <td className="text-center py-4 px-2">
+                                        <span
+                                          className={`text-sm rounded ${statusClass}`}
+                                        >
+                                          {statusText}
+                                        </span>
+                                      </td>
+                                      <td className="text-center py-4 px-2">
+                                        <span className="text-base text-qblack whitespace-nowrap px-2">
+                                          {formatPrice(item.totalPrice)}
+                                        </span>
+                                      </td>
+                                      <td className="text-center py-4">
+                                        <button
+                                          type="button"
+                                          className="w-[116px] h-[46px] bg-yellow-400 text-black font-bold"
+                                        >
+                                          View Details
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
                               </tbody>
                             </table>
                           </div>
@@ -932,7 +1027,10 @@ export default function ProfilePage() {
                         </React.Fragment>
                       ) : activeTab === 4 ? (
                         <React.Fragment>
-                          <div className="changePasswordTab w-full">
+                          <form
+                            onSubmit={handleChangePassword}
+                            className="changePasswordTab w-full"
+                          >
                             <div className="w-full flex xl:flex-row flex-col-reverse space-x-5 xl:items-center">
                               <div className="w-[397px] mb-10">
                                 <div className="input-field mb-6">
@@ -947,9 +1045,19 @@ export default function ProfilePage() {
                                       placeholder="● ● ● ● ● ●"
                                       className="input-field placeholder:text-base text-bese px-4 text-dark-gray w-full h-full bg-[#FAFAFA] focus:ring-0 focus:outline-none"
                                       type="password"
-                                      id="old_password"
+                                      onChange={handleChangePasswordInput}
+                                      value={inputChangePass.old_password}
+                                      name="old_password"
                                     />
                                   </div>
+                                  {validationErrors &&
+                                    validationErrors.old_password && (
+                                      <p className="mt-1 text-red-500">
+                                        <li>
+                                          {validationErrors.old_password.msg}
+                                        </li>
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="input-field mb-6">
                                   <label
@@ -963,9 +1071,17 @@ export default function ProfilePage() {
                                       placeholder="● ● ● ● ● ●"
                                       className="input-field placeholder:text-base text-bese px-4 text-dark-gray w-full h-full bg-[#FAFAFA] focus:ring-0 focus:outline-none"
                                       type="password"
-                                      id="new_password"
+                                      name="password"
+                                      value={inputChangePass.password}
+                                      onChange={handleChangePasswordInput}
                                     />
                                   </div>
+                                  {validationErrors &&
+                                    validationErrors.password && (
+                                      <p className="mt-1 text-red-500">
+                                        <li>{validationErrors.password.msg}</li>
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="input-field mb-6">
                                   <label
@@ -979,23 +1095,39 @@ export default function ProfilePage() {
                                       placeholder="● ● ● ● ● ●"
                                       className="input-field placeholder:text-base text-bese px-4 text-dark-gray w-full h-full bg-[#FAFAFA] focus:ring-0 focus:outline-none"
                                       type="password"
-                                      id="confirm_password"
+                                      name="confirm_password"
+                                      value={inputChangePass.confirm_password}
+                                      onChange={handleChangePasswordInput}
                                     />
                                   </div>
+                                  {validationErrors &&
+                                    validationErrors.confirm_password && (
+                                      <p className="mt-1 text-red-500">
+                                        <li>
+                                          {
+                                            validationErrors.confirm_password
+                                              .msg
+                                          }
+                                        </li>
+                                      </p>
+                                    )}
                                 </div>
                                 <div className="w-full mt-[30px] flex justify-start">
                                   <div className="sm:flex sm:space-x-[30px] items-center">
                                     <div className="w-[180px] h-[50px]">
                                       <button
-                                        type="button"
+                                        type="submit"
                                         className="flex w-full h-full items-center justify-center leading-0 opacity-1 bg-yellow-400"
                                       >
                                         <div className="w-full text-sm font-semibold">
-                                          Upldate Password
+                                          Update Password
                                         </div>
                                       </button>
                                     </div>
-                                    <button type="button">
+                                    <button
+                                      onClick={handleCancel}
+                                      type="button"
+                                    >
                                       <div className="w-full text-sm font-semibold text-black mb-5 sm:mb-0">
                                         Cancel
                                       </div>
@@ -1353,7 +1485,7 @@ export default function ProfilePage() {
                                 </svg>
                               </div>
                             </div>
-                          </div>
+                          </form>
                         </React.Fragment>
                       ) : null}
                     </div>
