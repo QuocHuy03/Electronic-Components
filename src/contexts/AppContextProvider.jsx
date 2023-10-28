@@ -7,11 +7,13 @@ export const AppContext = createContext({});
 export function AppContextProvider({ children }) {
   const dispatch = useDispatch();
   const { carts } = useSelector((state) => state.cart);
-  const { user } = useSelector((state) => state.auth);
+  const { accessToken, user } = useSelector((state) => state.auth);
   const { orders } = useSelector((state) => state.order);
   useEffect(() => {
-    dispatch(getCart(user?._id));
-  }, []);
+    if (accessToken) {
+      dispatch(getCart());
+    }
+  }, [accessToken]);
   return (
     <AppContext.Provider
       value={{
