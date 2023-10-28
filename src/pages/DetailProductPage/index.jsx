@@ -8,6 +8,7 @@ import { addToCart } from "../../stores/cart/actions";
 import createNotification from "../../utils/notification";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
+import { Rating } from "react-simple-star-rating";
 import {
   calculateDiscountPercentage,
   formatPrice,
@@ -17,7 +18,7 @@ export default function DetailProductPage() {
   const [isSeeMore, setIsSeeMore] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isReview, setIsReview] = useState(true);
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
   const [showColorError, setShowColorError] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
@@ -557,17 +558,29 @@ export default function DetailProductPage() {
                 <div className="max-w-6xl mx-auto">
                   <ul className="flex space-x-12 ">
                     <li onClick={() => handleTabClick(0)}>
-                      <span className={`py-[15px] sm:text-[15px] text-sm sm:block border-b font-medium cursor-pointer ${activeTab === 0 ? "border-yellow-400 text-black" : ""}`}>
+                      <span
+                        className={`py-[15px] sm:text-[15px] text-sm sm:block border-b font-medium cursor-pointer ${
+                          activeTab === 0 ? "border-yellow-400 text-black" : ""
+                        }`}
+                      >
                         Description
                       </span>
                     </li>
                     <li onClick={() => handleTabClick(1)}>
-                      <span className={`py-[15px] sm:text-[15px] text-sm sm:block border-b font-medium cursor-pointer ${activeTab === 1 ? "border-yellow-400 text-black" : ""}`}>
+                      <span
+                        className={`py-[15px] sm:text-[15px] text-sm sm:block border-b font-medium cursor-pointer ${
+                          activeTab === 1 ? "border-yellow-400 text-black" : ""
+                        }`}
+                      >
                         Reviews
                       </span>
                     </li>
                     <li onClick={() => handleTabClick(2)}>
-                      <span className={`py-[15px] sm:text-[15px] text-sm sm:block border-b font-medium cursor-pointer ${activeTab === 2 ? "border-yellow-400 text-black" : ""}`}>
+                      <span
+                        className={`py-[15px] sm:text-[15px] text-sm sm:block border-b font-medium cursor-pointer ${
+                          activeTab === 2 ? "border-yellow-400 text-black" : ""
+                        }`}
+                      >
                         Seller Info
                       </span>
                     </li>
@@ -584,9 +597,7 @@ export default function DetailProductPage() {
                       dangerouslySetInnerHTML={{
                         __html: detailProduct?.descriptionProduct,
                       }}
-                    >
-                   
-                    </div>
+                    ></div>
                   ) : activeTab === 1 ? (
                     <div className="max-w-6xl mx-auto">
                       <div
@@ -600,140 +611,12 @@ export default function DetailProductPage() {
                           <div className="review-wrapper w-full">
                             <div className="w-full reviews mb-[60px]">
                               <div className="w-full comments mb-[60px]">
-                                <div className="comment-item bg-white px-10 py-[32px] mb-2.5">
-                                  <div className="comment-author flex justify-between items-center mb-3">
-                                    <div className="flex space-x-3 items-center">
-                                      <div className="w-[50px] h-[50px] rounded-full overflow-hidden relative">
-                                        <span
-                                          style={{
-                                            boxSizing: "border-box",
-                                            display: "block",
-                                            overflow: "hidden",
-                                            width: "initial",
-                                            height: "initial",
-                                            background: "none",
-                                            opacity: 1,
-                                            border: 0,
-                                            margin: 0,
-                                            padding: 0,
-                                            position: "absolute",
-                                            inset: 0,
-                                          }}
-                                        >
-                                          <img
-                                            alt
-                                            sizes="100vw"
-                                            srcSet="/_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=640&q=75 640w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=750&q=75 750w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=828&q=75 828w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=1080&q=75 1080w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=1200&q=75 1200w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=1920&q=75 1920w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=2048&q=75 2048w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=3840&q=75 3840w"
-                                            src="/_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=3840&q=75"
-                                            decoding="async"
-                                            data-nimg="fill"
-                                            className="w-full h-full object-cover"
-                                            style={{
-                                              position: "absolute",
-                                              inset: 0,
-                                              boxSizing: "border-box",
-                                              padding: 0,
-                                              border: "none",
-                                              margin: "auto",
-                                              display: "block",
-                                              width: 0,
-                                              height: 0,
-                                              minWidth: "100%",
-                                              maxWidth: "100%",
-                                              minHeight: "100%",
-                                              maxHeight: "100%",
-                                            }}
-                                          />
-                                        </span>
-                                      </div>
-                                      <div>
-                                        <p className="text-[18px] font-medium text-qblack">
-                                          Rafiqul Islam
-                                        </p>
-                                        <p className="text-[13px] font-normal text-qgray">
-                                          London,UK
-                                        </p>
-                                      </div>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                      <div className="flex">
-                                        <span>
-                                          <svg
-                                            width={18}
-                                            height={17}
-                                            viewBox="0 0 18 17"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                              fill="#FFA800"
-                                            />
-                                          </svg>
-                                        </span>
-                                        <span>
-                                          <svg
-                                            width={18}
-                                            height={17}
-                                            viewBox="0 0 18 17"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                              fill="#FFA800"
-                                            />
-                                          </svg>
-                                        </span>
-                                        <span>
-                                          <svg
-                                            width={18}
-                                            height={17}
-                                            viewBox="0 0 18 17"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                              fill="#FFA800"
-                                            />
-                                          </svg>
-                                        </span>
-                                        <span>
-                                          <svg
-                                            width={18}
-                                            height={17}
-                                            viewBox="0 0 18 17"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                              fill="#FFA800"
-                                            />
-                                          </svg>
-                                        </span>
-                                      </div>
-                                      <span className="text-[13px] font-normal text-qblack mt-1 inline-block">
-                                        (4.0)
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="comment mb-[30px]">
-                                    <p className="text-[15px] text-qgray leading-7 text-normal">
-                                      Lorem Ipsum is simply dummy text of the
-                                      printing and typesetting industry. Lorem
-                                      Ipsum has been the industry's standard
-                                      dummy text ever since the redi 1500s, when
-                                      an unknown printer took a galley of type
-                                      and scrambled it to make a type specimen
-                                      book. It has survived not only five
-                                      centuries but also the on leap into
-                                      electronic typesetting, remaining
-                                    </p>
-                                  </div>
-                                  <div className="sub-comment-item bg-white px-10 pt-[32px] border-t">
-                                    <div className="comment-author mb-3">
+                                {isComment?.map((item, index) => (
+                                  <div
+                                    key={index}
+                                    className="comment-item bg-white px-10 py-[32px] mb-2.5"
+                                  >
+                                    <div className="comment-author flex justify-between items-center mb-3">
                                       <div className="flex space-x-3 items-center">
                                         <div className="w-[50px] h-[50px] rounded-full overflow-hidden relative">
                                           <span
@@ -755,8 +638,7 @@ export default function DetailProductPage() {
                                             <img
                                               alt
                                               sizes="100vw"
-                                              srcSet="/_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=640&q=75 640w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=750&q=75 750w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=828&q=75 828w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=1080&q=75 1080w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=1200&q=75 1200w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=1920&q=75 1920w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=2048&q=75 2048w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=3840&q=75 3840w"
-                                              src="/_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=3840&q=75"
+                                              src={`https://ui-avatars.com/api/name=${item.userID?.fullname}`}
                                               decoding="async"
                                               data-nimg="fill"
                                               className="w-full h-full object-cover"
@@ -779,168 +661,109 @@ export default function DetailProductPage() {
                                           </span>
                                         </div>
                                         <div>
-                                          <p className="text-[18px] font-medium text-qblack" />
+                                          <p className="text-[18px] font-medium text-qblack">
+                                            Rafiqul Islam
+                                          </p>
                                           <p className="text-[13px] font-normal text-qgray">
                                             London,UK
                                           </p>
                                         </div>
                                       </div>
+                                      <div className="flex items-center space-x-2">
+                                        <div className="flex">
+                                          {Array.from(
+                                            { length: item.rating },
+                                            (_, index) => (
+                                              <span key={index}>
+                                                <svg
+                                                  width={18}
+                                                  height={17}
+                                                  viewBox="0 0 18 17"
+                                                  fill="none"
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                  <path
+                                                    d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
+                                                    fill="#FFA800"
+                                                  />
+                                                </svg>
+                                              </span>
+                                            )
+                                          )}
+                                        </div>
+                                        <span className="text-[13px] font-normal text-black mt-1 inline-block">
+                                          ({item.rating}.0)
+                                        </span>
+                                      </div>
                                     </div>
                                     <div className="comment mb-[30px]">
                                       <p className="text-[15px] text-qgray leading-7 text-normal">
-                                        Lorem Ipsum is simply dummy text of the
-                                        printing and typesetting industry.
+                                        {item.comment}
                                       </p>
                                     </div>
-                                  </div>
-                                </div>
-                                <div className="comment-item bg-white px-10 py-[32px] mb-2.5">
-                                  <div className="comment-author flex justify-between items-center mb-3">
-                                    <div className="flex space-x-3 items-center">
-                                      <div className="w-[50px] h-[50px] rounded-full overflow-hidden relative">
-                                        <span
-                                          style={{
-                                            boxSizing: "border-box",
-                                            display: "block",
-                                            overflow: "hidden",
-                                            width: "initial",
-                                            height: "initial",
-                                            background: "none",
-                                            opacity: 1,
-                                            border: 0,
-                                            margin: 0,
-                                            padding: 0,
-                                            position: "absolute",
-                                            inset: 0,
-                                          }}
-                                        >
-                                          <img
-                                            alt
-                                            sizes="100vw"
-                                            srcSet="/_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=640&q=75 640w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=750&q=75 750w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=828&q=75 828w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=1080&q=75 1080w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=1200&q=75 1200w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=1920&q=75 1920w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=2048&q=75 2048w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=3840&q=75 3840w"
-                                            src="/_next/image?url=%2Fassets%2Fimages%2Fcomment-user-1.png&w=3840&q=75"
-                                            decoding="async"
-                                            data-nimg="fill"
-                                            className="w-full h-full object-cover"
-                                            style={{
-                                              position: "absolute",
-                                              inset: 0,
-                                              boxSizing: "border-box",
-                                              padding: 0,
-                                              border: "none",
-                                              margin: "auto",
-                                              display: "block",
-                                              width: 0,
-                                              height: 0,
-                                              minWidth: "100%",
-                                              maxWidth: "100%",
-                                              minHeight: "100%",
-                                              maxHeight: "100%",
-                                            }}
-                                          />
-                                        </span>
+                                    <div className="sub-comment-item bg-white px-10 pt-[32px] border-t">
+                                      <div className="comment-author mb-3">
+                                        <div className="flex space-x-3 items-center">
+                                          <div className="w-[50px] h-[50px] rounded-full overflow-hidden relative">
+                                            <span
+                                              style={{
+                                                boxSizing: "border-box",
+                                                display: "block",
+                                                overflow: "hidden",
+                                                width: "initial",
+                                                height: "initial",
+                                                background: "none",
+                                                opacity: 1,
+                                                border: 0,
+                                                margin: 0,
+                                                padding: 0,
+                                                position: "absolute",
+                                                inset: 0,
+                                              }}
+                                            >
+                                              <img
+                                                alt
+                                                sizes="100vw"
+                                                srcSet="/_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=640&q=75 640w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=750&q=75 750w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=828&q=75 828w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=1080&q=75 1080w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=1200&q=75 1200w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=1920&q=75 1920w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=2048&q=75 2048w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=3840&q=75 3840w"
+                                                src="/_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=3840&q=75"
+                                                decoding="async"
+                                                data-nimg="fill"
+                                                className="w-full h-full object-cover"
+                                                style={{
+                                                  position: "absolute",
+                                                  inset: 0,
+                                                  boxSizing: "border-box",
+                                                  padding: 0,
+                                                  border: "none",
+                                                  margin: "auto",
+                                                  display: "block",
+                                                  width: 0,
+                                                  height: 0,
+                                                  minWidth: "100%",
+                                                  maxWidth: "100%",
+                                                  minHeight: "100%",
+                                                  maxHeight: "100%",
+                                                }}
+                                              />
+                                            </span>
+                                          </div>
+                                          <div>
+                                            <p className="text-[18px] font-medium text-qblack" />
+                                            <p className="text-[13px] font-normal text-qgray">
+                                              London,UK
+                                            </p>
+                                          </div>
+                                        </div>
                                       </div>
-                                      <div>
-                                        <p className="text-[18px] font-medium text-qblack">
-                                          Abdullah Mamun
-                                        </p>
-                                        <p className="text-[13px] font-normal text-qgray">
-                                          London,UK
+                                      <div className="comment mb-[30px]">
+                                        <p className="text-[15px] text-qgray leading-7 text-normal">
+                                          Lorem Ipsum is simply dummy text of
+                                          the printing and typesetting industry.
                                         </p>
                                       </div>
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                      <div className="flex">
-                                        <span>
-                                          <svg
-                                            width={18}
-                                            height={17}
-                                            viewBox="0 0 18 17"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                              fill="#FFA800"
-                                            />
-                                          </svg>
-                                        </span>
-                                        <span>
-                                          <svg
-                                            width={18}
-                                            height={17}
-                                            viewBox="0 0 18 17"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                              fill="#FFA800"
-                                            />
-                                          </svg>
-                                        </span>
-                                        <span>
-                                          <svg
-                                            width={18}
-                                            height={17}
-                                            viewBox="0 0 18 17"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                              fill="#FFA800"
-                                            />
-                                          </svg>
-                                        </span>
-                                        <span>
-                                          <svg
-                                            width={18}
-                                            height={17}
-                                            viewBox="0 0 18 17"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                              fill="#FFA800"
-                                            />
-                                          </svg>
-                                        </span>
-                                        <span>
-                                          <svg
-                                            width={18}
-                                            height={17}
-                                            viewBox="0 0 18 17"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                              fill="#FFA800"
-                                            />
-                                          </svg>
-                                        </span>
-                                      </div>
-                                      <span className="text-[13px] font-normal text-qblack mt-1 inline-block">
-                                        (5.0)
-                                      </span>
-                                    </div>
                                   </div>
-                                  <div className="comment mb-[30px]">
-                                    <p className="text-[15px] text-qgray leading-7 text-normal">
-                                      Lorem Ipsum is simply dummy text of the
-                                      printing and typesetting industry. Lorem
-                                      Ipsum has been the industry's standard
-                                      dummy text ever since the redi 1500s, when
-                                      an unknown printer took a galley of type
-                                      and scrambled it to make a type specimen
-                                      book. It has survived not only five
-                                      centuries but also the on leap into
-                                      electronic typesetting, remaining
-                                    </p>
-                                  </div>
-                                </div>
+                                ))}
                               </div>
                               <div className="w-full flex justify-center">
                                 <button
@@ -951,13 +774,24 @@ export default function DetailProductPage() {
                                 </button>
                               </div>
                             </div>
-                            <div className="write-review w-full">
+                            <form
+                              onSubmit={handleComment}
+                              className="write-review w-full"
+                            >
                               <h1 className="text-2xl font-medium text-qblack mb-5">
                                 Write Your Reviews
                               </h1>
                               <div className="flex space-x-1 items-center mb-[30px]">
                                 <div className="star-rating flex">
-                                  <button type="button" className="text-qgray">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRating(1)}
+                                    className={
+                                      rating >= 1
+                                        ? "text-yellow-400"
+                                        : "text-gray-400"
+                                    }
+                                  >
                                     <svg
                                       width={19}
                                       height={18}
@@ -969,7 +803,15 @@ export default function DetailProductPage() {
                                       <path d="M9.5 0L11.6329 6.56434H18.535L12.9511 10.6213L15.084 17.1857L9.5 13.1287L3.91604 17.1857L6.04892 10.6213L0.464963 6.56434H7.36712L9.5 0Z" />
                                     </svg>
                                   </button>
-                                  <button type="button" className="text-qgray">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRating(2)}
+                                    className={
+                                      rating >= 2
+                                        ? "text-yellow-400"
+                                        : "text-gray-400"
+                                    }
+                                  >
                                     <svg
                                       width={19}
                                       height={18}
@@ -981,7 +823,15 @@ export default function DetailProductPage() {
                                       <path d="M9.5 0L11.6329 6.56434H18.535L12.9511 10.6213L15.084 17.1857L9.5 13.1287L3.91604 17.1857L6.04892 10.6213L0.464963 6.56434H7.36712L9.5 0Z" />
                                     </svg>
                                   </button>
-                                  <button type="button" className="text-qgray">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRating(3)}
+                                    className={
+                                      rating >= 3
+                                        ? "text-yellow-400"
+                                        : "text-gray-400"
+                                    }
+                                  >
                                     <svg
                                       width={19}
                                       height={18}
@@ -993,7 +843,35 @@ export default function DetailProductPage() {
                                       <path d="M9.5 0L11.6329 6.56434H18.535L12.9511 10.6213L15.084 17.1857L9.5 13.1287L3.91604 17.1857L6.04892 10.6213L0.464963 6.56434H7.36712L9.5 0Z" />
                                     </svg>
                                   </button>
-                                  <button type="button" className="text-qgray">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRating(4)}
+                                    className={
+                                      rating >= 4
+                                        ? "text-yellow-400"
+                                        : "text-gray-400"
+                                    }
+                                  >
+                                    <svg
+                                      width={19}
+                                      height={18}
+                                      viewBox="0 0 19 18"
+                                      fill="none"
+                                      className="fill-current"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path d="M9.5 0L11.6329 6.56434H18.535L12.9511 10.6213L15.084 17.1857L9.5 13.1287L3.91604 17.1857L6.04892 10.6213L0.464963 6.56434H7.36712L9.5 0Z" />
+                                    </svg>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRating(5)}
+                                    className={
+                                      rating >= 5
+                                        ? "text-yellow-400"
+                                        : "text-gray-400"
+                                    }
+                                  >
                                     <svg
                                       width={19}
                                       height={18}
@@ -1007,86 +885,35 @@ export default function DetailProductPage() {
                                   </button>
                                 </div>
                                 <span className="text-qblack text-[15px] font-normal mt-1">
-                                  (0.0)
+                                  ({rating}.0)
                                 </span>
                               </div>
                               <div className="w-full review-form ">
-                                <div className="sm:flex sm:space-x-[30px] items-center mb-5">
-                                  <div className="sm:w-1/3 w-full">
-                                    <div className="input-com w-full h-full">
-                                      <label
-                                        className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
-                                        htmlFor="name"
-                                      >
-                                        name*
-                                      </label>
-                                      <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                        <input
-                                          placeholder
-                                          className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full h-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                          type="text"
-                                          id="name"
-                                          defaultValue
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="sm:w-1/3 w-full mt-5 sm:mt-0">
-                                    <div className="input-com w-full h-full">
-                                      <label
-                                        className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
-                                        htmlFor="name"
-                                      >
-                                        Email*
-                                      </label>
-                                      <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                        <input
-                                          placeholder
-                                          className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full h-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                          type="email"
-                                          id="name"
-                                          defaultValue
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="sm:w-1/3 w-full mt-5 sm:mt-0">
-                                    <div className="input-com w-full h-full">
-                                      <label
-                                        className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
-                                        htmlFor="name"
-                                      >
-                                        Phone Number*
-                                      </label>
-                                      <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                                        <input
-                                          placeholder
-                                          className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full h-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                          type="text"
-                                          id="name"
-                                          defaultValue
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="w-full mb-[30px]">
-                                  <h6 className="input-label text-qgray capitalize text-[13px] font-normal block mb-2 ">
+                                <div className="sm:flex sm:space-x-[30px] items-center mb-5"></div>
+                                <div className="w-full mb-[10px]">
+                                  <h6 className="input-label text-gray-400 capitalize text-[13px] font-normal block mb-2 ">
                                     Message*
                                   </h6>
                                   <textarea
-                                    name
-                                    id
+                                    name="comment"
+                                    onChange={handleChange}
                                     cols={30}
                                     rows={3}
-                                    className="w-full focus:ring-0 focus:outline-none p-6"
-                                    defaultValue={""}
+                                    placeholder="Mời bạn để lại bình luận..."
+                                    value={inputs.comment}
+                                    className="w-full focus:ring-0 focus:outline-none p-4 border border-yellow-400"
                                   />
                                 </div>
+                                {validationErrors &&
+                                  validationErrors.comment && (
+                                    <p className="mt-1 text-red-500">
+                                      <li>{validationErrors.comment.msg}</li>
+                                    </p>
+                                  )}
                                 <div className="flex justify-end">
                                   <button
-                                    type="button"
-                                    className="black-btn w-[300px] h-[50px] flex justify-center"
+                                    type="submit"
+                                    className="bg-black text-white w-[300px] h-[50px] flex justify-center"
                                   >
                                     <span className="flex space-x-1 items-center h-full">
                                       <span className="text-sm font-semibold">
@@ -1096,7 +923,7 @@ export default function DetailProductPage() {
                                   </button>
                                 </div>
                               </div>
-                            </div>
+                            </form>
                           </div>
                         </div>
                       </div>
