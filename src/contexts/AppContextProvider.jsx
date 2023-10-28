@@ -9,9 +9,9 @@ export function AppContextProvider({ children }) {
   const { carts } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.auth);
   const { orders } = useSelector((state) => state.order);
-  // useEffect(() => {
-  //   dispatch(getCart(user?._id));
-  // }, []);
+  useEffect(() => {
+    dispatch(getCart(user?._id));
+  }, []);
   return (
     <AppContext.Provider
       value={{
