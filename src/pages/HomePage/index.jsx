@@ -5,7 +5,7 @@ import { productService } from "../../services/product.service";
 import { Link } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import { calculateDiscountPercentage, formatPrice } from "../../utils/fomatPrice";
-
+import brand from "../../json/brand.json";
 export default function HomePage() {
   const { data, isloading } = useQuery(
     ["product"],
@@ -15,7 +15,8 @@ export default function HomePage() {
       retryDelay: 1000,
     }
   );
-  console.log(data);
+
+console.log(brand);
   return (
     <Layout>
       {/* Banner */}
@@ -1148,6 +1149,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="grid lg:grid-cols-6 sm:grid-cols-4 grid-cols-2">
+          {brand?.map((item) => (
             <div className="item">
               <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
                 <span
@@ -1168,7 +1170,7 @@ export default function HomePage() {
                 >
                   <img
                     alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-1.png&w=1920&q=75"
+                    src={item.image}
                     decoding="async"
                     data-nimg="fill"
                     sizes="100vw"
@@ -1193,501 +1195,7 @@ export default function HomePage() {
                 </span>
               </div>
             </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-2.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-3.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-4.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-5.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-6.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-7.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-8.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-9.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-10.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-11.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
-            <div className="item">
-              <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                <span
-                  style={{
-                    boxSizing: "border-box",
-                    display: "block",
-                    overflow: "hidden",
-                    width: "initial",
-                    height: "initial",
-                    background: "none",
-                    opacity: 1,
-                    border: 0,
-                    margin: 0,
-                    padding: 0,
-                    position: "absolute",
-                    inset: 0,
-                  }}
-                >
-                  <img
-                    alt="logo"
-                    src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fbrand-12.png&w=1920&q=75"
-                    decoding="async"
-                    data-nimg="fill"
-                    sizes="100vw"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      boxSizing: "border-box",
-                      padding: 0,
-                      border: "none",
-                      margin: "auto",
-                      display: "block",
-                      width: 0,
-                      height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
-                      objectFit: "scale-down",
-                    }}
-                  />
-                  <noscript />
-                </span>
-              </div>
-            </div>
+          ))}
           </div>
         </div>
       </div>
@@ -1748,7 +1256,7 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="countdown-title mb-4">
-                    <h1 className="text-[44px] text-qblack font-600">
+                    <h1 className="text-[44px] text-black font-600">
                       WOO! Flash Sale
                     </h1>
                   </div>
@@ -1860,7 +1368,7 @@ export default function HomePage() {
                               src="/_next/image?url=%2Fassets%2Fimages%2Fplay-store.png&w=384&q=75"
                               decoding="async"
                               data-nimg="intrinsic"
-                              srcSet="/_next/image?url=%2Fassets%2Fimages%2Fplay-store.png&w=256&q=75 1x, /_next/image?url=%2Fassets%2Fimages%2Fplay-store.png&w=384&q=75 2x"
+                              srcSet="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fplay-store.png&w=256&q=75"
                               style={{
                                 position: "absolute",
                                 inset: 0,
@@ -1934,7 +1442,7 @@ export default function HomePage() {
                               src="/_next/image?url=%2Fassets%2Fimages%2Fapple-store.png&w=384&q=75"
                               decoding="async"
                               data-nimg="intrinsic"
-                              srcSet="/_next/image?url=%2Fassets%2Fimages%2Fapple-store.png&w=256&q=75 1x, /_next/image?url=%2Fassets%2Fimages%2Fapple-store.png&w=384&q=75 2x"
+                              srcSet="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fapple-store.png&w=256&q=75"
                               style={{
                                 position: "absolute",
                                 inset: 0,
@@ -1979,7 +1487,7 @@ export default function HomePage() {
                         decoding="async"
                         data-nimg="fill"
                         sizes="100vw"
-                        srcSet="/_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=640&q=75 640w, /_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=750&q=75 750w, /_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=828&q=75 828w, /_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=1080&q=75 1080w, /_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=1200&q=75 1200w, /_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=1920&q=75 1920w, /_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=2048&q=75 2048w, /_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=3840&q=75 3840w"
+                        srcSet="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=1920&q=75"
                         style={{
                           position: "absolute",
                           inset: 0,
