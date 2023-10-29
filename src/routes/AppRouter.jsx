@@ -16,12 +16,14 @@ import { useSelector } from "react-redux";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import FilterPage from "../pages/FilterPage";
+import OrderPage from "../pages/OrderPage";
 
 const privateRoutes = [
   { path: URL_CONSTANTS.PROFILE, component: ProfilePage },
   { path: URL_CONSTANTS.CART, component: CartPage },
   { path: URL_CONSTANTS.CHECKOUT, component: CheckoutPage },
   { path: URL_CONSTANTS.NOTFOUND, component: NotFound },
+  { path: URL_CONSTANTS.ORDER, component: OrderPage },
 ];
 const publicRoutes = [
   { path: URL_CONSTANTS.HOME, component: HomePage },

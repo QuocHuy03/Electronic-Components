@@ -8,7 +8,7 @@ import { addToCart } from "../../stores/cart/actions";
 import createNotification from "../../utils/notification";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
-import { Rating } from "react-simple-star-rating";
+
 import {
   calculateDiscountPercentage,
   formatPrice,
@@ -25,6 +25,7 @@ export default function DetailProductPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
+ 
   const toggleSeeMore = () => {
     setIsSeeMore(!isSeeMore);
   };
@@ -99,13 +100,18 @@ export default function DetailProductPage() {
   }, [detailProduct]);
 
   const handleColorClick = (color) => {
-    if (color === null) {
+    if (color === "") {
       setShowColorError(true);
     } else {
       setSelectedColor(color);
       setShowColorError(false);
     }
   };
+  // useEffect(() => {
+  //   if (detailProduct && detailProduct?.colors && detailProduct?.colors.length > 0) {
+  //     setSelectedColor(detailProduct?.colors[0].nameColor);
+  //   }
+  // }, [detailProduct]);
 
   const buyCart = async (product) => {
     if (!selectedColor) {
@@ -374,7 +380,6 @@ export default function DetailProductPage() {
                               {detailProduct?.colors.map((item, index) => (
                                 <div key={index}>
                                   <button
-                                    type="button"
                                     onClick={() =>
                                       handleColorClick(item.nameColor)
                                     }
@@ -385,7 +390,7 @@ export default function DetailProductPage() {
                                     } flex justify-center items-center`}
                                   >
                                     <span
-                                      className="w-[20px] h-[20px] block rounded-full border"
+                                      className="w-[20px] h-[20px] rounded-full border"
                                       style={{ background: item.nameColor }}
                                     />
                                   </button>
@@ -394,7 +399,7 @@ export default function DetailProductPage() {
                             </div>
                             {showColorError && (
                               <span
-                                style={{ color: "red", paddingTop: "20px" }}
+                                style={{ color: "red", marginTop: "20px" }}
                               >
                                 (Vui lòng chọn màu)
                               </span>

@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { URL_CONSTANTS } from "../../constants/url.constants";
+import { Link } from "react-router-dom";
 import {
   deleteToCartAll,
   deleteToCartItem,
@@ -17,7 +16,6 @@ import createNotification from "../../utils/notification";
 export default function CartPage() {
   const dispatch = useDispatch();
   let { carts, user } = useContext(AppContext);
-  console.log(carts);
   useEffect(() => {
     dispatch(getCart(user?._id));
   }, []);
@@ -191,7 +189,10 @@ export default function CartPage() {
                                 <td className="text-center py-4 px-2">
                                   <div className=" flex justify-center items-center">
                                     <span
-                                      className={`w-[20px] h-[20px] bg-${item.color}-400 block rounded-full`}
+                                    style={{
+                                      backgroundColor: item.color
+                                    }}
+                                      className={`w-[20px] h-[20px] border block rounded-full`}
                                     />
                                   </div>
                                 </td>
@@ -312,11 +313,11 @@ export default function CartPage() {
                           </p>
                         </div>
                       </div>
-                      <div className="w-full h-[50px] bg-black text-white flex justify-center items-center">
+                      <Link  to={`/checkout/${uuidv4()}`} className="w-full h-[50px] bg-black text-white flex justify-center items-center">
                         <span className="text-sm font-semibold">
                           Proceed to Checkout
                         </span>
-                      </div>
+                      </Link>
                     </div>
                   </div>
                 </div>
