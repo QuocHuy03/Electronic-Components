@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import { AppContext } from "../../contexts/AppContextProvider";
 import { formatPrice } from "../../utils/fomatPrice";
+import { deleteToCartItem } from "../../stores/cart/actions";
+import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 
 export default function HeaderCenter() {
   const { carts } = useContext(AppContext);
+  const dispatch = useDispatch();
   const totalAmountAll = carts?.reduce(
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
     0
@@ -20,14 +24,14 @@ export default function HeaderCenter() {
         <div className="max-w-6xl mx-auto h-full">
           <div className="relative h-full">
             <div className="flex justify-between items-center h-full">
-              <div className="cursor-pointer">
+              <Link to={URL_CONSTANTS.HOME} className="cursor-pointer">
                 <img
                   width={152}
                   height={36}
                   src="https://shopo-next.vercel.app/assets/images/logo.svg"
                   alt="logo"
                 />
-              </div>
+              </Link>
               <div className="w-[517px] h-[44px]">
                 <div className="w-full h-full flex items-center border border-qgray-border bg-white search-com">
                   <div className="flex-1 h-full">
@@ -172,18 +176,18 @@ export default function HeaderCenter() {
                               </span>
                             </div>
                             <div className="product-action-btn">
-                              <div
+                              <Link to={URL_CONSTANTS.CART}
                                 style={{
                                   backgroundColor: "#f0f1f3",
                                 }}
                                 className="flex items-center justify-center leading-3 font-bold  w-full h-[50px] mb-[10px] cursor-pointer"
                               >
                                 <span>View Cart</span>
-                              </div>
+                              </Link>
                               <div className="w-full h-[50px] cursor-pointer">
-                                <div className="bg-yellow-400 flex h-full w-full opacity-1 leading-0 font-bold items-center justify-center">
+                                <Link to={`/checkout/${uuidv4()}`} className="bg-yellow-400 flex h-full w-full opacity-1 leading-0 font-bold items-center justify-center">
                                   <span className="text-sm">Checkout Now</span>
-                                </div>
+                                </Link>
                               </div>
                             </div>
                           </div>

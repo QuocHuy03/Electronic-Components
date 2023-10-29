@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   deleteToCartAll,
@@ -16,9 +16,6 @@ import createNotification from "../../utils/notification";
 export default function CartPage() {
   const dispatch = useDispatch();
   let { carts, user } = useContext(AppContext);
-  useEffect(() => {
-    dispatch(getCart(user?._id));
-  }, []);
 
   const totalAmountAll = carts?.reduce(
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
@@ -313,7 +310,7 @@ export default function CartPage() {
                           </p>
                         </div>
                       </div>
-                      <Link  to={`/checkout/${uuidv4()}`} className="w-full h-[50px] bg-black text-white flex justify-center items-center">
+                      <Link to={`/checkout/${uuidv4()}`} className="w-full h-[50px] bg-black text-white flex justify-center items-center">
                         <span className="text-sm font-semibold">
                           Proceed to Checkout
                         </span>

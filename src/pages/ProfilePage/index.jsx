@@ -656,10 +656,15 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                New Orders
+                                 Orders Processing
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
-                                656
+                                {
+                                  isOrders?.filter(
+                                    (item) =>
+                                      item.orderStatus === OrderStatus.PROCESSING
+                                  ).length
+                                }
                               </span>
                             </div>
                             <div className="qv-item w-[252px] h-[208px] bg-black group hover:bg-yellow-400 transition-all duration-300 ease-in-out p-6">
@@ -680,10 +685,15 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                New Orders
+                                 Orders Shipped
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
-                                656
+                              {
+                                  isOrders?.filter(
+                                    (item) =>
+                                      item.orderStatus === OrderStatus.SHIPPED
+                                  ).length
+                                }
                               </span>
                             </div>
                             <div className="qv-item w-[252px] h-[208px] bg-black group hover:bg-yellow-400 transition-all duration-300 ease-in-out p-6">
@@ -712,10 +722,15 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                New Orders
+                                 Orders Delivered
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
-                                656
+                              {
+                                  isOrders?.filter(
+                                    (item) =>
+                                      item.orderStatus === OrderStatus.DELIVERED
+                                  ).length
+                                }
                               </span>
                             </div>
                           </div>
@@ -839,7 +854,10 @@ export default function ProfilePage() {
                                   })
                                 ) : (
                                   <tr className="bg-white border-b hover:bg-gray-50">
-                                    <td colSpan="5" className="text-center py-4 text-yellow-400">
+                                    <td
+                                      colSpan="5"
+                                      className="text-center py-4 text-yellow-400"
+                                    >
                                       Order Not Empty ...
                                     </td>
                                   </tr>
