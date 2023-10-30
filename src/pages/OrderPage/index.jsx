@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../contexts/AppContextProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { orders } from "../../stores/order/actions";
@@ -13,6 +13,7 @@ export default function OrderPage() {
   const queryParams = new URLSearchParams(location.search);
   const dispatch = useDispatch();
   const paymentMethod = queryParams.get("payment");
+  const [isOrderStatus, setIsOrderStatus] = useState(false);
 
   const paymentMomo = {
     partnerCode: queryParams.get("partnerCode"),
@@ -44,7 +45,7 @@ export default function OrderPage() {
     };
     try {
       const response = await dispatch(orders(data, paymentMethod));
-
+      console.log(response);
       if (response.status === true) {
         createNotification("success", "topRight", response.message);
       } else {

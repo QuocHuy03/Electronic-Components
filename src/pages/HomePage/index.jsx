@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import { calculateDiscountPercentage, formatPrice } from "../../utils/fomatPrice";
 import brand from "../../json/brand.json";
+
 export default function HomePage() {
   const { data, isloading } = useQuery(
     ["product"],
@@ -15,12 +16,10 @@ export default function HomePage() {
       retryDelay: 1000,
     }
   );
-
-console.log(brand);
   return (
     <Layout>
       {/* Banner */}
-      <div className="w-full banner-wrapper mb-[60px]">
+      <div className="w-full banner-wrapper mb-[60px]" data-aos="fade-up">
         <div className="max-w-6xl mx-auto">
           <div className="main-wrapper w-full">
             <div className="banner-card xl:flex xl:space-x-[30px] xl:h-[600px] mb-[30px]">
@@ -1184,10 +1183,10 @@ console.log(brand);
                       display: "block",
                       width: 0,
                       height: 0,
-                      minWidth: "100%",
-                      maxWidth: "100%",
-                      minHeight: "100%",
-                      maxHeight: "100%",
+                      minWidth: "90%",
+                      maxWidth: "90%",
+                      minHeight: "90%",
+                      maxHeight: "90%",
                       objectFit: "scale-down",
                     }}
                   />

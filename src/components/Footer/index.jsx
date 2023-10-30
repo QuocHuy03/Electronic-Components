@@ -152,15 +152,14 @@ export default function Footer() {
                 </a>
               </div>
               <span className="sm:text-base text-[10px] text-qgray font-300">
-                ©2022
-                <a
-                  href="https://quomodosoft.com/"
+                ©2023
+                <b
                   target="_blank"
                   rel="noreferrer"
                   className="font-500 text-qblack mx-1"
                 >
-                  Quomodosoft
-                </a>
+                  GradTechShop
+                </b>
                 All rights reserved
               </span>
             </div>
