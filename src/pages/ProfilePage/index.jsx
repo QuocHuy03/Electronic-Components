@@ -9,7 +9,7 @@ import createNotification from "../../utils/notification";
 import { orderService } from "../../services/order.service";
 import formatDate from "../../utils/fomatDate";
 import { useQuery } from "@tanstack/react-query";
-import OrderStatus from "../../types/order.type"
+import OrderStatus from "../../types/order.type";
 import { formatPrice } from "../../utils/fomatPrice";
 import { persistor } from "../../stores/app.store";
 
@@ -92,29 +92,26 @@ export default function ProfilePage() {
 
   // update me
 
+  const initialValues = (user) => ({
+    fullname: user?.fullname || "",
+    username: user?.username || "",
+    address: user?.address || "",
+    city: user?.city || "",
+    district: user?.district || "",
+    commune: user?.commune || "",
+    phone: user?.phone || "",
+  });
+
   const UpdateProfile = ({ user }) => {
-    const isUserAvailable = user !== null;
     const [provinces, setProvinces] = useState([]);
     const [selectedProvince, setSelectedProvince] = useState("");
     const [districts, setDistricts] = useState([]);
     const [selectedDistrict, setSelectedDistrict] = useState("");
     const [selectedCommune, setSelectedCommune] = useState("");
     const [wards, setWards] = useState([]);
+    const [inputs, setInputs] = useState(initialValues(user));
 
-    const initialInputValues = {
-      fullname: isUserAvailable ? user.fullname : "",
-      username: isUserAvailable ? user.username : "",
-      email: isUserAvailable ? user.email : "",
-      address: isUserAvailable ? user.address : "",
-      city: isUserAvailable ? user.city : "",
-      district: isUserAvailable ? user.district : "",
-      commune: isUserAvailable ? user.commune : "",
-      phone: isUserAvailable ? user.phone : "",
-    };
-
-    const [inputs, setInputs] = useState(initialInputValues);
-
-    const handleChange = (e) => {
+    const handleChangeInput = (e) => {
       const { name, value } = e.target;
       setInputs((prevInputs) => ({
         ...prevInputs,
@@ -126,12 +123,12 @@ export default function ProfilePage() {
       setProvinces(huydev.provinces);
       setDistricts(huydev.districts);
       setWards(huydev.wards);
-      if (isUserAvailable) {
+      if (user) {
         setSelectedProvince(user.city);
         setSelectedDistrict(user.district);
         setSelectedCommune(user.commune);
       }
-    }, [isUserAvailable]);
+    }, [user]);
 
     const handleSelectProvince = (e) => {
       setSelectedProvince(e.target.value);
@@ -166,20 +163,9 @@ export default function ProfilePage() {
       (ward) => ward.district_id === Number(selectedDistrict)
     );
     const handleSubmit = async (e) => {
-      let data = {
-        fullname: inputs.fullname,
-        username: inputs.username,
-        address: inputs.address,
-        city: Number(inputs.city),
-        district: Number(inputs.district),
-        commune: Number(inputs.commune),
-        phone: inputs.phone,
-      };
-      // console.log(data)
       e.preventDefault();
-
       try {
-        const response = await userService.updateMe(data);
+        const response = await userService.updateMe(inputs);
         dispatch({
           type: LOAD_CURRENT_LOGIN_USER_SUCCESS,
           payload: response.user,
@@ -209,7 +195,7 @@ export default function ProfilePage() {
                       className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                       type="text"
                       name="fullname"
-                      onChange={handleChange}
+                      onChange={handleChangeInput}
                       value={inputs.fullname}
                     />
                   </div>
@@ -226,7 +212,7 @@ export default function ProfilePage() {
                       className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                       type="text"
                       name="username"
-                      onChange={handleChange}
+                      onChange={handleChangeInput}
                       value={inputs.username}
                     />
                   </div>
@@ -245,7 +231,8 @@ export default function ProfilePage() {
                       className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                       type="email"
                       name="email"
-                      onChange={handleChange}
+                      disabled
+                      onChange={handleChangeInput}
                       value={inputs.email}
                     />
                   </div>
@@ -263,7 +250,7 @@ export default function ProfilePage() {
                       type="number"
                       min={9}
                       name="phone"
-                      onChange={handleChange}
+                      onChange={handleChangeInput}
                       value={inputs.phone}
                     />
                   </div>
@@ -282,7 +269,7 @@ export default function ProfilePage() {
                       className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                       type="text"
                       name="address"
-                      onChange={handleChange}
+                      onChange={handleChangeInput}
                       value={inputs.address}
                     />
                   </div>
@@ -669,10 +656,15 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                New Orders
+                                 Orders Processing
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
-                                656
+                                {
+                                  isOrders?.filter(
+                                    (item) =>
+                                      item.orderStatus === OrderStatus.PROCESSING
+                                  ).length
+                                }
                               </span>
                             </div>
                             <div className="qv-item w-[252px] h-[208px] bg-black group hover:bg-yellow-400 transition-all duration-300 ease-in-out p-6">
@@ -693,10 +685,15 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                New Orders
+                                 Orders Shipped
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
-                                656
+                              {
+                                  isOrders?.filter(
+                                    (item) =>
+                                      item.orderStatus === OrderStatus.SHIPPED
+                                  ).length
+                                }
                               </span>
                             </div>
                             <div className="qv-item w-[252px] h-[208px] bg-black group hover:bg-yellow-400 transition-all duration-300 ease-in-out p-6">
@@ -725,10 +722,15 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                New Orders
+                                 Orders Delivered
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
-                                656
+                              {
+                                  isOrders?.filter(
+                                    (item) =>
+                                      item.orderStatus === OrderStatus.DELIVERED
+                                  ).length
+                                }
                               </span>
                             </div>
                           </div>
@@ -757,92 +759,109 @@ export default function ProfilePage() {
                                     Action
                                   </td>
                                 </tr>
-                                {isOrders?.map((item, index) => {
-                                  let statusClass =
-                                    "text-sm rounded p-2 ";
-                                  let statusText = "";
+                                {isOrders.length > 0 ? (
+                                  isOrders?.map((item, index) => {
+                                    let statusClass = "text-sm rounded p-2 ";
+                                    let statusText = "";
 
-                                  switch (item.orderStatus) {
-                                    case OrderStatus.DELIVERED:
-                                      statusClass += "text-green-500 bg-green-100";
-                                      statusText = "Đã Giao Hàng";
-                                      break;
+                                    switch (item.orderStatus) {
+                                      case OrderStatus.DELIVERED:
+                                        statusClass +=
+                                          "text-green-500 bg-green-100";
+                                        statusText = "Đã Giao Hàng";
+                                        break;
 
-                                    case OrderStatus.PROCESSING:
-                                      statusClass += "text-blue-500 bg-blue-100";
-                                      statusText = "Đang Xử Lý";
-                                      break;
+                                      case OrderStatus.PROCESSING:
+                                        statusClass +=
+                                          "text-blue-500 bg-blue-100";
+                                        statusText = "Đang Xử Lý";
+                                        break;
 
-                                    case OrderStatus.SHIPPED:
-                                    case OrderStatus.SHIPPED_CONFIRMED:
-                                      statusClass += "text-yellow-500 bg-yellow-100";
-                                      statusText = "Đang Giao Hàng";
-                                      break;
+                                      case OrderStatus.SHIPPED:
+                                      case OrderStatus.SHIPPED_CONFIRMED:
+                                        statusClass +=
+                                          "text-yellow-500 bg-yellow-100";
+                                        statusText = "Đang Giao Hàng";
+                                        break;
 
-                                    case OrderStatus.ON_HOLD:
-                                      statusClass += "text-orange-500 bg-orange-100";
-                                      statusText = "Tạm Giữ & Chậm Trễ";
-                                      break;
+                                      case OrderStatus.ON_HOLD:
+                                        statusClass +=
+                                          "text-orange-500 bg-orange-100";
+                                        statusText = "Tạm Giữ & Chậm Trễ";
+                                        break;
 
-                                    case OrderStatus.CANCELLED:
-                                      statusClass += "text-red-500 bg-red-100";
-                                      statusText = "Đã Hủy";
-                                      break;
+                                      case OrderStatus.CANCELLED:
+                                        statusClass +=
+                                          "text-red-500 bg-red-100";
+                                        statusText = "Đã Hủy";
+                                        break;
 
-                                    case OrderStatus.BACKORDERED:
-                                      statusClass += "text-purple-500 bg-purple-100";
-                                      statusText = "Chờ Hàng Về Kho";
-                                      break;
+                                      case OrderStatus.BACKORDERED:
+                                        statusClass +=
+                                          "text-purple-500 bg-purple-100";
+                                        statusText = "Chờ Hàng Về Kho";
+                                        break;
 
-                                    case OrderStatus.REFUNDED:
-                                      statusClass += "text-gray-500 bg-gray-100";
-                                      statusText = "Đã Hoàn Tiền";
-                                      break;
+                                      case OrderStatus.REFUNDED:
+                                        statusClass +=
+                                          "text-gray-500 bg-gray-100";
+                                        statusText = "Đã Hoàn Tiền";
+                                        break;
 
-                                    default:
-                                      statusClass += "text-white bg-black";
-                                      statusText = "Lỗi";
-                                      break;
-                                  }
+                                      default:
+                                        statusClass += "text-white bg-black";
+                                        statusText = "Lỗi";
+                                        break;
+                                    }
 
-                                  return (
-                                    <tr
-                                      className="bg-white border-b hover:bg-gray-50"
-                                      key={index}
+                                    return (
+                                      <tr
+                                        className="bg-white border-b hover:bg-gray-50"
+                                        key={index}
+                                      >
+                                        <td className="text-center py-4">
+                                          <span className="text-lg text-qgray font-medium">
+                                            #{index + 1}
+                                          </span>
+                                        </td>
+                                        <td className="text-center py-4 px-2">
+                                          <span className="text-base text-qgray whitespace-nowrap">
+                                            {formatDate(item.createdAt)}
+                                          </span>
+                                        </td>
+                                        <td className="text-center py-4 px-2">
+                                          <span
+                                            className={`text-sm rounded ${statusClass}`}
+                                          >
+                                            {statusText}
+                                          </span>
+                                        </td>
+                                        <td className="text-center py-4 px-2">
+                                          <span className="text-base text-qblack whitespace-nowrap px-2">
+                                            {formatPrice(item.totalPrice)}
+                                          </span>
+                                        </td>
+                                        <td className="text-center py-4">
+                                          <button
+                                            type="button"
+                                            className="w-[116px] h-[46px] bg-yellow-400 text-black font-bold"
+                                          >
+                                            View Details
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    );
+                                  })
+                                ) : (
+                                  <tr className="bg-white border-b hover:bg-gray-50">
+                                    <td
+                                      colSpan="5"
+                                      className="text-center py-4 text-yellow-400"
                                     >
-                                      <td className="text-center py-4">
-                                        <span className="text-lg text-qgray font-medium">
-                                          #{index + 1}
-                                        </span>
-                                      </td>
-                                      <td className="text-center py-4 px-2">
-                                        <span className="text-base text-qgray whitespace-nowrap">
-                                          {formatDate(item.createdAt)}
-                                        </span>
-                                      </td>
-                                      <td className="text-center py-4 px-2">
-                                        <span
-                                          className={`text-sm rounded ${statusClass}`}
-                                        >
-                                          {statusText}
-                                        </span>
-                                      </td>
-                                      <td className="text-center py-4 px-2">
-                                        <span className="text-base text-qblack whitespace-nowrap px-2">
-                                          {formatPrice(item.totalPrice)}
-                                        </span>
-                                      </td>
-                                      <td className="text-center py-4">
-                                        <button
-                                          type="button"
-                                          className="w-[116px] h-[46px] bg-yellow-400 text-black font-bold"
-                                        >
-                                          View Details
-                                        </button>
-                                      </td>
-                                    </tr>
-                                  );
-                                })}
+                                      Order Not Empty ...
+                                    </td>
+                                  </tr>
+                                )}
                               </tbody>
                             </table>
                           </div>
