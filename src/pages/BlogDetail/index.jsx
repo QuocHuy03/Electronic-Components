@@ -4,12 +4,11 @@ import Layout from "../../components/Layout";
 export default function BlogDetail() {
   return (
     <Layout>
-       
       <div className="w-full  pt-0 pb-0">
         <div className="blog-page-wrapper w-full">
           <div className="title-area mb-[60px]">
             <div className="page-title-wrapper bg-[#FFFAEF] w-full h-[173px] py-10">
-            <div className="max-w-6xl mx-auto">
+              <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>
                     <div className="breadcrumb-wrapper font-400 text-[13px] text-qblack mb-[23px]">
@@ -37,7 +36,7 @@ export default function BlogDetail() {
             </div>
           </div>
           <div className="content-area w-full">
-          <div className="max-w-6xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               <div className="blog-article lg:flex lg:space-x-[30px] mb-7">
                 <div className="flex-1">
                   <div className="img w-full h-[457px] relative">
@@ -526,7 +525,7 @@ export default function BlogDetail() {
                                 id
                                 cols={30}
                                 rows={3}
-                                className="w-full focus:ring-0 focus:outline-none p-6 bg-slate-100" 
+                                className="w-full focus:ring-0 focus:outline-none p-6 bg-slate-100"
                                 defaultValue={""}
                               />
                             </div>
@@ -1143,7 +1142,10 @@ export default function BlogDetail() {
                             placeholder="Enter Your Email Address"
                           />
                         </div>
-                        <button type="button" className="w-full h-[60px] bg-amber-400">
+                        <button
+                          type="button"
+                          className="w-full h-[60px] bg-amber-400"
+                        >
                           <span
                             className="yellow-btn w-full h-full "
                             style={{ fontSize: 18 }}
@@ -1161,69 +1163,67 @@ export default function BlogDetail() {
         </div>
       </div>
       <div
-          className="discount-banner w-full h-[307px] bg-cover flex justify-center items-center "
-          style={{
-            background:
-              'url("https://shopo-next.vercel.app/assets/images/discount-banner-1.jpg") 0% 0% / cover no-repeat',
-          }}
-        >
-          <div>
-            <div data-aos="fade-up" className="aos-init aos-animate">
-              <h1 className="sm:text-3xl text-xl font-700 text-qblack mb-2 text-center font-bold">
-                Get{" "}
-                <span className="mx-1 text-amber-500 font-bold   ">20%</span>{" "}
-                Off Discount Coupon
-              </h1>
-              <p className="text-center sm:text-[18px] text-sm font-400">
-                by Subscribe our Newsletter
-              </p>
+        className="discount-banner w-full h-[307px] bg-cover flex justify-center items-center "
+        style={{
+          background:
+            'url("https://shopo-next.vercel.app/assets/images/discount-banner-1.jpg") 0% 0% / cover no-repeat',
+        }}
+      >
+        <div>
+          <div data-aos="fade-up" className="aos-init aos-animate">
+            <h1 className="sm:text-3xl text-xl font-700 text-qblack mb-2 text-center font-bold">
+              Get <span className="mx-1 text-amber-500 font-bold   ">20%</span>{" "}
+              Off Discount Coupon
+            </h1>
+            <p className="text-center sm:text-[18px] text-sm font-400">
+              by Subscribe our Newsletter
+            </p>
+          </div>
+          <div
+            data-aos="fade-right"
+            className="sm:w-[543px] w-[300px] h-[54px] flex mt-8 aos-init aos-animate"
+          >
+            <div className="flex-1 bg-white pl-4 flex space-x-2 items-center h-full focus-within:text-qyellow text-qblack">
+              <span>
+                <svg
+                  width={17}
+                  height={15}
+                  viewBox="0 0 17 15"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 14H2C1.4 14 1 13.6 1 13V2C1 1.4 1.4 1 2 1H15C15.6 1 16 1.4 16 2V13C16 13.6 15.6 14 15 14Z"
+                    stroke="currentColor"
+                    strokeMiterlimit={10}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M3 4L8.5 8.5L14 4"
+                    stroke="currentColor"
+                    strokeMiterlimit={10}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <input
+                type="email"
+                name="email"
+                className="w-full h-full focus:outline-none text-sm placeholder:text-xs placeholder:text-qblack text-qblack font-400 tracking-wider"
+                placeholder="EMAIL ADDRESS"
+              />
             </div>
-            <div
-              data-aos="fade-right"
-              className="sm:w-[543px] w-[300px] h-[54px] flex mt-8 aos-init aos-animate"
+            <button
+              type="button"
+              className="sm:w-[158px] w-[80px] h-full bg-amber-400 text-sm font-bold"
             >
-              <div className="flex-1 bg-white pl-4 flex space-x-2 items-center h-full focus-within:text-qyellow text-qblack">
-                <span>
-                  <svg
-                    width={17}
-                    height={15}
-                    viewBox="0 0 17 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M15 14H2C1.4 14 1 13.6 1 13V2C1 1.4 1.4 1 2 1H15C15.6 1 16 1.4 16 2V13C16 13.6 15.6 14 15 14Z"
-                      stroke="currentColor"
-                      strokeMiterlimit={10}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3 4L8.5 8.5L14 4"
-                      stroke="currentColor"
-                      strokeMiterlimit={10}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-                <input
-                  type="email"
-                  name="email"
-                  className="w-full h-full focus:outline-none text-sm placeholder:text-xs placeholder:text-qblack text-qblack font-400 tracking-wider"
-                  placeholder="EMAIL ADDRESS"
-                />
-              </div>
-              <button
-                type="button"
-                className="sm:w-[158px] w-[80px] h-full bg-amber-400 text-sm font-bold"
-              >
-                Get the Coupon
-              </button>
-            </div>
+              Get the Coupon
+            </button>
           </div>
         </div>
-
+      </div>
     </Layout>
   );
 }

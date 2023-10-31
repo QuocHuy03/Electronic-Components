@@ -8,7 +8,7 @@ import {
   ORDER_UPDATE,
 } from "./types";
 
-export const redirestPayment = (data) => {
+export const redirectPayment = (data) => {
   return async (dispatch) => {
     dispatch({
       type: ORDER_SUCCESS,

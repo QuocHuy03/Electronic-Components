@@ -11,7 +11,7 @@ import * as serviceWorker from './serviceWorker';
 import AppRouter from "./routes/AppRouter";
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
@@ -23,6 +23,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </Provider>
       </QueryClientProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 serviceWorker.unregister();

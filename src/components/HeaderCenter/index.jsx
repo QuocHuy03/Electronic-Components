@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import { AppContext } from "../../contexts/AppContextProvider";
 import { formatPrice } from "../../utils/fomatPrice";
+import { deleteToCartItem } from "../../stores/cart/actions";
+import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 
 export default function HeaderCenter() {
   const { carts } = useContext(AppContext);
+  const dispatch = useDispatch();
   const totalAmountAll = carts?.reduce(
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
     0
@@ -20,14 +24,14 @@ export default function HeaderCenter() {
         <div className="max-w-6xl mx-auto h-full">
           <div className="relative h-full">
             <div className="flex justify-between items-center h-full">
-              <div className="cursor-pointer">
+              <Link to={URL_CONSTANTS.HOME} className="cursor-pointer">
                 <img
                   width={152}
                   height={36}
                   src="https://shopo-next.vercel.app/assets/images/logo.svg"
                   alt="logo"
                 />
-              </div>
+              </Link>
               <div className="w-[517px] h-[44px]">
                 <div className="w-full h-full flex items-center border border-qgray-border bg-white search-com">
                   <div className="flex-1 h-full">
@@ -112,92 +116,102 @@ export default function HeaderCenter() {
                     }}
                   >
                     <div className="w-full h-full">
-                      <div className="product-items overflow-y-scroll">
-                        <ul>
-                          {carts?.length > 0 ? (
-                            carts?.map((item) => (
-                              <li className="w-full h-full flex">
-                                <div className="flex space-x-[6px] justify-center items-center px-4 my-[20px]">
-                                  <div className="w-[65px] h-full">
-                                    <img
-                                      src={item.product.image}
-                                      alt={item.product.nameProduct}
-                                      className="w-full h-full object-contain"
-                                    />
+                      {carts?.length > 0 ? (
+                        <React.Fragment>
+                          <div className="product-items overflow-y-scroll">
+                            <ul>
+                              {carts?.map((item) => (
+                                <li className="w-full h-full flex">
+                                  <div className="flex space-x-[6px] justify-center items-center px-4 my-[20px]">
+                                    <div className="w-[65px] h-full">
+                                      <img
+                                        src={item.product.image}
+                                        alt={item.product.nameProduct}
+                                        className="w-full h-full object-contain"
+                                      />
+                                    </div>
+                                    <div className="flex-1 h-full flex flex-col justify-center ">
+                                      <p className="title mb-2 text-[13px] font-600 text-black leading-4 line-clamp-2 hover:text-blue-600">
+                                        {item.product.nameProduct}
+                                      </p>
+                                      <p className="price">
+                                        <span className="offer-price text-red-500 font-600 text-[15px] ml-2">
+                                          {formatPrice(
+                                            item.product.price_has_dropped *
+                                              item.quantity
+                                          )}
+                                        </span>
+                                      </p>
+                                    </div>
                                   </div>
-                                  <div className="flex-1 h-full flex flex-col justify-center ">
-                                    <p className="title mb-2 text-[13px] font-600 text-black leading-4 line-clamp-2 hover:text-blue-600">
-                                      {item.product.nameProduct}
-                                    </p>
-                                    <p className="price">
-                                      <span className="offer-price text-red-500 font-600 text-[15px] ml-2">
-                                        {formatPrice(
-                                          item.product.price_has_dropped *
-                                            item.quantity
-                                        )}
-                                      </span>
-                                    </p>
-                                  </div>
-                                </div>
-                                <span
-                                  className="mt-[20px] mr-[15px] inline-flex cursor-pointer"
-                                  onClick={() => handleDeleteItem(item._id)}
-                                >
-                                  <svg
-                                    width={8}
-                                    height={8}
-                                    viewBox="0 0 8 8"
-                                    fill="none"
-                                    className="inline fill-current text-[#AAAAAA] hover:text-qred"
-                                    xmlns="http://www.w3.org/2000/svg"
+                                  <span
+                                    className="mt-[20px] mr-[15px] inline-flex cursor-pointer"
+                                    onClick={() => handleDeleteItem(item._id)}
                                   >
-                                    <path d="M7.76 0.24C7.44 -0.08 6.96 -0.08 6.64 0.24L4 2.88L1.36 0.24C1.04 -0.08 0.56 -0.08 0.24 0.24C-0.08 0.56 -0.08 1.04 0.24 1.36L2.88 4L0.24 6.64C-0.08 6.96 -0.08 7.44 0.24 7.76C0.56 8.08 1.04 8.08 1.36 7.76L4 5.12L6.64 7.76C6.96 8.08 7.44 8.08 7.76 7.76C8.08 7.44 8.08 6.96 7.76 6.64L5.12 4L7.76 1.36C8.08 1.04 8.08 0.56 7.76 0.24Z" />
-                                  </svg>
-                                </span>
-                              </li>
-                            ))
-                          ) : (
-                            <h1>Ko Có sản phẩm</h1>
-                          )}
-                        </ul>
-                      </div>
-                      <div className="w-full px-4 mt-[20px] mb-[12px]">
-                        <div className="h-[1px] bg-[#F0F1F3]" />
-                      </div>
-                      <div className="product-actions px-4 mb-[30px]">
-                        <div className="total-equation flex justify-between items-center mb-[28px]">
-                          <span className="text-[15px] font-500 text-black">
-                            Subtotal
-                          </span>
-                          <span className="text-[15px] font-500 text-red-500">
-                            {formatPrice(totalAmountAll)}
-                          </span>
-                        </div>
-                        <div className="product-action-btn">
-                          <div
-                            style={{
-                              backgroundColor: "#f0f1f3",
-                            }}
-                            className="flex items-center justify-center leading-3 font-bold  w-full h-[50px] mb-[10px] cursor-pointer"
-                          >
-                            <span>View Cart</span>
+                                    <svg
+                                      width={8}
+                                      height={8}
+                                      viewBox="0 0 8 8"
+                                      fill="none"
+                                      className="inline fill-current text-[#AAAAAA] hover:text-qred"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path d="M7.76 0.24C7.44 -0.08 6.96 -0.08 6.64 0.24L4 2.88L1.36 0.24C1.04 -0.08 0.56 -0.08 0.24 0.24C-0.08 0.56 -0.08 1.04 0.24 1.36L2.88 4L0.24 6.64C-0.08 6.96 -0.08 7.44 0.24 7.76C0.56 8.08 1.04 8.08 1.36 7.76L4 5.12L6.64 7.76C6.96 8.08 7.44 8.08 7.76 7.76C8.08 7.44 8.08 6.96 7.76 6.64L5.12 4L7.76 1.36C8.08 1.04 8.08 0.56 7.76 0.24Z" />
+                                    </svg>
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
                           </div>
-                          <div className="w-full h-[50px] cursor-pointer">
-                            <div className="bg-yellow-400 flex h-full w-full opacity-1 leading-0 font-bold items-center justify-center">
-                              <span className="text-sm">Checkout Now</span>
+                          <div className="w-full px-4 mt-[20px] mb-[12px]">
+                            <div className="h-[1px] bg-[#F0F1F3]" />
+                          </div>
+                          <div className="product-actions px-4 mb-[30px]">
+                            <div className="total-equation flex justify-between items-center mb-[28px]">
+                              <span className="text-[15px] font-500 text-black">
+                                Subtotal
+                              </span>
+                              <span className="text-[15px] font-500 text-red-500">
+                                {formatPrice(totalAmountAll)}
+                              </span>
+                            </div>
+                            <div className="product-action-btn">
+                              <Link to={URL_CONSTANTS.CART}
+                                style={{
+                                  backgroundColor: "#f0f1f3",
+                                }}
+                                className="flex items-center justify-center leading-3 font-bold  w-full h-[50px] mb-[10px] cursor-pointer"
+                              >
+                                <span>View Cart</span>
+                              </Link>
+                              <div className="w-full h-[50px] cursor-pointer">
+                                <Link to={`/checkout/${uuidv4()}`} className="bg-yellow-400 flex h-full w-full opacity-1 leading-0 font-bold items-center justify-center">
+                                  <span className="text-sm">Checkout Now</span>
+                                </Link>
+                              </div>
                             </div>
                           </div>
+                        </React.Fragment>
+                      ) : (
+                        <div className="p-4">
+                          <div className="flex justify-center items-center">
+                            <img
+                              width={200}
+                              src="https://i.imgur.com/7ebt4Bn.png"
+                              alt="empty_cart"
+                            />
+                          </div>
+                          <p className="text-sm flex justify-center items-center text-gray-400 pb-2">
+                            Giỏ hàng chưa có sản phẩm nào
+                          </p>
+                          <Link
+                            to="/filter/all-product"
+                            className="p-2 bg-yellow-400 items-center flex h-full w-full justify-center opacity-1 leaning-6"
+                          >
+                            Mua Sắm Ngay
+                          </Link>
                         </div>
-                      </div>
-                      <div className="w-full px-4 mt-[20px]">
-                        <div className="h-[1px] bg-[#F0F1F3]" />
-                      </div>
-                      <div className="flex justify-center py-[15px]">
-                        <p className="text-[13px] font-500 text-gray-400">
-                          Get Return within{" "}
-                          <span className="text-black">30 days</span>
-                        </p>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </div>

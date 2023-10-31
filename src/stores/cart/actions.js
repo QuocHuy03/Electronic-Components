@@ -25,7 +25,7 @@ export const getCart = (data) => {
     });
 
     try {
-      const response = await cartService.fetchCartByUserID(data);
+      const response = await cartService.fetchCartByUserID();
       if (response.status === true) {
         dispatch({
           type: GET_CART_SUCCESS,
