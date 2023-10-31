@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-10-31T16:07:26.130Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="R4a7c1EsxVMT5f-twVIF" version="22.0.8" type="github">
+<mxfile host="app.diagrams.net" modified="2023-10-31T16:11:44.218Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="qnSNawjl-YKNCrgKzuJi" version="22.0.8" type="github">
   <diagram name="Trang-1" id="CbWZottKJksRMsXl4OTU">
     <mxGraphModel dx="983" dy="425" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1920" math="0" shadow="0">
       <root>
@@ -65,10 +65,10 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-22" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;bannerService.fetchAllBanners()&lt;br&gt;(Lấy dữ tất cả dữ liệu banner)&lt;br&gt;&lt;/font&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="860" y="170" width="180" height="70" as="geometry" />
+          <mxGeometry x="780" y="110" width="180" height="70" as="geometry" />
         </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-30" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;bannerService.fetchDeleteBanner(data)&lt;br&gt;(Xóa dữ liệu banner phải cần [_id])&lt;br&gt;&lt;/font&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="940" y="232.5" width="230" height="85" as="geometry" />
+          <mxGeometry x="930" y="170" width="230" height="85" as="geometry" />
         </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-31" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0.16;exitY=0.55;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="X-_IwXTnalUpg8y82jki-30" target="X-_IwXTnalUpg8y82jki-17">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -86,9 +86,9 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-35" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;&amp;nbsp;bannerService.fetchUpdateBanner(isDataEdit._id, data)&lt;br&gt;(Cập nhật dữ liệu banner phải cần dữ liệu [id , data])&lt;br&gt;&lt;/font&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="830" y="402.5" width="260" height="85" as="geometry" />
+          <mxGeometry x="790" y="445" width="260" height="85" as="geometry" />
         </mxCell>
-        <mxCell id="X-_IwXTnalUpg8y82jki-36" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;exitX=0.25;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="X-_IwXTnalUpg8y82jki-35" target="X-_IwXTnalUpg8y82jki-17">
+        <mxCell id="X-_IwXTnalUpg8y82jki-36" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;exitX=0.4;exitY=0.1;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="X-_IwXTnalUpg8y82jki-35" target="X-_IwXTnalUpg8y82jki-17">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="848" y="437" as="sourcePoint" />
             <mxPoint x="811" y="340" as="targetPoint" />
