@@ -14,7 +14,7 @@ const fetchAllBlogs = async () => {
 const fetchBlogBySlug = async (slug) => {
   try {
     const response = await http.get(`/blog/getBlogBySlug/${slug}`);
-    return response;
+    return response.result;
   } catch (error) {
     console.error(error);
   }
