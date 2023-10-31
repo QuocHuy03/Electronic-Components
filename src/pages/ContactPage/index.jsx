@@ -22,7 +22,6 @@ export default function ContactPage() {
                         <a href="/contact">
                           <span className="mx-1 capitalize">contact</span>
                         </a>
-                        <span className="sperator">/</span>
                       </span>
                     </div>
                   </div>
@@ -78,10 +77,10 @@ export default function ContactPage() {
                         Phone
                       </p>
                       <p className="text-[15px] text-black leading-[30px] text-center">
-                        +(323) 9847 3847 383
+                        +(84) 965 788 523
                       </p>
                       <p className="text-[15px] text-black leading-[30px] text-center">
-                        +(434) 5466 5467 443
+                        +(84) 965 788 523
                       </p>
                     </div>
                     <div className="xl:w-1/2 w-full h-[196px] flex flex-col item justify-center bg-[#D3EFFF] p-5">
@@ -125,10 +124,7 @@ export default function ContactPage() {
                         Email
                       </p>
                       <p className="text-[15px] text-black leading-[30px] text-center">
-                        Demoemail@gmail.com
-                      </p>
-                      <p className="text-[15px] text-black leading-[30px] text-center">
-                        rafiqulislamsuvobd@gmail.com
+                        <b> GradTechShop@gmail.com </b>
                       </p>
                     </div>
                   </div>
@@ -155,18 +151,18 @@ export default function ContactPage() {
                           Address
                         </h1>
                         <p className="text-[15px] text-qblack leading-[30px]">
-                          4517 Washington Ave. Manchester, Road 2342, <br />
-                          Kentucky 39495
+                        137 Nguyễn Thị Thập, Thanh Khê Tây, Liên Chiểu, Đà Nẵng, Việt Nam
                         </p>
                       </div>
                     </div>
                     <div className="w-full h-[206px] mt-5">
-                      <iframe
-                        title="newWork"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.94539481518!2d-74.26675559025064!3d40.69739290398433!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sbd!4v1656755618576!5m2!1sen!2sbd"
-                        loading="lazy"
-                        style={{ border: 0, width: "100%", height: "100%" }}
-                      />
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3833.802589282688!2d108.16738507576034!3d16.07573073926259!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219b509a30cfb%3A0xb93a05e26b3b28ff!2zVHLGsOG7nW5nIENhbyDEkeG6s25nIEZQVCBQb2x5dGVjaG5pYw!5e0!3m2!1svi!2s!4v1698650822426!5m2!1svi!2s" 
+                    width={570} 
+                    height={250} 
+                    style={{border: 0}} 
+                    allowFullScreen loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade" />
+
                     </div>
                   </div>
                 </div>
@@ -204,9 +200,8 @@ export default function ContactPage() {
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                           <input
                             placeholder="Demo Name"
-                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full h-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                             id="first_name"
-                            defaultValue
                           />
                         </div>
                       </div>
@@ -221,10 +216,9 @@ export default function ContactPage() {
                         </label>
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                           <input
-                            placeholder="info@quomodosoft.com"
-                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full h-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                            placeholder="info@gmail.com"
+                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                             id="email"
-                            defaultValue
                           />
                         </div>
                       </div>
@@ -240,9 +234,9 @@ export default function ContactPage() {
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                           <input
                             placeholder="Your Subject here"
-                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full h-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                             id="subject"
-                            defaultValue
+
                           />
                         </div>
                       </div>
@@ -254,7 +248,7 @@ export default function ContactPage() {
                       <textarea
                         placeholder="Type your message here"
                         className="w-full h-[105px] focus:ring-0 focus:outline-none p-3 border border-qgray-border placeholder:text-sm"
-                        defaultValue={""}
+
                       />
                     </div>
                     <div>
@@ -267,68 +261,6 @@ export default function ContactPage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className="discount-banner w-full h-[307px] bg-cover flex justify-center items-center "
-          style={{
-            background:
-              'url("https://shopo-next.vercel.app/assets/images/discount-banner-1.jpg") 0% 0% / cover no-repeat',
-          }}
-        >
-          <div>
-            <div data-aos="fade-up" className="aos-init aos-animate">
-              <h1 className="sm:text-3xl text-xl font-700 text-qblack mb-2 text-center font-bold">
-                Get <span className="mx-1 text-amber-500 font-bold   ">20%</span> Off Discount
-                Coupon
-              </h1>
-              <p className="text-center sm:text-[18px] text-sm font-400">
-                by Subscribe our Newsletter
-              </p>
-            </div>
-            <div
-              data-aos="fade-right"
-              className="sm:w-[543px] w-[300px] h-[54px] flex mt-8 aos-init aos-animate"
-            >
-              <div className="flex-1 bg-white pl-4 flex space-x-2 items-center h-full focus-within:text-qyellow text-qblack">
-                <span>
-                  <svg
-                    width={17}
-                    height={15}
-                    viewBox="0 0 17 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M15 14H2C1.4 14 1 13.6 1 13V2C1 1.4 1.4 1 2 1H15C15.6 1 16 1.4 16 2V13C16 13.6 15.6 14 15 14Z"
-                      stroke="currentColor"
-                      strokeMiterlimit={10}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3 4L8.5 8.5L14 4"
-                      stroke="currentColor"
-                      strokeMiterlimit={10}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-                <input
-                  type="email"
-                  name="email"
-                  className="w-full h-full focus:outline-none text-sm placeholder:text-xs placeholder:text-qblack text-qblack font-400 tracking-wider"
-                  placeholder="EMAIL ADDRESS"
-                />
-              </div>
-              <button
-                type="button"
-                className="sm:w-[158px] w-[80px] h-full bg-amber-400 text-sm font-bold"
-              >
-                Get the Coupon
-              </button>
             </div>
           </div>
         </div>
