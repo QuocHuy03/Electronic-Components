@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-11-01T05:16:10.396Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="zhISqKOSTbY5CmgCtif1" version="22.0.8" type="github">
+<mxfile host="app.diagrams.net" modified="2023-11-01T05:19:07.111Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="mwcWYSuG0FO0SeChjdH9" version="22.0.8" type="github">
   <diagram name="Trang-1" id="CbWZottKJksRMsXl4OTU">
     <mxGraphModel dx="1156" dy="2420" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1920" math="0" shadow="0">
       <root>
@@ -64,6 +64,11 @@
             <mxPoint x="990" y="320" as="targetPoint" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="_X4Y5udXrDRVniKwlJAB-36" value="&lt;b&gt;Read&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="X-_IwXTnalUpg8y82jki-20">
+          <mxGeometry x="-0.1946" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-22" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;bannerService.fetchAllBanners()&lt;br&gt;(Lấy dữ tất cả dữ liệu banner)&lt;br&gt;&lt;/font&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="820" y="120" width="180" height="70" as="geometry" />
         </mxCell>
@@ -76,13 +81,23 @@
             <mxPoint x="590" y="360" as="targetPoint" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="_X4Y5udXrDRVniKwlJAB-33" value="&lt;b&gt;Delete&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="X-_IwXTnalUpg8y82jki-31">
+          <mxGeometry x="0.0911" y="-1" relative="1" as="geometry">
+            <mxPoint x="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-33" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;bannerService.fetchPostBanner(data)&lt;br&gt;(Thêm dữ liệu banner phải cần dữ liệu [data])&lt;br&gt;&lt;/font&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="880" y="317.5" width="260" height="85" as="geometry" />
+          <mxGeometry x="925" y="340" width="260" height="85" as="geometry" />
         </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-34" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.07;exitY=0.4;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="X-_IwXTnalUpg8y82jki-33" target="X-_IwXTnalUpg8y82jki-17" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="957" y="292" as="sourcePoint" />
             <mxPoint x="880" y="305" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_X4Y5udXrDRVniKwlJAB-32" value="&lt;b&gt;Create&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="X-_IwXTnalUpg8y82jki-34">
+          <mxGeometry x="0.0655" y="-1" relative="1" as="geometry">
+            <mxPoint x="8" y="5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-35" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;&amp;nbsp;bannerService.fetchUpdateBanner(isDataEdit._id, data)&lt;br&gt;(Cập nhật dữ liệu banner phải cần dữ liệu [id , data])&lt;br&gt;&lt;/font&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -92,6 +107,11 @@
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="848" y="437" as="sourcePoint" />
             <mxPoint x="811" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_X4Y5udXrDRVniKwlJAB-35" value="&lt;b&gt;Update&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="X-_IwXTnalUpg8y82jki-36">
+          <mxGeometry x="0.0235" y="-1" relative="1" as="geometry">
+            <mxPoint x="-1" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-38" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.96;exitY=0.7;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="X-_IwXTnalUpg8y82jki-33" target="X-_IwXTnalUpg8y82jki-44" edge="1">
@@ -111,12 +131,12 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-44" value="Folder Utils&lt;br&gt;(custom.env.ts)" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1320" y="320" width="130" height="80" as="geometry" />
+          <mxGeometry x="1300" y="322.5" width="130" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="X-_IwXTnalUpg8y82jki-46" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="X-_IwXTnalUpg8y82jki-44" target="X-_IwXTnalUpg8y82jki-52" edge="1">
+        <mxCell id="X-_IwXTnalUpg8y82jki-46" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="X-_IwXTnalUpg8y82jki-44" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="1160" y="340" as="sourcePoint" />
-            <mxPoint x="1500" y="360" as="targetPoint" />
+            <mxPoint x="1180" y="342.5" as="sourcePoint" />
+            <mxPoint x="1340" y="242.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="X-_IwXTnalUpg8y82jki-49" value="Trả về mã hóa của ảnh&lt;br&gt;(base64)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="X-_IwXTnalUpg8y82jki-46" vertex="1" connectable="0">
