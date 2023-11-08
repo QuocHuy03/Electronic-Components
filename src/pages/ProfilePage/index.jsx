@@ -227,13 +227,12 @@ export default function ProfilePage() {
                   </label>
                   <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                     <input
-                      placeholder="demoemial@gmail.com"
                       className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                       type="email"
                       name="email"
                       disabled
                       onChange={handleChangeInput}
-                      value={inputs.email}
+                      value={user?.email}
                     />
                   </div>
                 </div>
