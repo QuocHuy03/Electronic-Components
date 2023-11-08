@@ -17,6 +17,7 @@ export function AppContextProvider({ children }) {
   return (
     <AppContext.Provider
       value={{
+        accessToken,
         carts,
         user,
         order: orders,

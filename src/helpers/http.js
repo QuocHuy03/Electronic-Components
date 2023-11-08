@@ -57,11 +57,11 @@ class Http {
 
                 return this.huydev(originalRequest);
               } catch (error) {
-                history.push(`/auth` + URL_CONSTANTS.LOGIN);
+                history.push(URL_CONSTANTS.LOGIN);
               }
             } else {
               console.log("Refresh token not available.");
-              history.push(`/auth` + URL_CONSTANTS.LOGIN);
+              history.push(URL_CONSTANTS.LOGIN);
             }
           }
         }
