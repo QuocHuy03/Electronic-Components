@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import { useSelector } from "react-redux";
 import { categoryService } from "../../services/category.service";
+import HomePage from './../../pages/HomePage/index';
 
 
 export default function HeaderBottom() {
@@ -168,6 +169,7 @@ export default function HeaderBottom() {
                           isCategories?.map((item) => (
                     <li className="category-item">
                       <div className="flex justify-between items-center px-5 h-10 bg-white  transition-all duration-300 ease-in-out cursor-pointer text-qblack hover:bg-qyellow">
+                        <Link to={`/filter/${item.slugCategory}`}>
                         <div className="flex items-center space-x-6">
                           <span>
                             <img width={20} src={item.imageCategory} alt="" />
@@ -176,7 +178,7 @@ export default function HeaderBottom() {
                           {item.nameCategory}
                           </span>
                         </div>
-                  
+                        </Link>
                       </div>
                     </li>
                     ))
@@ -188,19 +190,18 @@ export default function HeaderBottom() {
               <div className="nav">
                 <ul className="nav-wrapper flex xl:space-x-10 space-x-5">
                   <li className="relative ">
+                    <Link to={URL_CONSTANTS.HOME}>
                     <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
                       <span>Homepage</span>
                     </span>
+                    </Link>
                   </li>
                   <li className="relative">
+                    <Link to={URL_CONSTANTS.FILTER}>
                     <span className="flex items-center text-sm font-600 cursor-pointer text-black transition duration-300">
                       <span>Shop</span>
                     </span>
-                  </li>
-                  <li className="relative">
-                    <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
-                      <span>Pages</span>
-                    </span>
+                    </Link>
                   </li>
                   <li>
                     <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
@@ -208,14 +209,18 @@ export default function HeaderBottom() {
                     </span>
                   </li>
                   <li>
+                    <Link to={URL_CONSTANTS.BLOG}>
                     <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
                       <span>Blog</span>
                     </span>
+                    </Link>
                   </li>
                   <li>
+                    <Link to={URL_CONSTANTS.CONTACT}>
                     <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
                       <span>Contact</span>
                     </span>
+                    </Link>                   
                   </li>
                 </ul>
               </div>

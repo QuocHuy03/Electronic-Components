@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { productService } from "../../services/product.service";
 import { Link } from "react-router-dom";
 import Loading from "../../components/Loading";
-import { categoryService } from './../../services/category.service';
-import { brandService } from './../../services/brand.service';
+import { categoryService } from "./../../services/category.service";
+import { brandService } from "./../../services/brand.service";
+import RangeComponent from "../../components/Range";
 import {
   calculateDiscountPercentage,
   formatPrice,
@@ -36,6 +37,12 @@ export default function FilterPage() {
       retryDelay: 1000,
     }
   );
+  const [priceRange, setPriceRange] = useState([1000000, 100000000]);
+
+  const handlePriceChange = (newValues) => {
+    setPriceRange(newValues);
+  };
+
   return (
     <Layout>
       <div className="w-full  pt-[30px] pb-[60px]">
@@ -66,7 +73,10 @@ export default function FilterPage() {
                           <Loading />
                         ) : (
                           isCategories?.map((item) => (
-                            <li key={item._id} className="item flex justify-between items-center mb-5">
+                            <li
+                              key={item._id}
+                              className="item flex justify-between items-center mb-5"
+                            >
                               <div className="flex space-x-[14px] items-center">
                                 <div>
                                   <div>
@@ -99,68 +109,41 @@ export default function FilterPage() {
                       </h1>
                     </div>
                     <div className="price-range mb-5">
-                      <div data-testid="element" className="range-slider">
-                        <input
-                          type="range"
-                          min={0}
-                          max={100}
-                          step={1}
-                          disabled
-                          defaultValue={30}
-                        />
-                        <input
-                          type="range"
-                          min={0}
-                          max={100}
-                          step={1}
-                          disabled
-                          defaultValue={60}
-                        />
-                        <div
-                          role="slider"
-                          className="range-slider__thumb"
-                          data-lower="true"
-                          aria-valuemin={0}
-                          aria-valuemax={100}
-                          aria-valuenow={30}
-                          aria-valuetext={30}
-                          aria-disabled="false"
-                          tabIndex={0}
-                          style={{ left: "calc(30% + 2.8px)" }}
-                        />
-                        <div
-                          role="slider"
-                          className="range-slider__thumb"
-                          data-upper="true"
-                          aria-valuemin={0}
-                          aria-valuemax={100}
-                          aria-valuenow={60}
-                          aria-valuetext={60}
-                          aria-disabled="false"
-                          tabIndex={0}
-                          style={{ left: "calc(60% + -1.4px)" }}
-                        />
-                        <div
-                          className="range-slider__range"
-                          style={{ left: "31.3333%", width: "28%" }}
+                      <div className="range-slider">
+                        <RangeComponent
+                          range={priceRange}
+                          onPriceChange={handlePriceChange}
                         />
                       </div>
                     </div>
-                    <p className="text-xs text-qblack font-400">
-                      Price: $30 - $60
+                    <p className="text-xs text-black font-400">
+                      Price:{" "}
+                      {priceRange[0].toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}{" "}
+                      -{" "}
+                      {priceRange[1].toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
                     </p>
                   </div>
+
                   <div className="filter-subject-item pb-10 border-b border-qgray-border mt-10">
                     <div className="subject-title mb-[30px]">
                       <h1 className="text-black text-base font-500">Brands</h1>
                     </div>
                     <div className="filter-items">
                       <ul>
-                      {loadingBrand ? (
+                        {loadingBrand ? (
                           <Loading />
                         ) : (
                           isBrands?.map((item) => (
-                            <li key={item._id} className="item flex justify-between items-center mb-5">
+                            <li
+                              key={item._id}
+                              className="item flex justify-between items-center mb-5"
+                            >
                               <div className="flex space-x-[14px] items-center">
                                 <div>
                                   <div>
@@ -183,7 +166,6 @@ export default function FilterPage() {
                             </li>
                           ))
                         )}
-                  
                       </ul>
                     </div>
                   </div>
@@ -211,7 +193,7 @@ export default function FilterPage() {
                       </div>
                     </div>
                   </div> */}
-             
+
                   <button
                     type="button"
                     className="w-10 h-10 fixed top-5 right-5 z-50 rounded lg:hidden flex justify-center items-center border border-qred text-qred"
@@ -248,22 +230,18 @@ export default function FilterPage() {
                   </div>
                   <div className="flex space-x-3 items-center">
                     <span className="font-400 text-[13px]">Sort by:</span>
-                    <div className="flex space-x-3 items-center border-b border-b-qgray">
-                      <span className="font-400 text-[13px] text-qgray">
-                        Default
-                      </span>
-                      <span>
-                        <svg
-                          width={10}
-                          height={6}
-                          viewBox="0 0 10 6"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M1 1L5 5L9 1" stroke="#9A9A9A" />
-                        </svg>
-                      </span>
-                    </div>
+
+                    <label for="underline_select" class="sr-only">
+                      Underline select
+                    </label>
+                    <select
+                      id="underline_select"
+                      class="block px-0  text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                    >
+                      <option selected>Vui lòng chọn</option>
+                      <option value="Cao">Cao ➞ Thấp</option>
+                      <option value="Thấp">Thấp ➞ Cao</option>
+                    </select>
                   </div>
                   <button
                     type="button"
@@ -437,68 +415,7 @@ export default function FilterPage() {
           </div>
         </div>
       </div>
-      <div
-        className="discount-banner w-full h-[307px] bg-cover flex justify-center items-center "
-        style={{
-          background:
-            'url("https://shopo-next.vercel.app/assets/images/discount-banner-1.jpg") 0% 0% / cover no-repeat',
-        }}
-      >
-        <div>
-          <div data-aos="fade-up" className="aos-init aos-animate">
-            <h1 className="sm:text-3xl text-xl font-700 text-qblack mb-2 text-center font-bold">
-              Get <span className="mx-1 text-amber-500 font-bold   ">20%</span>{" "}
-              Off Discount Coupon
-            </h1>
-            <p className="text-center sm:text-[18px] text-sm font-400">
-              by Subscribe our Newsletter
-            </p>
-          </div>
-          <div
-            data-aos="fade-right"
-            className="sm:w-[543px] w-[300px] h-[54px] flex mt-8 aos-init aos-animate"
-          >
-            <div className="flex-1 bg-white pl-4 flex space-x-2 items-center h-full focus-within:text-qyellow text-qblack">
-              <span>
-                <svg
-                  width={17}
-                  height={15}
-                  viewBox="0 0 17 15"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15 14H2C1.4 14 1 13.6 1 13V2C1 1.4 1.4 1 2 1H15C15.6 1 16 1.4 16 2V13C16 13.6 15.6 14 15 14Z"
-                    stroke="currentColor"
-                    strokeMiterlimit={10}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M3 4L8.5 8.5L14 4"
-                    stroke="currentColor"
-                    strokeMiterlimit={10}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-              <input
-                type="email"
-                name="email"
-                className="w-full h-full focus:outline-none text-sm placeholder:text-xs placeholder:text-qblack text-qblack font-400 tracking-wider"
-                placeholder="EMAIL ADDRESS"
-              />
-            </div>
-            <button
-              type="button"
-              className="sm:w-[158px] w-[80px] h-full bg-amber-400 text-sm font-bold"
-            >
-              Get the Coupon
-            </button>
-          </div>
-        </div>
-      </div>
+     
     </Layout>
   );
 }
