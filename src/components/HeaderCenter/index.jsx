@@ -263,7 +263,7 @@ export default function HeaderCenter() {
             <img
               width={152}
               height={36}
-              src="/assets/images/logo.svg"
+              src="https://i.imgur.com/gSR0WOr.jpg"
               alt="logo"
             />
           </div>
