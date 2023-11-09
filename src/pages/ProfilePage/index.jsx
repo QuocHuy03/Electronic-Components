@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import OrderStatus from "../../types/order.type";
 import { formatPrice } from "../../utils/fomatPrice";
 import { persistor } from "../../stores/app.store";
+import { Link } from "react-router-dom";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -655,13 +656,14 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                 Orders Processing
+                                Orders Processing
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
                                 {
                                   isOrders?.filter(
                                     (item) =>
-                                      item.orderStatus === OrderStatus.PROCESSING
+                                      item.orderStatus ===
+                                      OrderStatus.PROCESSING
                                   ).length
                                 }
                               </span>
@@ -684,10 +686,10 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                 Orders Shipped
+                                Orders Shipped
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
-                              {
+                                {
                                   isOrders?.filter(
                                     (item) =>
                                       item.orderStatus === OrderStatus.SHIPPED
@@ -721,10 +723,10 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                 Orders Delivered
+                                Orders Delivered
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
-                              {
+                                {
                                   isOrders?.filter(
                                     (item) =>
                                       item.orderStatus === OrderStatus.DELIVERED
@@ -841,12 +843,12 @@ export default function ProfilePage() {
                                           </span>
                                         </td>
                                         <td className="text-center py-4">
-                                          <button
-                                            type="button"
-                                            className="w-[116px] h-[46px] bg-yellow-400 text-black font-bold"
+                                          <Link
+                                            to={`/order/${item.code}`}
+                                            className="px-2 py-3 rounded-sm bg-yellow-400 text-black font-bold"
                                           >
                                             View Details
-                                          </button>
+                                          </Link>
                                         </td>
                                       </tr>
                                     );
