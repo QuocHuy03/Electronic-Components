@@ -60,8 +60,8 @@ export default function FilterPage() {
             </div>
             <div className="w-full lg:flex lg:space-x-[30px]">
               <div className="lg:w-[270px]">
-                <div className="filter-widget w-full fixed lg:relative left-0 top-0 h-screen z-10 lg:h-auto overflow-y-scroll lg:overflow-y-auto bg-gray-50 px-[30px] pt-[40px] mb-[30px]  hidden lg:block">
-                  <div className="filter-subject-item pb-10 border-b border-qgray-border">
+                <div className="filter-widget w-full fixed lg:relative left-0 top-0 h-screen z-10 lg:h-auto overflow-y-scroll lg:overflow-y-auto bg-white px-[30px] pt-[40px] mb-[30px]  hidden lg:block">
+                  <div className="filter-subject-item pb-10 border-b border-gray-border">
                     <div className="subject-title mb-[30px]">
                       <h1 className="text-black text-base font-500">
                         Product categories
@@ -90,7 +90,7 @@ export default function FilterPage() {
                                 <div>
                                   <label
                                     htmlFor={item.nameCategory}
-                                    className="text-xs font-black font-400 capitalize"
+                                    className="text-xs font-400 capitalize"
                                   >
                                     {item.nameCategory}
                                   </label>
@@ -157,7 +157,7 @@ export default function FilterPage() {
                                 <div>
                                   <label
                                     htmlFor={item.nameBrand}
-                                    className="text-xs font-black font-400 capitalize"
+                                    className="text-xs font-400 capitalize"
                                   >
                                     {item.nameBrand}
                                   </label>
@@ -231,12 +231,12 @@ export default function FilterPage() {
                   <div className="flex space-x-3 items-center">
                     <span className="font-400 text-[13px]">Sort by:</span>
 
-                    <label for="underline_select" class="sr-only">
+                    <label for="responsive_select" class="sr-only ">
                       Underline select
                     </label>
                     <select
                       id="underline_select"
-                      class="block px-0  text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                      class="block w-full px-4 py-1 text-sm text-gray-700 bg-gray-200 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring focus:border-blue-300 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600 dark:ring-gray-300 dark:focus:border-blue-300 "
                     >
                       <option selected>Vui lòng chọn</option>
                       <option value="Cao">Cao ➞ Thấp</option>
