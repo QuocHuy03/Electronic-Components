@@ -20,9 +20,9 @@ export default function Slider() {
   return (
 
         <>
-          <Swiper className="mySwiper">
+          <Swiper className="mySwiper" navigation>
             {data?.map((item) => (
-            <SwiperSlide><img src={item.imagePath} alt={item.nameImage} /></SwiperSlide>
+            <SwiperSlide><img src={item.imagePath} alt={item.nameImage}   /></SwiperSlide>
             ))}
           </Swiper>
         </>
