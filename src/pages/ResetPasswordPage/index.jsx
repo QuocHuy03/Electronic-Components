@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useLocation } from "react-router-dom";
 import { userService } from "../../services/user.service";
@@ -7,63 +7,72 @@ import createNotification from "../../utils/notification";
 export default function ResetPasswordPage() {
   const location = useLocation();
   const [isForgotPasswordToken, setIsForgotPasswordToken] = useState(null);
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const forgotPasswordToken = searchParams.get("forgot_password_token");
     setIsForgotPasswordToken(forgotPasswordToken);
   }, [location.search]);
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false);
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-  const togglePasswordConfirmVisibility = () => {
-    setPasswordConfirmVisible(!passwordConfirmVisible);
-  };
+
+  const togglePasswordVisibility = useCallback(() => {
+    setPasswordVisible((prevVisible) => !prevVisible);
+  }, []);
+
+  const togglePasswordConfirmVisibility = useCallback(() => {
+    setPasswordConfirmVisible((prevVisible) => !prevVisible);
+  }, []);
+
   const [isPassword, setIsPassword] = useState("");
   const [isPasswordConfirm, setIsPasswordConfirm] = useState("");
 
   const [validationErrors, setValidationErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+
   const [inputs, setInputs] = useState({
     password: "",
     confirm_password: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     if (name === "password") {
       setIsPassword(value);
     } else if (name === "confirm_password") {
       setIsPasswordConfirm(value);
     }
-    setInputs((inputs) => ({ ...inputs, [name]: value }));
-  };
+    setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-    let data = {
-      forgot_password_token: isForgotPasswordToken,
-      password: inputs.password,
-      confirm_password: inputs.confirm_password,
-    };
-    try {
-      const response = await userService.resetPassword(data);
-      if (response.status === true) {
-        setValidationErrors([]);
-        createNotification("success", "topRight", response.message);
-      } else {
-        if (response?.status === false) {
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setSubmitted(true);
+      const data = {
+        forgot_password_token: isForgotPasswordToken,
+        password: inputs.password,
+        confirm_password: inputs.confirm_password,
+      };
+      try {
+        const response = await resetPassword(data);
+        if (response.status === true) {
           setValidationErrors([]);
-          createNotification("error", "topRight", response.message);
+          createNotification("success", "topRight", response.message);
+        } else {
+          if (response?.status === false) {
+            setValidationErrors([]);
+            createNotification("error", "topRight", response.message);
+          }
+          setValidationErrors(response.errors);
         }
-        setValidationErrors(response.errors);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    },
+    [isForgotPasswordToken, inputs]
+  );
 
   return (
     <Layout>
@@ -639,7 +648,6 @@ export default function ResetPasswordPage() {
           </div>
         </div>
       </div>
-      
     </Layout>
   );
 }

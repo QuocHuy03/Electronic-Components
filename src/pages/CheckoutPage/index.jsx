@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Layout from "../../components/Layout";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../contexts/AppContextProvider";
@@ -28,16 +28,7 @@ export default function CheckoutPage() {
   const { carts, user } = useContext(AppContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { data: isPayments, isloading: loadingPayment } = useQuery(
-    ["payment"],
-    () => paymentService.fetchAllPayments(),
-    {
-      retry: 3,
-      retryDelay: 1000,
-    }
-  );
-
+  const history = useHistory();
   const [provinces, setProvinces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [districts, setDistricts] = useState([]);
@@ -48,47 +39,54 @@ export default function CheckoutPage() {
 
   const [inputs, setInputs] = useState(initialValues(user));
 
-  const handleClickPayment = (itemId) => {
-    setActiveItem(itemId);
-  };
+  const { data: isPayments, isloading: loadingPayment } = useQuery(
+    ["payment"],
+    () => paymentService.fetchAllPayments(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
 
-  // Event Handlers
-  const handleInputChange = (e) => {
+  const handleClickPayment = useCallback((itemId) => {
+    setActiveItem(itemId);
+  }, []);
+
+  const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setInputs((prevInputs) => ({
       ...prevInputs,
       [name]: value,
     }));
-  };
+  }, []);
 
-  const handleSelectProvince = (e) => {
+  const handleSelectProvince = useCallback((e) => {
     const selectedCity = e.target.value;
     setSelectedProvince(selectedCity);
     setInputs((prevInputs) => ({
       ...prevInputs,
       city: selectedCity,
     }));
-  };
+  }, []);
 
-  const handleSelectDistrict = (e) => {
+  const handleSelectDistrict = useCallback((e) => {
     const selectedDistrictValue = e.target.value;
     setSelectedDistrict(selectedDistrictValue);
     setInputs((prevInputs) => ({
       ...prevInputs,
       district: selectedDistrictValue,
     }));
-  };
+  }, []);
 
-  const handleSelectCommune = (e) => {
+  const handleSelectCommune = useCallback((e) => {
     const selectedCommuneValue = e.target.value;
     setSelectedCommune(selectedCommuneValue);
     setInputs((prevInputs) => ({
       ...prevInputs,
       commune: selectedCommuneValue,
     }));
-  };
+  }, []);
 
-  // Effects
   useEffect(() => {
     setProvinces(huydev.provinces);
     setDistricts(huydev.districts);
@@ -100,57 +98,69 @@ export default function CheckoutPage() {
     }
   }, [user]);
 
-  // Calculate total amount
-  const totalAmountAll = carts?.reduce(
-    (total, cart) => total + cart.product.price_has_dropped * cart.quantity,
-    0
+  const totalAmountAll = useMemo(
+    () =>
+      carts?.reduce(
+        (total, cart) => total + cart.product.price_has_dropped * cart.quantity,
+        0
+      ),
+    [carts]
   );
 
-  // filter number address
-
-  const filteredDistricts = districts?.filter(
-    (district) => district.province_id === Number(selectedProvince)
+  const filteredDistricts = useMemo(
+    () =>
+      districts?.filter(
+        (district) => district.province_id === Number(selectedProvince)
+      ),
+    [districts, selectedProvince]
   );
 
-  const filteredWards = wards?.filter(
-    (ward) => ward.district_id === Number(selectedDistrict)
+  const filteredWards = useMemo(
+    () =>
+      wards?.filter((ward) => ward.district_id === Number(selectedDistrict)),
+    [wards, selectedDistrict]
   );
 
-  // Payment Data
-  const products = carts?.map((cart) => ({
-    color: cart.color,
-    productID: cart.productID,
-    quantity: cart.quantity,
-  }));
+  const products = useMemo(
+    () =>
+      carts?.map((cart) => ({
+        color: cart.color,
+        productID: cart.productID,
+        quantity: cart.quantity,
+      })),
+    [carts]
+  );
 
+  const orderData = useMemo(
+    () => ({
+      code,
+      totalPrice: totalAmountAll,
+      paymentID: activeItem,
+      products,
+    }),
+    [code, totalAmountAll, activeItem, products]
+  );
 
-  const orderData = {
-    code,
-    totalPrice: totalAmountAll,
-    paymentID: activeItem,
-    products,
-  };
+  const handleSubmitOrder = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-  // Handle Submit Order
-  const handleSubmitOrder = async (e) => {
-    e.preventDefault();
+      const updateResponse = await userService.updateMe(inputs);
+      dispatch({
+        type: LOAD_CURRENT_LOGIN_USER_SUCCESS,
+        payload: updateResponse.user,
+      });
 
-    // Update user data
-    const updateResponse = await userService.updateMe(inputs);
-    dispatch({
-      type: LOAD_CURRENT_LOGIN_USER_SUCCESS,
-      payload: updateResponse.user,
-    });
+      const paymentResponse = await dispatch(redirectPayment(orderData));
 
-    // Dispatch payment action
-    const paymentResponse = await dispatch(redirectPayment(orderData));
-
-    if (paymentResponse && paymentResponse.paymentMethod === true) {
-      history.push(paymentResponse.result);
-    } else {
-      navigate(paymentResponse.result);
-    }
-  };
+      if (paymentResponse && paymentResponse.paymentMethod === true) {
+        history.push(paymentResponse.result);
+      } else {
+        navigate(paymentResponse.result);
+      }
+    },
+    [inputs, orderData, navigate, history]
+  );
 
   return (
     <Layout>

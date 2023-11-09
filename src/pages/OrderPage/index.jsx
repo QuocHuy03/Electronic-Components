@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { AppContext } from "../../contexts/AppContextProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { orders } from "../../stores/order/actions";
@@ -10,32 +16,43 @@ export default function OrderPage() {
   const { order } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
+  const queryParams = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
   const dispatch = useDispatch();
-  const paymentMethod = queryParams.get("payment");
-  const [isOrderStatus, setIsOrderStatus] = useState(false);
+  const paymentMethod = useMemo(
+    () => queryParams.get("payment"),
+    [queryParams]
+  );
 
-  const paymentMomo = {
-    partnerCode: queryParams.get("partnerCode"),
-    orderId: queryParams.get("orderId"),
-    requestId: queryParams.get("requestId"),
-    amount: queryParams.get("amount"),
-    orderInfo: queryParams.get("orderInfo"),
-    orderType: queryParams.get("orderType"),
-    transId: queryParams.get("transId"),
-    message: queryParams.get("message"),
-  };
+  const paymentMomo = useMemo(
+    () => ({
+      partnerCode: queryParams.get("partnerCode"),
+      orderId: queryParams.get("orderId"),
+      requestId: queryParams.get("requestId"),
+      amount: queryParams.get("amount"),
+      orderInfo: queryParams.get("orderInfo"),
+      orderType: queryParams.get("orderType"),
+      transId: queryParams.get("transId"),
+      message: queryParams.get("message"),
+    }),
+    [queryParams]
+  );
 
-  const paymentVnpay = {
-    vnp_Amount: queryParams.get("vnp_Amount"),
-    vnp_BankCode: queryParams.get("vnp_BankCode"),
-    vnp_BankTranNo: queryParams.get("vnp_BankTranNo"),
-    vnp_CardType: queryParams.get("vnp_CardType"),
-    vnp_OrderInfo: queryParams.get("vnp_OrderInfo"),
-    vnp_TransactionNo: queryParams.get("vnp_TransactionNo"),
-  };
+  const paymentVnpay = useMemo(
+    () => ({
+      vnp_Amount: queryParams.get("vnp_Amount"),
+      vnp_BankCode: queryParams.get("vnp_BankCode"),
+      vnp_BankTranNo: queryParams.get("vnp_BankTranNo"),
+      vnp_CardType: queryParams.get("vnp_CardType"),
+      vnp_OrderInfo: queryParams.get("vnp_OrderInfo"),
+      vnp_TransactionNo: queryParams.get("vnp_TransactionNo"),
+    }),
+    [queryParams]
+  );
 
-  const dispatchOrder = async () => {
+  const dispatchOrder = useCallback(async () => {
     const data = {
       ...order,
       ...(paymentMomo && paymentMomo.transId !== null ? { paymentMomo } : {}),
@@ -56,11 +73,11 @@ export default function OrderPage() {
       console.error(error);
       // navigate(`/checkout/${uuidv4()}`);
     }
-  };
+  }, [dispatch, order, paymentMomo, paymentVnpay, paymentMethod]);
 
   useEffect(() => {
     dispatchOrder();
-  }, []);
+  }, [dispatchOrder]);
 
   return (
     <Layout>

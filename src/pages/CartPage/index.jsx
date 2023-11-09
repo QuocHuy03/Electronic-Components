@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -15,14 +15,14 @@ import createNotification from "../../utils/notification";
 
 export default function CartPage() {
   const dispatch = useDispatch();
-  let { carts, user } = useContext(AppContext);
+  const { carts, user } = useContext(AppContext);
 
   const totalAmountAll = carts?.reduce(
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
     0
   );
 
-  const handleUpdateCart = async (item, operation) => {
+  const handleUpdateCart = useCallback(async (item, operation) => {
     const updatedItem = { ...item };
     const quantityCart = parseInt(updatedItem.quantity, 10);
     if (operation === "increment") {
@@ -36,18 +36,21 @@ export default function CartPage() {
     delete updatedItem._id;
     const response = await dispatch(updateToCart(updatedItem));
     if (response.status === true) {
+      // Xử lý logic thành công
     } else {
       createNotification("error", "topRight", response.message);
     }
-  };
+  }, [dispatch]);
 
-  const handleDeleteItem = async (item) => {
+  const handleDeleteItem = useCallback(async (item) => {
     const response = await dispatch(deleteToCartItem(item));
-  };
+    // Xử lý logic sau khi xóa một mục
+  }, [dispatch]);
 
-  const handleDeleteAll = async () => {
+  const handleDeleteAll = useCallback(async () => {
     const response = await dispatch(deleteToCartAll());
-  };
+    // Xử lý logic sau khi xóa tất cả mục
+  }, [dispatch]);
   return (
     <Layout>
       <div className="w-full pt-0 pb-0">

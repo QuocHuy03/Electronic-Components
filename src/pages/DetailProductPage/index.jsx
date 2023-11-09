@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Layout from "../../components/Layout";
 import { productService } from "../../services/product.service";
 import { commentService } from "../../services/comment.service";
@@ -8,7 +8,6 @@ import { addToCart } from "../../stores/cart/actions";
 import createNotification from "../../utils/notification";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
-
 import {
   calculateDiscountPercentage,
   formatPrice,
@@ -17,7 +16,8 @@ import { AppContext } from "../../contexts/AppContextProvider";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 
 export default function DetailProductPage() {
-  let { accessToken } = useContext(AppContext);
+  const { accessToken } = useContext(AppContext);
+
   const [isSeeMore, setIsSeeMore] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isReview, setIsReview] = useState(true);
@@ -29,26 +29,30 @@ export default function DetailProductPage() {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
 
-  const toggleSeeMore = () => {
+  const toggleSeeMore = useCallback(() => {
     setIsSeeMore(!isSeeMore);
-  };
-  const toggleReview = () => {
-    setIsReview(!isReview);
-  };
-  const handleRating = (rate) => {
-    setRating(rate);
-  };
+  }, [isSeeMore]);
 
-  const handleImageClick = (index) => {
+  const toggleReview = useCallback(() => {
+    setIsReview(!isReview);
+  }, [isReview]);
+
+  const handleRating = useCallback((rate) => {
+    setRating(rate);
+  }, []);
+
+  const handleImageClick = useCallback((index) => {
     setSelectedImageIndex(index);
-  };
+  }, []);
 
   const { slug } = useParams();
   const [isSlug, setSlug] = useState(null);
   const [validationErrors, setValidationErrors] = useState([]);
+
   const [inputs, setInputs] = useState({
     comment: "",
   });
+
   const [detailProduct, setDetailProduct] = useState(null);
   const [isComment, setIsComment] = useState(null);
 
@@ -58,10 +62,14 @@ export default function DetailProductPage() {
     }
   }, [slug]);
 
+  const queryKey = useMemo(() => ["edit-product", isSlug], [isSlug]);
+
   const { data: detailProductData, isLoading: isDetailProductLoading } =
-    useQuery({
-      queryKey: ["edit-product", isSlug],
-      queryFn: () => productService.fetchProductBySlug(isSlug),
+    useQuery(queryKey, async () => {
+      if (isSlug) {
+        return await productService.fetchProductBySlug(isSlug);
+      }
+    }, {
       staleTime: 500,
       enabled: !!isSlug,
     });
@@ -75,10 +83,9 @@ export default function DetailProductPage() {
     }
   );
 
-  const filteredRelated =
-    related?.filter(
-      (huydev) => huydev.slugProduct !== detailProductData?.slugProduct
-    ) ?? [];
+  const filteredRelated = useMemo(() => related?.filter(
+    (huydev) => huydev.slugProduct !== detailProductData?.slugProduct
+  ) ?? [], [related, detailProductData]);
 
   useEffect(() => {
     if (detailProductData) {
@@ -86,7 +93,7 @@ export default function DetailProductPage() {
     }
   }, [detailProductData]);
 
-  const fetchCommentData = async () => {
+  const fetchCommentData = useCallback(async () => {
     if (detailProduct) {
       try {
         const commentData = await commentService.fetchByProductComments(
@@ -97,33 +104,30 @@ export default function DetailProductPage() {
         console.error("Error fetching comment data:", error);
       }
     }
-  };
-  useEffect(() => {
-    fetchCommentData();
   }, [detailProduct]);
 
+  useEffect(() => {
+    fetchCommentData();
+  }, [detailProduct, fetchCommentData]);
+
   // tổng, trung bình đánh giá
-  const totalRating = isComment?.reduce(
+  const totalRating = useMemo(() => isComment?.reduce(
     (total, comment) => total + parseInt(comment.rating),
     0
-  );
-  const averageRating = totalRating / isComment?.length;
+  ), [isComment]);
 
-  const handleColorClick = (color) => {
+  const averageRating = useMemo(() => totalRating / isComment?.length, [totalRating, isComment]);
+
+  const handleColorClick = useCallback((color) => {
     if (color === "") {
       setShowColorError(true);
     } else {
       setSelectedColor(color);
       setShowColorError(false);
     }
-  };
-  // useEffect(() => {
-  //   if (detailProduct && detailProduct?.colors && detailProduct?.colors.length > 0) {
-  //     setSelectedColor(detailProduct?.colors[0].nameColor);
-  //   }
-  // }, [detailProduct]);
+  }, []);
 
-  const buyCart = async (product) => {
+  const buyCart = useCallback(async (product) => {
     if (!selectedColor) {
       setShowColorError(true);
       return;
@@ -144,14 +148,14 @@ export default function DetailProductPage() {
     } else {
       createNotification("error", "topRight", response.message);
     }
-  };
+  }, [selectedColor, accessToken, dispatch, navigate, quantity]);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setInputs((inputs) => ({ ...inputs, [name]: value }));
-  };
+  }, []);
 
-  const handleComment = async (e) => {
+  const handleComment = useCallback(async (e) => {
     e.preventDefault();
     let data = {
       rating: rating,
@@ -178,20 +182,22 @@ export default function DetailProductPage() {
     } catch (error) {
       console.log(error);
     }
-  };
-  const increaseQuantity = () => {
-    setQuantity(quantity + 1);
-  };
+  }, [rating, inputs, detailProduct, fetchCommentData]);
 
-  const decreaseQuantity = () => {
+  const increaseQuantity = useCallback(() => {
+    setQuantity(quantity + 1);
+  }, [quantity]);
+
+  const decreaseQuantity = useCallback(() => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
     }
-  };
+  }, [quantity]);
 
-  const handleTabClick = (index) => {
+  const handleTabClick = useCallback((index) => {
     setActiveTab(index);
-  };
+  }, []);
+
 
   return (
     <Layout>

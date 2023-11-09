@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import huydev from "../../json/address.json";
@@ -56,15 +56,18 @@ export default function ProfilePage() {
     }));
   };
 
-  const handleChangePassword = async (e) => {
-    let data = {
+  const handleChangePasswordData = useMemo(() => {
+    return {
       old_password: inputChangePass.old_password,
       password: inputChangePass.password,
       confirm_password: inputChangePass.confirm_password,
     };
+  }, [inputChangePass]);
+
+  const handleChangePassword = useCallback(async (e) => {
     e.preventDefault();
     try {
-      const response = await userService.changePassword(data);
+      const response = await userService.changePassword(handleChangePasswordData);
       if (response.status === true) {
         setValidationErrors([]);
         createNotification("success", "topRight", response.message);
@@ -79,7 +82,8 @@ export default function ProfilePage() {
     } catch (error) {
       console.error("An error occurred:", error);
     }
-  };
+  }, [dispatch, refreshToken, handleChangePasswordData]);
+  
 
   const handleCancel = () => {
     // Reset the form
@@ -131,38 +135,44 @@ export default function ProfilePage() {
       }
     }, [user]);
 
-    const handleSelectProvince = (e) => {
+    const handleSelectProvince = useCallback((e) => {
       setSelectedProvince(e.target.value);
-
       setInputs((prevInputs) => ({
         ...prevInputs,
         city: e.target.value,
       }));
-    };
-
-    const handleSelectDistrict = (e) => {
+    }, []);
+    
+    const handleSelectDistrict = useCallback((e) => {
       setSelectedDistrict(e.target.value);
       setInputs((prevInputs) => ({
         ...prevInputs,
         district: e.target.value,
       }));
-    };
-
-    const handleSelectCommune = (e) => {
+    }, []);
+    
+    const handleSelectCommune = useCallback((e) => {
       setSelectedCommune(e.target.value);
       setInputs((prevInputs) => ({
         ...prevInputs,
         commune: e.target.value,
       }));
-    };
+    }, []);
+    
+    const filteredDistricts = useMemo(() => {
+      return districts?.filter(
+        (district) => district.province_id === Number(selectedProvince)
+      );
+    }, [districts, selectedProvince]);
+    
+    const filteredWards = useMemo(() => {
+      return wards?.filter(
+        (ward) => ward.district_id === Number(selectedDistrict)
+      );
+    }, [wards, selectedDistrict]);
 
-    const filteredDistricts = districts?.filter(
-      (district) => district.province_id === Number(selectedProvince)
-    );
+    
 
-    const filteredWards = wards?.filter(
-      (ward) => ward.district_id === Number(selectedDistrict)
-    );
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
@@ -180,6 +190,7 @@ export default function ProfilePage() {
         console.error("An error occurred:", error);
       }
     };
+    
     return (
       <form onSubmit={handleSubmit}>
         <div className="flex space-x-8">

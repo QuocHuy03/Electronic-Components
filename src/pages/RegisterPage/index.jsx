@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,15 @@ import { URL_CONSTANTS } from "../../constants/url.constants";
 import { history } from "../../helpers/history";
 import { register } from "../../stores/authentication/actions";
 import createNotification from "../../utils/notification";
+
+const initialValues = {
+  fullname: "",
+  username: "",
+  email: "",
+  password: "",
+  confirm_password: "",
+};
+
 
 export default function RegisterPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -29,19 +38,11 @@ export default function RegisterPage() {
 
   const navigate = useNavigate();
   const [validationErrors, setValidationErrors] = useState([]);
-  const [inputs, setInputs] = useState({
-    fullname: "",
-    username: "",
-    email: "",
-    password: "",
-    confirm_password: "",
-  });
+  const [inputs, setInputs] = useState(initialValues);
   const [submitted, setSubmitted] = useState(false);
 
   const loading = useSelector((state) => state.auth.loading);
   const accessToken = useSelector((state) => state.auth.accessToken);
-
-  const { fullname, username, email, password, confirm_password } = inputs;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,39 +51,40 @@ export default function RegisterPage() {
     }
   }, [dispatch, accessToken]);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setInputs((inputs) => ({ ...inputs, [name]: value }));
-  };
+    setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-    let data = {
-      fullname,
-      username,
-      email,
-      password: isPassword,
-      confirm_password: isPasswordConfirm,
-    };
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setSubmitted(true);
+      let data = {
+        ...inputs,
+        password: isPassword,
+        confirm_password: isPasswordConfirm,
+      };
 
-    try {
-      const response = await dispatch(register(data));
-      if (response.status === true) {
-        setValidationErrors([]);
-        createNotification("success", "topRight", response.message);
-        navigate(URL_CONSTANTS.LOGIN);
-      } else {
-        if (response.response?.status === false) {
+      try {
+        const response = await dispatch(register(data));
+        if (response.status === true) {
           setValidationErrors([]);
-          createNotification("error", "topRight", response.response.message);
+          createNotification("success", "topRight", response.message);
+          navigate(URL_CONSTANTS.LOGIN);
+        } else {
+          if (response.response?.status === false) {
+            setValidationErrors([]);
+            createNotification("error", "topRight", response.response.message);
+          }
+          setValidationErrors(response.response.errors);
         }
-        setValidationErrors(response.response.errors);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    },
+    [dispatch, isPassword, isPasswordConfirm, inputs, navigate]
+  );
   return (
     <Layout>
       <div className="w-full  pt-0 pb-0">
