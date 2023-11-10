@@ -243,104 +243,46 @@ export default function FilterPage() {
             </div>
             <div className="w-full lg:flex lg:space-x-[30px]">
               <div className="lg:w-[270px]">
-                <div className="filter-widget w-full fixed lg:relative left-0 top-0 h-screen z-10 lg:h-auto overflow-y-scroll lg:overflow-y-auto bg-white px-[30px] pt-[40px] mb-[30px]  hidden lg:block">
-                  <div className="filter-subject-item pb-10 border-b border-gray-border mt-10">
-                    <h3 className="text-lg font-semibold">Bộ Lọc</h3>
-                    <hr className="my-4" />
-                    <div className="flex flex-wrap gap-2">
-                      {Object.entries(filters).map(([key, value]) =>
-                        value && key !== "sorts" && key !== "prices" ? (
-                          <div key={key}>
-                            {Array.isArray(value)
-                              ? value.map((item, index) => (
-                                  <div
-                                    className="opacity-1 inline-flex items-center px-2 bg-[rgb(255, 255, 255)] h-[24px] rounded-xl border-solid border-[rgb(210, 210, 210)]"
-                                    key={index + 1}
-                                  >
-                                    <span
-                                      className="css-cbubas"
-                                      style={{ cursor: "pointer" }}
-                                    >
-                                      <div
-                                        type="caption"
-                                        color="textPrimary"
-                                        className="capitalize"
-                                      >
-                                        {item}
-                                      </div>
-                                      <svg
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        size={16}
-                                        className="css-9w5ue6"
-                                        height={16}
-                                        width={16}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() =>
-                                          handleFilterChange(key, item)
-                                        }
-                                      >
-                                        <path
-                                          d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
-                                          fill="#DFDFE6"
-                                        />
-                                        <path
-                                          fillRule="evenodd"
-                                          clipRule="evenodd"
-                                          d="M9.90045 8.64594C9.60755 8.35305 9.13268 8.35305 8.83979 8.64594C8.54689 8.93883 8.54689 9.41371 8.83979 9.7066L11.0765 11.9433L8.83997 14.1798C8.54707 14.4727 8.54707 14.9476 8.83997 15.2405C9.13286 15.5334 9.60773 15.5334 9.90063 15.2405L12.1371 13.004L14.3737 15.2405C14.6666 15.5334 15.1414 15.5334 15.4343 15.2405C15.7272 14.9476 15.7272 14.4727 15.4343 14.1798L13.1978 11.9433L15.4345 9.7066C15.7274 9.41371 15.7274 8.93883 15.4345 8.64594C15.1416 8.35305 14.6667 8.35305 14.3738 8.64594L12.1371 10.8826L9.90045 8.64594Z"
-                                          fill="white"
-                                        />
-                                      </svg>
-                                    </span>
+                <div className="filter-widget w-full fixed lg:relative left-0 top-0 h-screen z-10 lg:h-auto overflow-y-scroll lg:overflow-y-auto bg-gray-50 px-[30px] pt-[40px] mb-[30px]  hidden lg:block">
+                  <div className="filter-subject-item pb-10 border-b border-qgray-border">
+                    <div className="subject-title mb-[30px]">
+                      <h1 className="text-black text-base font-500">
+                        Product categories
+                      </h1>
+                    </div>
+                    <div className="filter-items">
+                      <ul>
+                        {loadingCategory ? (
+                          <Loading />
+                        ) : (
+                          isCategories?.map((item) => (
+                            <li
+                              key={item._id}
+                              className="item flex justify-between items-center mb-5"
+                            >
+                              <div className="flex space-x-[14px] items-center">
+                                <div>
+                                  <div>
+                                    <input
+                                      type="checkbox"
+                                      name={item.nameCategory}
+                                      id={item.nameCategory}
+                                    />
                                   </div>
-                                ))
-                              : value.split(",").map((item, index) => (
-                                  <div
-                                    className="opacity-1 inline-flex items-center px-2 bg-[rgb(255, 255, 255)] h-[24px] rounded-xl border-solid border-[rgb(210, 210, 210)]"
-                                    key={`${key}_${item}_${index}`}
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor={item.nameCategory}
+                                    className="text-xs font-black font-400 capitalize"
                                   >
-                                    <span
-                                      className="css-cbubas"
-                                      style={{ cursor: "pointer" }}
-                                    >
-                                      <div
-                                        type="caption"
-                                        color="textPrimary"
-                                        className="capitalize"
-                                      >
-                                        {item}
-                                      </div>
-                                      <svg
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        size={16}
-                                        className="css-9w5ue6"
-                                        height={16}
-                                        width={16}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() =>
-                                          handleFilterChange(key, item)
-                                        }
-                                      >
-                                        <path
-                                          d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
-                                          fill="#DFDFE6"
-                                        />
-                                        <path
-                                          fillRule="evenodd"
-                                          clipRule="evenodd"
-                                          d="M9.90045 8.64594C9.60755 8.35305 9.13268 8.35305 8.83979 8.64594C8.54689 8.93883 8.54689 9.41371 8.83979 9.7066L11.0765 11.9433L8.83997 14.1798C8.54707 14.4727 8.54707 14.9476 8.83997 15.2405C9.13286 15.5334 9.60773 15.5334 9.90063 15.2405L12.1371 13.004L14.3737 15.2405C14.6666 15.5334 15.1414 15.5334 15.4343 15.2405C15.7272 14.9476 15.7272 14.4727 15.4343 14.1798L13.1978 11.9433L15.4345 9.7066C15.7274 9.41371 15.7274 8.93883 15.4345 8.64594C15.1416 8.35305 14.6667 8.35305 14.3738 8.64594L12.1371 10.8826L9.90045 8.64594Z"
-                                          fill="white"
-                                        />
-                                      </svg>
-                                    </span>
-                                  </div>
-                                ))}
-                          </div>
-                        ) : null
-                      )}
+                                    {item.nameCategory}
+                                  </label>
+                                </div>
+                              </div>
+                            </li>
+                          ))
+                        )}
+                      </ul>
                     </div>
                   </div>
                   <div className="filter-subject-item pb-10 border-b border-qgray-border mt-10">
@@ -473,12 +415,14 @@ export default function FilterPage() {
                     </p>
                   </div>
                   <div className="flex space-x-3 items-center">
-                    <span className="font-400 text-[13px]">Sort</span>
+                    <span className="font-400 text-[13px]">Sort by:</span>
+
+                    <label for="underline_select" class="sr-only">
+                      Underline select
+                    </label>
                     <select
-                      onChange={(e) =>
-                        handleFilterChange("sorts", e.target.value)
-                      }
-                      class="block w-full px-4 py-1 text-sm  border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring focus:border-blue-300 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600 dark:ring-gray-300 dark:focus:border-blue-300 "
+                      id="underline_select"
+                      class="block px-0  text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                     >
                       <option selected>Vui lòng chọn</option>
                       {sort?.map((item, index) => (

@@ -29,6 +29,7 @@ export default function LoginPage() {
     setPasswordVisible((prevVisible) => !prevVisible);
   }, []);
 
+
   const [isPassword, setIsPassword] = useState("");
   const handlePasswordChange = useCallback((e) => {
     setIsPassword(e.target.value);
@@ -86,7 +87,6 @@ export default function LoginPage() {
     },
     [dispatch, navigate, redirectTo, email, isPassword]
   );
-
 
   return (
     <Layout>

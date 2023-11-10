@@ -8,11 +8,13 @@ import createNotification from "../../utils/notification";
 export default function ResetPasswordPage() {
   const location = useLocation();
   const [isForgotPasswordToken, setIsForgotPasswordToken] = useState(null);
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const forgotPasswordToken = searchParams.get("forgot_password_token");
     setIsForgotPasswordToken(forgotPasswordToken);
   }, [location.search]);
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false);
 
@@ -30,6 +32,7 @@ export default function ResetPasswordPage() {
 
   const [validationErrors, setValidationErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+
   const [inputs, setInputs] = useState({
     password: "",
     confirm_password: "",

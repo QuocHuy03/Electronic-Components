@@ -52,6 +52,7 @@ export default function RegisterPage() {
   }, [dispatch, accessToken]);
 
 
+
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));

@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+
 import Layout from "../../components/Layout";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../contexts/AppContextProvider";
@@ -53,11 +47,6 @@ export default function CheckoutPage() {
     }
   );
 
-  const handleClickPayment = (itemId) => {
-    setActiveItem(itemId);
-  };
-
-  // Event Handlers
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setInputs((prevInputs) => ({
@@ -93,7 +82,6 @@ export default function CheckoutPage() {
     }));
   }, []);
 
-  // Effects
   useEffect(() => {
     setProvinces(huydev.provinces);
     setDistricts(huydev.districts);

@@ -14,6 +14,7 @@ import { addToCart } from "../../stores/cart/actions";
 import createNotification from "../../utils/notification";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
+import './style.css'
 import {
   calculateDiscountPercentage,
   formatPrice,
@@ -23,6 +24,7 @@ import { URL_CONSTANTS } from "../../constants/url.constants";
 
 export default function DetailProductPage() {
   const { accessToken } = useContext(AppContext);
+
   const [isSeeMore, setIsSeeMore] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isReview, setIsReview] = useState(true);
@@ -110,6 +112,7 @@ export default function DetailProductPage() {
         console.error("Error fetching comment data:", error);
       }
     }
+
   }, [detailProduct]);
 
   useEffect(() => {
@@ -135,6 +138,7 @@ export default function DetailProductPage() {
     fetchCommentData();
   }, [detailProduct]);
 
+
   const handleColorClick = useCallback((color) => {
     if (color === "") {
       setShowColorError(true);
@@ -143,12 +147,6 @@ export default function DetailProductPage() {
       setShowColorError(false);
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (detailProduct && detailProduct?.colors && detailProduct?.colors.length > 0) {
-  //     setSelectedColor(detailProduct?.colors[0].nameColor);
-  //   }
-  // }, [detailProduct]);
 
   const buyCart = useCallback(
     async (product) => {
@@ -435,34 +433,14 @@ export default function DetailProductPage() {
                                 </button>
                               </div>
                             </div>
-                            <div className="w-[60px] h-full flex justify-center items-center border border-qgray-border">
-                              <button type="button">
-                                <span>
-                                  <svg
-                                    width={24}
-                                    height={24}
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M17 1C14.9 1 13.1 2.1 12 3.7C10.9 2.1 9.1 1 7 1C3.7 1 1 3.7 1 7C1 13 12 22 12 22C12 22 23 13 23 7C23 3.7 20.3 1 17 1Z"
-                                      stroke="#D5D5D5"
-                                      strokeWidth={2}
-                                      strokeMiterlimit={10}
-                                      strokeLinecap="square"
-                                    />
-                                  </svg>
-                                </span>
-                              </button>
-                            </div>
+
                             <div className="flex-1 h-full">
                               <button
                                 type="button"
                                 onClick={() => buyCart(detailProduct)}
-                                className="bg-black text-white text-sm font-semibold w-full h-full"
+                                className="bg-black text-white text-sm font-semibold w-full h-full rounded-lg"
                               >
-                                Add To Cart
+                                Thêm vào giỏ hàng
                               </button>
                             </div>
                           </div>
@@ -574,7 +552,7 @@ export default function DetailProductPage() {
                           activeTab === 0 ? "border-yellow-400 text-black" : ""
                         }`}
                       >
-                        Description
+                        Mô tả sản phẩm
                       </span>
                     </li>
                     <li onClick={() => handleTabClick(1)}>
@@ -583,7 +561,7 @@ export default function DetailProductPage() {
                           activeTab === 1 ? "border-yellow-400 text-black" : ""
                         }`}
                       >
-                        Reviews
+                        Đánh giá sản phẩm
                       </span>
                     </li>
                     <li onClick={() => handleTabClick(2)}>
@@ -592,7 +570,7 @@ export default function DetailProductPage() {
                           activeTab === 2 ? "border-yellow-400 text-black" : ""
                         }`}
                       >
-                        Seller Info
+                        Thông số sản phẩm
                       </span>
                     </li>
                   </ul>
@@ -616,7 +594,7 @@ export default function DetailProductPage() {
                         className="w-full tab-content-item aos-init aos-animate"
                       >
                         <h6 className="text-[18px] font-medium text-qblack mb-2">
-                          Reviews
+                          Bình Luận
                         </h6>
                         <div className="w-full">
                           <div className="review-wrapper w-full">
@@ -625,11 +603,14 @@ export default function DetailProductPage() {
                                 {isComment?.map((item, index) => (
                                   <div
                                     key={index}
-                                    className="comment-item bg-white mb-2.5"
+
+                                    className="comment-item bg-white mb-2.5 rounded-2xl"
+
+
                                   >
                                     <div className="comment-author flex justify-between items-center mb-3">
-                                      <div className="flex space-x-3 items-center">
-                                        <div className="w-[50px] h-[50px] rounded-full overflow-hidden relative">
+                                      <div className="flex space-x-3 items-center mt-3 ml-3">
+                                        <div className="w-[40px] h-[40px] rounded-full overflow-hidden relative">
                                           <span
                                             style={{
                                               boxSizing: "border-box",
@@ -680,7 +661,7 @@ export default function DetailProductPage() {
                                           </p>
                                         </div>
                                       </div>
-                                      <div className="flex items-center space-x-2">
+                                      <div className="flex items-center space-x-2 mr-5">
                                         <div className="flex">
                                           {Array.from(
                                             { length: item.rating },
@@ -707,6 +688,7 @@ export default function DetailProductPage() {
                                         </span>
                                       </div>
                                     </div>
+
 
                                     <div className="comment">
                                       <p className="text-[15px] text-gray leading-7 text-normal">
@@ -783,13 +765,16 @@ export default function DetailProductPage() {
                                       </div>
 <<<<<<< HEAD
                                     </div> */}
+
                                   </div>
                                 ))}
                               </div>
                               <div className="w-full flex justify-center">
                                 <button
                                   type="button"
-                                  className="bg-black text-white w-[300px] h-[50px] text-sm font-semibold"
+
+                                  className="bg-black text-white w-[170px] h-[50px] text-sm font-semibold rounded-3xl"
+
                                 >
                                   Load More
                                 </button>
@@ -800,7 +785,7 @@ export default function DetailProductPage() {
                               className="write-review w-full"
                             >
                               <h1 className="text-2xl font-medium text-qblack mb-5">
-                                Write Your Reviews
+                                Đánh giá và nhận xét
                               </h1>
                               <div className="flex space-x-1 items-center mb-[30px]">
                                 <div className="star-rating flex">
@@ -934,7 +919,7 @@ export default function DetailProductPage() {
                                 <div className="flex justify-end">
                                   <button
                                     type="submit"
-                                    className="bg-black text-white w-[300px] h-[50px] flex justify-center"
+                                    className="bg-black text-white w-[200px] h-[50px] flex justify-center rounded-3xl"
                                   >
                                     <span className="flex space-x-1 items-center h-full">
                                       <span className="text-sm font-semibold">
@@ -957,11 +942,14 @@ export default function DetailProductPage() {
                       >
                         <div className="saller-info-wrapper w-full">
                           <div className="items-center flex justify-center">
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: detailProduct?.specificationsProduct,
-                              }}
-                            ></div>
+                            <div className="pd-spec-holder ">
+                              <div
+                                className="tlqcontent "
+                                dangerouslySetInnerHTML={{
+                                  __html: detailProduct?.specificationsProduct,
+                                }}
+                              ></div>
+                            </div>
                           </div>
                         </div>
                       </div>
