@@ -244,47 +244,7 @@ export default function FilterPage() {
             <div className="w-full lg:flex lg:space-x-[30px]">
               <div className="lg:w-[270px]">
                 <div className="filter-widget w-full fixed lg:relative left-0 top-0 h-screen z-10 lg:h-auto overflow-y-scroll lg:overflow-y-auto bg-gray-50 px-[30px] pt-[40px] mb-[30px]  hidden lg:block">
-                  <div className="filter-subject-item pb-10 border-b border-qgray-border">
-                    <div className="subject-title mb-[30px]">
-                      <h1 className="text-black text-base font-500">
-                        Product categories
-                      </h1>
-                    </div>
-                    <div className="filter-items">
-                      <ul>
-                        {loadingCategory ? (
-                          <Loading />
-                        ) : (
-                          isCategories?.map((item) => (
-                            <li
-                              key={item._id}
-                              className="item flex justify-between items-center mb-5"
-                            >
-                              <div className="flex space-x-[14px] items-center">
-                                <div>
-                                  <div>
-                                    <input
-                                      type="checkbox"
-                                      name={item.nameCategory}
-                                      id={item.nameCategory}
-                                    />
-                                  </div>
-                                </div>
-                                <div>
-                                  <label
-                                    htmlFor={item.nameCategory}
-                                    className="text-xs font-black font-400 capitalize"
-                                  >
-                                    {item.nameCategory}
-                                  </label>
-                                </div>
-                              </div>
-                            </li>
-                          ))
-                        )}
-                      </ul>
-                    </div>
-                  </div>
+                 
                   <div className="filter-subject-item pb-10 border-b border-qgray-border mt-10">
                     <div className="subject-title mb-[30px]">
                       <h1 className="text-black text-base font-500">

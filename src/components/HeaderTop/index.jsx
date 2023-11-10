@@ -33,9 +33,11 @@ export default function HeaderTop() {
           <div className="topbar-nav">
             <ul className="flex space-x-6">
               <li>
+                <Link to={URL_CONSTANTS.PROFILE}>
                 <span className="text-xs leading-6 text-qblack font-500">
                   Account
                 </span>
+                </Link>
               </li>
               <li>
                 <span className="text-xs leading-6 text-qblack font-500">

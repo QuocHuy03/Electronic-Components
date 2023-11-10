@@ -97,7 +97,7 @@ export default function OrderDetailPage() {
                       alt=""
                     />
                   </div>
-                  <div class="absolute top-1/2 left-[64%] w-48 h-1 bg-green-500 transform -translate-y-1/2"></div>
+                  <div class="absolute top-1/2 left-[67%] w-44 h-1 bg-green-500 transform -translate-y-1/2"></div>
                   </div>
                   <div class="flex flex-col">
                     <p class="font-bold">Đã giao cho ĐVVC</p>
