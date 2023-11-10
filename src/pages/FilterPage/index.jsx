@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { productService } from "../../services/product.service";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Loading from "../../components/Loading";
 import { categoryService } from "./../../services/category.service";
 import { brandService } from "./../../services/brand.service";
@@ -35,14 +35,21 @@ const sort = [
 ];
 
 export default function FilterPage() {
-  const { data: isProducts, isloading: loadingProduct } = useQuery(
-    ["products"],
-    () => productService.fetchAllProducts(),
-    {
-      retry: 3,
-      retryDelay: 1000,
+  const { slug } = useParams();
+  const [isSlug, setSlug] = useState(null);
+  useEffect(() => {
+    if (slug) {
+      setSlug(slug);
     }
-  );
+  }, [slug]);
+
+  const { data: isProducts, isloading: loadingProduct } = useQuery({
+    queryKey: ["products", isSlug],
+    queryFn: () => productService.fetchProductsByCategory(isSlug),
+    staleTime: 500,
+    enabled: !!isSlug,
+  });
+
   const { data: isBrands, isloading: loadingBrand } = useQuery(
     ["brands"],
     () => brandService.fetchAllBrands(),
