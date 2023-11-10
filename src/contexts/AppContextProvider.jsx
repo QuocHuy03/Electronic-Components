@@ -22,10 +22,7 @@ export function AppContextProvider({ children }) {
   return (
     <AppContext.Provider
       value={{
-<<<<<<< HEAD
         accessToken,
-=======
->>>>>>> 6b9da2a83a6e91a80c49225029b1f8a4a9415d11
         carts,
         user,
         order: orders,
