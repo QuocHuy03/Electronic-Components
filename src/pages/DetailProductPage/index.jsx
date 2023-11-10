@@ -439,7 +439,7 @@ export default function DetailProductPage() {
                               <button
                                 type="button"
                                 onClick={() => buyCart(detailProduct)}
-                                className="bg-black text-white text-sm font-semibold w-full h-full"
+                                className="bg-black text-white text-sm font-semibold w-full h-full rounded-lg"
                               >
                                 Thêm vào giỏ hàng
                               </button>
@@ -604,11 +604,11 @@ export default function DetailProductPage() {
                                 {isComment?.map((item, index) => (
                                   <div
                                     key={index}
-                                    className="comment-item bg-white mb-2.5"
+                                    className="comment-item bg-white mb-2.5 rounded-2xl"
                                   >
                                     <div className="comment-author flex justify-between items-center mb-3">
-                                      <div className="flex space-x-3 items-center">
-                                        <div className="w-[50px] h-[50px] rounded-full overflow-hidden relative">
+                                      <div className="flex space-x-3 items-center mt-3 ml-3">
+                                        <div className="w-[40px] h-[40px] rounded-full overflow-hidden relative">
                                           <span
                                             style={{
                                               boxSizing: "border-box",
@@ -659,7 +659,7 @@ export default function DetailProductPage() {
                                           </p>
                                         </div>
                                       </div>
-                                      <div className="flex items-center space-x-2">
+                                      <div className="flex items-center space-x-2 mr-5">
                                         <div className="flex">
                                           {Array.from(
                                             { length: item.rating },
@@ -686,7 +686,7 @@ export default function DetailProductPage() {
                                         </span>
                                       </div>
                                     </div>
-                                    <div className="comment">
+                                    <div className="comment ml-5">
                                       <p className="text-[15px] text-gray leading-7 text-normal">
                                         {item.comment}
                                       </p>
@@ -697,7 +697,7 @@ export default function DetailProductPage() {
                               <div className="w-full flex justify-center">
                                 <button
                                   type="button"
-                                  className="bg-black text-white w-[300px] h-[50px] text-sm font-semibold"
+                                  className="bg-black text-white w-[170px] h-[50px] text-sm font-semibold rounded-3xl"
                                 >
                                   Load More
                                 </button>
@@ -708,7 +708,7 @@ export default function DetailProductPage() {
                               className="write-review w-full"
                             >
                               <h1 className="text-2xl font-medium text-qblack mb-5">
-                                Write Your Reviews
+                                Đánh giá và nhận xét
                               </h1>
                               <div className="flex space-x-1 items-center mb-[30px]">
                                 <div className="star-rating flex">
@@ -842,7 +842,7 @@ export default function DetailProductPage() {
                                 <div className="flex justify-end">
                                   <button
                                     type="submit"
-                                    className="bg-black text-white w-[300px] h-[50px] flex justify-center"
+                                    className="bg-black text-white w-[200px] h-[50px] flex justify-center rounded-3xl"
                                   >
                                     <span className="flex space-x-1 items-center h-full">
                                       <span className="text-sm font-semibold">
