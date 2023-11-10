@@ -441,7 +441,7 @@ export default function DetailProductPage() {
                                 onClick={() => buyCart(detailProduct)}
                                 className="bg-black text-white text-sm font-semibold w-full h-full"
                               >
-                                Add To Cart
+                                Thêm vào giỏ hàng
                               </button>
                             </div>
                           </div>
@@ -553,7 +553,7 @@ export default function DetailProductPage() {
                           activeTab === 0 ? "border-yellow-400 text-black" : ""
                         }`}
                       >
-                        Description
+                        Mô tả sản phẩm
                       </span>
                     </li>
                     <li onClick={() => handleTabClick(1)}>
@@ -562,7 +562,7 @@ export default function DetailProductPage() {
                           activeTab === 1 ? "border-yellow-400 text-black" : ""
                         }`}
                       >
-                        Reviews
+                        Đánh giá sản phẩm
                       </span>
                     </li>
                     <li onClick={() => handleTabClick(2)}>
@@ -571,7 +571,7 @@ export default function DetailProductPage() {
                           activeTab === 2 ? "border-yellow-400 text-black" : ""
                         }`}
                       >
-                        Seller Info
+                        Thông số sản phẩm
                       </span>
                     </li>
                   </ul>
@@ -595,7 +595,7 @@ export default function DetailProductPage() {
                         className="w-full tab-content-item aos-init aos-animate"
                       >
                         <h6 className="text-[18px] font-medium text-qblack mb-2">
-                          Reviews
+                          Bình Luận
                         </h6>
                         <div className="w-full">
                           <div className="review-wrapper w-full">
@@ -691,67 +691,6 @@ export default function DetailProductPage() {
                                         {item.comment}
                                       </p>
                                     </div>
-                                    {/* <div className="sub-comment-item bg-white px-10 pt-[32px] border-t">
-                                      <div className="comment-author mb-3">
-                                        <div className="flex space-x-3 items-center">
-                                          <div className="w-[50px] h-[50px] rounded-full overflow-hidden relative">
-                                            <span
-                                              style={{
-                                                boxSizing: "border-box",
-                                                display: "block",
-                                                overflow: "hidden",
-                                                width: "initial",
-                                                height: "initial",
-                                                background: "none",
-                                                opacity: 1,
-                                                border: 0,
-                                                margin: 0,
-                                                padding: 0,
-                                                position: "absolute",
-                                                inset: 0,
-                                              }}
-                                            >
-                                              <img
-                                                alt
-                                                sizes="100vw"
-                                                srcSet="/_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=640&q=75 640w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=750&q=75 750w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=828&q=75 828w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=1080&q=75 1080w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=1200&q=75 1200w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=1920&q=75 1920w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=2048&q=75 2048w, /_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=3840&q=75 3840w"
-                                                src="/_next/image?url=%2Fassets%2Fimages%2Fcomment-user-2.png&w=3840&q=75"
-                                                decoding="async"
-                                                data-nimg="fill"
-                                                className="w-full h-full object-cover"
-                                                style={{
-                                                  position: "absolute",
-                                                  inset: 0,
-                                                  boxSizing: "border-box",
-                                                  padding: 0,
-                                                  border: "none",
-                                                  margin: "auto",
-                                                  display: "block",
-                                                  width: 0,
-                                                  height: 0,
-                                                  minWidth: "100%",
-                                                  maxWidth: "100%",
-                                                  minHeight: "100%",
-                                                  maxHeight: "100%",
-                                                }}
-                                              />
-                                            </span>
-                                          </div>
-                                          <div>
-                                            <p className="text-[18px] font-medium text-qblack" />
-                                            <p className="text-[13px] font-normal text-qgray">
-                                              London,UK
-                                            </p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="comment mb-[30px]">
-                                        <p className="text-[15px] text-qgray leading-7 text-normal">
-                                          Lorem Ipsum is simply dummy text of
-                                          the printing and typesetting industry.
-                                        </p>
-                                      </div>
-                                    </div> */}
                                   </div>
                                 ))}
                               </div>

@@ -56,6 +56,70 @@ export default function OrderDetailPage() {
               </div>
             </div>
           </div>
+          <div class="max-w-6xl mx-auto">
+            <div class="w-full screen-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md flex items-center space-x-4">
+              <div class="flex items-center space-x-28 ml-28">
+                <div>
+                  <div className="relative">
+                    <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-6">
+                      <img
+                        src="https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/orders-icon.png"
+                        alt=""
+                      />
+                    </div>
+                    <div class="absolute top-1/2 left-[66%] w-48 h-1 bg-green-500 transform -translate-y-1/2"></div>
+                  </div>
+                  <div class="flex flex-col">
+                    <p class="font-bold">Đơn hàng đã đặt</p>
+                    <p class="text-gray-500">13:08 08-02-2023</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="relative">
+                    <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-8">
+                      <img
+                        src="https://icon-library.com/images/money-order-icon/money-order-icon-14.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="absolute top-1/2 left-[70%] w-44 h-1 bg-green-500 transform -translate-y-1/2"></div>
+                  </div>
+                  <div class="flex flex-col">
+                    <p class="font-bold">Đã xác nhận đơn </p>
+                    <p class="text-gray-500">13:08 08-02-2023</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="relative">
+                  <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-6">
+                    <img
+                      src="https://cdn.iconscout.com/icon/premium/png-256-thumb/successful-delivery-1786644-1522008.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="absolute top-1/2 left-[64%] w-48 h-1 bg-green-500 transform -translate-y-1/2"></div>
+                  </div>
+                  <div class="flex flex-col">
+                    <p class="font-bold">Đã giao cho ĐVVC</p>
+                    <p class="text-gray-500">13:08 08-02-2023</p>
+                  </div>
+                </div>
+                <div>
+                  <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-7">
+                    <img
+                      src="https://cdn.iconscout.com/icon/premium/png-256-thumb/order-received-3112928-2602187.png?f=webp"
+                      alt=""
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <p class="font-bold">Đã nhận được hàng</p>
+                    <p class="text-gray-500">13:08 08-02-2023</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="w-full mt-[23px]">
             <div className="max-w-6xl mx-auto">
               <div className="w-full mb-[30px]">
@@ -189,10 +253,14 @@ export default function OrderDetailPage() {
                   <h2 className="text-2xl font-semibold">Địa chỉ nhận hàng</h2>
                   <div className="mt-3">
                     <p className="text-gray-600 text-xl font-semibold mb-1">
-                     {isOrder?.user.fullname}
+                      {isOrder?.user.fullname}
                     </p>
-                    <p className="text-gray-600  mb-1">Email: {isOrder?.user.email}</p>
-                    <p className="text-gray-600  mb-1">(+84): {isOrder?.user.phone}</p>
+                    <p className="text-gray-600  mb-1">
+                      Email: {isOrder?.user.email}
+                    </p>
+                    <p className="text-gray-600  mb-1">
+                      (+84): {isOrder?.user.phone}
+                    </p>
                     <p className="text-gray-600">
                       Địa chỉ: {isOrder?.user.address}
                     </p>
@@ -204,7 +272,9 @@ export default function OrderDetailPage() {
                       <p className="text-[15px] font-medium text-qblack">
                         Tổng tiền hàng
                       </p>
-                      <p className="text-[15px] font-medium text-qred">{formatPrice(isOrder?.totalPrice)}</p>
+                      <p className="text-[15px] font-medium text-qred">
+                        {formatPrice(isOrder?.totalPrice)}
+                      </p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />
                   </div>
@@ -231,7 +301,9 @@ export default function OrderDetailPage() {
                       <p className="text-[15px] font-medium text-qblack">
                         Thành tiền
                       </p>
-                      <p className="text-[15px] font-medium text-qred">{formatPrice(isOrder?.totalPrice)}</p>
+                      <p className="text-[15px] font-medium text-qred">
+                        {formatPrice(isOrder?.totalPrice)}
+                      </p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />
                   </div>
@@ -241,7 +313,7 @@ export default function OrderDetailPage() {
                         Phương thức thanh toán
                       </p>
                       <p className="text-[15px] font-medium text-qred">
-                      {isOrder?.payment.namePayment}
+                        {isOrder?.payment.namePayment}
                       </p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />
