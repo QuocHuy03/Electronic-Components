@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+
 import Layout from "../../components/Layout";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../contexts/AppContextProvider";
@@ -28,7 +28,6 @@ export default function CheckoutPage() {
   const { carts, user } = useContext(AppContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const history = useHistory();
   const [provinces, setProvinces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [districts, setDistricts] = useState([]);
@@ -47,10 +46,6 @@ export default function CheckoutPage() {
       retryDelay: 1000,
     }
   );
-
-  const handleClickPayment = useCallback((itemId) => {
-    setActiveItem(itemId);
-  }, []);
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -252,7 +247,7 @@ export default function CheckoutPage() {
                                 type="email"
                                 name="email"
                                 onChange={handleInputChange}
-                                value={inputs.email}
+                                value={user?.email}
                                 disabled
                                 className="input-field placeholder:text-sm text-sm px-6 text-dark-gray font-normal bg-white focus:ring-0 focus:outline-none w-full h-[50px]"
                               />

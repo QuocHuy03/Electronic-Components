@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { productService } from "../../services/product.service";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Loading from "../../components/Loading";
 import { categoryService } from "./../../services/category.service";
 import { brandService } from "./../../services/brand.service";
@@ -11,24 +11,45 @@ import {
   calculateDiscountPercentage,
   formatPrice,
 } from "../../utils/fomatPrice";
+import { Empty } from "antd";
+
+const sort = [
+  {
+    id: 1,
+    name: "Giá tăng dần",
+    sort: "SORT_BY_PRICE",
+    order: "ASC",
+  },
+  {
+    id: 2,
+    name: "Giá giảm dần",
+    sort: "SORT_BY_PRICE",
+    order: "DESC",
+  },
+  {
+    id: 3,
+    name: "Sản phẩm mới nhất",
+    sort: "SORT_BY_PUBLISH_AT",
+    order: "SBPA",
+  },
+];
 
 export default function FilterPage() {
-  const { data: isProducts, isloading: loadingProduct } = useQuery(
-    ["products"],
-    () => productService.fetchAllProducts(),
-    {
-      retry: 3,
-      retryDelay: 1000,
+  const { slug } = useParams();
+  const [isSlug, setSlug] = useState(null);
+  useEffect(() => {
+    if (slug) {
+      setSlug(slug);
     }
-  );
-  const { data: isCategories, isloading: loadingCategory } = useQuery(
-    ["categories"],
-    () => categoryService.fetchAllCategories(),
-    {
-      retry: 3,
-      retryDelay: 1000,
-    }
-  );
+  }, [slug]);
+
+  const { data: isProducts, isloading: loadingProduct } = useQuery({
+    queryKey: ["products", isSlug],
+    queryFn: () => productService.fetchProductsByCategory(isSlug),
+    staleTime: 500,
+    enabled: !!isSlug,
+  });
+
   const { data: isBrands, isloading: loadingBrand } = useQuery(
     ["brands"],
     () => brandService.fetchAllBrands(),
@@ -39,9 +60,171 @@ export default function FilterPage() {
   );
   const [priceRange, setPriceRange] = useState([1000000, 100000000]);
 
-  const handlePriceChange = (newValues) => {
-    setPriceRange(newValues);
+  const handlePriceChange = (newPriceRange) => {
+    if (
+      newPriceRange[0] !== priceRange[0] ||
+      newPriceRange[1] !== priceRange[1]
+    ) {
+      // Assuming "prices" is the key you are using for the price filter
+      handleFilterChange("prices", `${newPriceRange[0]}-${newPriceRange[1]}`);
+
+      // Update the local state for the price range
+      setPriceRange(newPriceRange);
+    }
   };
+
+  const dataColors = [
+    {
+      id: 1,
+      name: "black",
+    },
+    {
+      id: 2,
+      name: "red",
+    },
+    {
+      id: 3,
+      name: "yellow",
+    },
+    {
+      id: 4,
+      name: "white",
+    },
+  ];
+
+  const initialFilters = {
+    brands: [],
+    colors: "",
+    sorts: "",
+    prices: "",
+  };
+
+  const [filters, setFilters] = useState(initialFilters);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const querybrands = params.getAll("brands");
+    const queryColors = params.get("colors");
+    const querySorts = params.get("sorts");
+    const queryPrices = params.get("prices");
+
+    setFilters({
+      brands: querybrands || [],
+      sorts: querySorts || "",
+      colors: queryColors || "",
+      prices: queryPrices || "",
+    });
+  }, []);
+
+  const handleFilterChange = (group, value) => {
+    setFilters((prevFilters) => {
+      const updatedFilters = { ...prevFilters };
+
+      if (group === "brands") {
+        if (updatedFilters.brands.includes(value)) {
+          updatedFilters.brands = updatedFilters.brands.filter(
+            (brand) => brand !== value
+          );
+        } else {
+          updatedFilters.brands.push(value);
+        }
+      } else if (value === updatedFilters[group]) {
+        delete updatedFilters[group];
+      } else {
+        updatedFilters[group] = value;
+      }
+
+      return updatedFilters;
+    });
+  };
+
+  useEffect(() => {
+    const hasFilters = Object.values(filters).some((value) =>
+      Array.isArray(value) ? value.length > 0 : value !== ""
+    );
+
+    const queryArray = [];
+
+    for (const [key, value] of Object.entries(filters)) {
+      if (
+        (Array.isArray(value) && value.length > 0) ||
+        (value !== "" && key !== "sorts" && key !== "prices")
+      ) {
+        // If the value is an array with items, add multiple key-value pairs with the same key
+        value.forEach((item) => {
+          queryArray.push(`${key}=${encodeURIComponent(item)}`);
+        });
+      } else if (value !== "" && key !== "brands") {
+        // If the value is a single value (excluding brands), add a single key-value pair
+        queryArray.push(`${key}=${encodeURIComponent(value)}`);
+      }
+    }
+
+    // Join all key-value pairs with "&" to create the final query string
+    const query = queryArray.join("&");
+
+    const currentPath = window.location.pathname;
+    const newUrl = hasFilters ? `${currentPath}?${query}` : currentPath;
+
+    window.history.replaceState({}, "", newUrl);
+  }, [filters]);
+
+  let filteredData = isProducts;
+  if (isProducts && isProducts?.length > 0) {
+    if (filters.sorts) {
+      if (filters.sorts === "ASC") {
+        filteredData = [...isProducts].sort(
+          (a, b) =>
+            parseInt(a.price_has_dropped) - parseInt(b.price_has_dropped)
+        );
+      } else if (filters.sorts === "DESC") {
+        filteredData = [...isProducts].sort(
+          (a, b) =>
+            parseInt(b.price_has_dropped) - parseInt(a.price_has_dropped)
+        );
+      } else if (filters.sorts === "SBPA") {
+        filteredData = [...isProducts].sort(
+          (a, b) =>
+            new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+        );
+      }
+    }
+    filteredData = filteredData?.filter((huydev) => {
+      // console.log(huydev);
+      if (Array.isArray(filters.brands) && filters.brands.length > 0) {
+        if (!filters.brands.includes(huydev?.brand.nameBrand.toLowerCase())) {
+          return false;
+        }
+      }
+
+      if (filters.colors) {
+        const selectedColors = filters.colors
+          .split(",")
+          .map((color) => color.trim());
+        const productColors = huydev.nameColors
+          .split(",")
+          .map((color) => color.trim());
+
+        const hasMatchingColor = selectedColors.some((selectedColor) =>
+          productColors.includes(selectedColor)
+        );
+
+        if (!hasMatchingColor) {
+          return false;
+        }
+      }
+      if (filters.prices) {
+        const [minSalary, maxSalary] = filters.prices.split("-");
+        const priceProduct = parseInt(huydev.price_has_dropped);
+        if (minSalary && priceProduct < parseInt(minSalary)) {
+          return false;
+        }
+        if (maxSalary && priceProduct > parseInt(maxSalary)) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }
 
   return (
     <Layout>
@@ -60,8 +243,8 @@ export default function FilterPage() {
             </div>
             <div className="w-full lg:flex lg:space-x-[30px]">
               <div className="lg:w-[270px]">
-                <div className="filter-widget w-full fixed lg:relative left-0 top-0 h-screen z-10 lg:h-auto overflow-y-scroll lg:overflow-y-auto bg-white px-[30px] pt-[40px] mb-[30px]  hidden lg:block">
-                  <div className="filter-subject-item pb-10 border-b border-gray-border">
+                <div className="filter-widget w-full fixed lg:relative left-0 top-0 h-screen z-10 lg:h-auto overflow-y-scroll lg:overflow-y-auto bg-gray-50 px-[30px] pt-[40px] mb-[30px]  hidden lg:block">
+                  <div className="filter-subject-item pb-10 border-b border-qgray-border">
                     <div className="subject-title mb-[30px]">
                       <h1 className="text-black text-base font-500">
                         Product categories
@@ -90,7 +273,7 @@ export default function FilterPage() {
                                 <div>
                                   <label
                                     htmlFor={item.nameCategory}
-                                    className="text-xs font-400 capitalize"
+                                    className="text-xs font-black font-400 capitalize"
                                   >
                                     {item.nameCategory}
                                   </label>
@@ -148,6 +331,15 @@ export default function FilterPage() {
                                 <div>
                                   <div>
                                     <input
+                                      onChange={() =>
+                                        handleFilterChange(
+                                          "brands",
+                                          item.slugBrand
+                                        )
+                                      }
+                                      checked={filters.brands.includes(
+                                        item.slugBrand
+                                      )}
                                       type="checkbox"
                                       name={item.nameBrand}
                                       id={item.nameBrand}
@@ -212,35 +404,32 @@ export default function FilterPage() {
                     </svg>
                   </button>
                 </div>
-                <div className="w-full hidden lg:block h-[295px]">
-                  <img
-                    src="https://shopo-next.vercel.app/assets/images/ads-5.png"
-                    alt
-                    className="w-full h-full object-contain"
-                  />
-                </div>
               </div>
               <div className="flex-1">
                 <div className="products-sorting w-full bg-slate-50 md:h-[70px] flex md:flex-row flex-col md:space-y-0 space-y-5 md:justify-between md:items-center p-[30px] mb-[40px]">
                   <div>
                     <p className="font-400 text-[13px]">
-                      <span className="text-qgray"> Showing</span> 1–16 of 66
-                      results
+                      <span className="text-qgray"> Showing</span> 1–
+                      {filteredData ? filteredData?.length : 0} of{" "}
+                      {isProducts?.length} results
                     </p>
                   </div>
                   <div className="flex space-x-3 items-center">
                     <span className="font-400 text-[13px]">Sort by:</span>
 
-                    <label for="responsive_select" class="sr-only ">
+                    <label for="underline_select" class="sr-only">
                       Underline select
                     </label>
                     <select
                       id="underline_select"
-                      class="block w-full px-4 py-1 text-sm text-gray-700 bg-gray-200 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring focus:border-blue-300 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600 dark:ring-gray-300 dark:focus:border-blue-300 "
+                      class="block px-0  text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                     >
                       <option selected>Vui lòng chọn</option>
-                      <option value="Cao">Cao ➞ Thấp</option>
-                      <option value="Thấp">Thấp ➞ Cao</option>
+                      {sort?.map((item, index) => (
+                        <option key={index} value={item.order}>
+                          {item.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <button
@@ -267,7 +456,7 @@ export default function FilterPage() {
                   {loadingProduct ? (
                     <Loading />
                   ) : (
-                    isProducts?.map((item) => (
+                    filteredData?.map((item) => (
                       <div data-aos="fade-up" className="aos-init aos-animate">
                         <div
                           className="product-card-one w-full h-full bg-white relative group overflow-hidden"
@@ -415,7 +604,6 @@ export default function FilterPage() {
           </div>
         </div>
       </div>
-     
     </Layout>
   );
 }

@@ -39,11 +39,6 @@ export default function HeaderTop() {
               </li>
               <li>
                 <span className="text-xs leading-6 text-qblack font-500">
-                  Track Order
-                </span>
-              </li>
-              <li>
-                <span className="text-xs leading-6 text-qblack font-500">
                   Support
                 </span>
               </li>

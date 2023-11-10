@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { Link, useNavigate } from "react-router-dom";
@@ -40,7 +41,6 @@ export default function RegisterPage() {
   const [validationErrors, setValidationErrors] = useState([]);
   const [inputs, setInputs] = useState(initialValues);
   const [submitted, setSubmitted] = useState(false);
-
   const loading = useSelector((state) => state.auth.loading);
   const accessToken = useSelector((state) => state.auth.accessToken);
   const dispatch = useDispatch();
@@ -50,6 +50,8 @@ export default function RegisterPage() {
       history.push(URL_CONSTANTS.LOGIN);
     }
   }, [dispatch, accessToken]);
+
+
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -85,6 +87,7 @@ export default function RegisterPage() {
     },
     [dispatch, isPassword, isPasswordConfirm, inputs, navigate]
   );
+
   return (
     <Layout>
       <div className="w-full  pt-0 pb-0">

@@ -22,30 +22,37 @@ export default function CartPage() {
     0
   );
 
-  const handleUpdateCart = useCallback(async (item, operation) => {
-    const updatedItem = { ...item };
-    const quantityCart = parseInt(updatedItem.quantity, 10);
-    if (operation === "increment") {
-      updatedItem.quantity = quantityCart + 1;
-    } else if (operation === "decrement") {
-      if (updatedItem.quantity > 1) {
-        updatedItem.quantity = quantityCart - 1;
+  const handleUpdateCart = useCallback(
+    async (item, operation) => {
+      const updatedItem = { ...item };
+      const quantityCart = parseInt(updatedItem.quantity, 10);
+      if (operation === "increment") {
+        updatedItem.quantity = quantityCart + 1;
+      } else if (operation === "decrement") {
+        if (updatedItem.quantity > 1) {
+          updatedItem.quantity = quantityCart - 1;
+        }
       }
-    }
-    delete updatedItem.product;
-    delete updatedItem._id;
-    const response = await dispatch(updateToCart(updatedItem));
-    if (response.status === true) {
-      // Xử lý logic thành công
-    } else {
-      createNotification("error", "topRight", response.message);
-    }
-  }, [dispatch]);
+      delete updatedItem.product;
+      delete updatedItem._id;
+      const response = await dispatch(updateToCart(updatedItem));
+      if (response.status === true) {
+        // Xử lý logic thành công
+      } else {
+        createNotification("error", "topRight", response.message);
+      }
+    },
+    [dispatch]
+  );
 
-  const handleDeleteItem = useCallback(async (item) => {
-    const response = await dispatch(deleteToCartItem(item));
-    // Xử lý logic sau khi xóa một mục
-  }, [dispatch]);
+  const handleDeleteItem = useCallback(
+    async (item) => {
+      const response = await dispatch(deleteToCartItem(item));
+      // Xử lý logic sau khi xóa một mục
+    },
+    [dispatch]
+  );
+
 
   const handleDeleteAll = useCallback(async () => {
     const response = await dispatch(deleteToCartAll());
@@ -189,9 +196,9 @@ export default function CartPage() {
                                 <td className="text-center py-4 px-2">
                                   <div className=" flex justify-center items-center">
                                     <span
-                                    style={{
-                                      backgroundColor: item.color
-                                    }}
+                                      style={{
+                                        backgroundColor: item.color,
+                                      }}
                                       className={`w-[20px] h-[20px] border block rounded-full`}
                                     />
                                   </div>
@@ -313,7 +320,10 @@ export default function CartPage() {
                           </p>
                         </div>
                       </div>
-                      <Link to={`/checkout/${uuidv4()}`} className="w-full h-[50px] bg-black text-white flex justify-center items-center">
+                      <Link
+                        to={`/checkout/${uuidv4()}`}
+                        className="w-full h-[50px] bg-black text-white flex justify-center items-center"
+                      >
                         <span className="text-sm font-semibold">
                           Proceed to Checkout
                         </span>

@@ -1,3 +1,4 @@
+
 import React, { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
@@ -28,12 +29,14 @@ export default function LoginPage() {
     setPasswordVisible((prevVisible) => !prevVisible);
   }, []);
 
+
   const [isPassword, setIsPassword] = useState("");
   const handlePasswordChange = useCallback((e) => {
     setIsPassword(e.target.value);
   }, []);
 
   const oauthURL = useMemo(() => getGoogleAuthUrl(), []);
+
   const navigate = useNavigate();
   const [validationErrors, setValidationErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);

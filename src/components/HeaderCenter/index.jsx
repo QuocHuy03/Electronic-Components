@@ -32,7 +32,7 @@ export default function HeaderCenter() {
                   alt="logo"
                 />
               </Link>
-              <div className="w-[517px] h-[44px]">
+              <div className="w-[417px] h-[44px]">
                 <div className="w-full h-full flex items-center border border-qgray-border bg-white search-com">
                   <div className="flex-1 h-full">
                     <form className="h-full">

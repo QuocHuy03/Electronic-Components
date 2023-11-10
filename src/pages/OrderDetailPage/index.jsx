@@ -105,7 +105,7 @@ export default function OrderDetailPage() {
                   </div>
                 </div>
                 <div>
-                  <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-7">
+                  <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-6">
                     <img
                       src="https://cdn.iconscout.com/icon/premium/png-256-thumb/order-received-3112928-2602187.png?f=webp"
                       alt=""
