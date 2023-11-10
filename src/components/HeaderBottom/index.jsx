@@ -5,9 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import { useSelector } from "react-redux";
 import { categoryService } from "../../services/category.service";
-import HomePage from './../../pages/HomePage/index';
-
-
+import HomePage from "./../../pages/HomePage/index";
 export default function HeaderBottom() {
   // const location = useLocation();
   const dropdownRef = useRef();
@@ -163,27 +161,30 @@ export default function HeaderBottom() {
                   }
                 >
                   <ul className="categories-list">
-                  {loadingCategory ? (
-                          <Loading />
-                        ) : (
-                          isCategories?.map((item) => (
-                    <li className="category-item">
-                      <div className="flex justify-between items-center px-5 h-10 bg-white  transition-all duration-300 ease-in-out cursor-pointer text-qblack hover:bg-qyellow">
-                        <Link to={`/filter/${item.slugCategory}`}>
-                        <div className="flex items-center space-x-6">
-                          <span>
-                            <img width={20} src={item.imageCategory} alt="" />
-                          </span>
-                          <span className="text-xs font-400">
-                          {item.nameCategory}
-                          </span>
-                        </div>
-                        </Link>
-                      </div>
-                    </li>
-                    ))
+                    {loadingCategory ? (
+                      <Loading />
+                    ) : (
+                      isCategories?.map((item) => (
+                        <li className="category-item">
+                          <Link to={`/filter/${item.slugCategory}`}>
+                            <div className="flex justify-between items-center px-5 h-10 bg-white  transition-all duration-300 ease-in-out cursor-pointer text-qblack hover:bg-qyellow">
+                              <div className="flex items-center space-x-6">
+                                <span>
+                                  <img
+                                    width={20}
+                                    src={item.imageCategory}
+                                    alt={item.nameCategory}
+                                  />
+                                </span>
+                                <span className="text-xs font-400">
+                                  {item.nameCategory}
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                        </li>
+                      ))
                     )}
-                    
                   </ul>
                 </div>
               </div>
@@ -191,16 +192,17 @@ export default function HeaderBottom() {
                 <ul className="nav-wrapper flex xl:space-x-10 space-x-5">
                   <li className="relative ">
                     <Link to={URL_CONSTANTS.HOME}>
-                    <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
-                      <span>Homepage</span>
-                    </span>
+                      <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
+                        <span>Homepage</span>
+                      </span>
                     </Link>
                   </li>
                   <li className="relative">
                     <Link to={URL_CONSTANTS.FILTER}>
-                    <span className="flex items-center text-sm font-600 cursor-pointer text-black transition duration-300">
-                      <span>Shop</span>
-                    </span>
+                      <span className="flex items-center text-sm font-600 cursor-pointer text-black transition duration-300">
+                        <span>Shop</span>
+                      </span>
+
                     </Link>
                   </li>
                   <li>
@@ -210,17 +212,18 @@ export default function HeaderBottom() {
                   </li>
                   <li>
                     <Link to={URL_CONSTANTS.BLOG}>
-                    <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
-                      <span>Blog</span>
-                    </span>
+                      <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
+                        <span>Blog</span>
+                      </span>
+
                     </Link>
                   </li>
                   <li>
                     <Link to={URL_CONSTANTS.CONTACT}>
-                    <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
-                      <span>Contact</span>
-                    </span>
-                    </Link>                   
+                      <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
+                        <span>Contact</span>
+                      </span>
+                    </Link>
                   </li>
                 </ul>
               </div>
