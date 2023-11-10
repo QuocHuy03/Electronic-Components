@@ -29,8 +29,18 @@ const fetchPostOrder = async (method, data) => {
   }
 };
 
+const fetchOrderByCode = async (code) => {
+  try {
+    const response = await http.get(`/order/getOrderByCode/${code}`);
+    return response.result;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export const orderService = {
   fetchAllOrders,
   fetchOrderByUserID,
+  fetchOrderByCode,
   fetchPostOrder,
 };

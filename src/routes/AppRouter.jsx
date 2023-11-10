@@ -17,6 +17,7 @@ import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import FilterPage from "../pages/FilterPage";
 import OrderPage from "../pages/OrderPage";
+import OrderDetailPage from "../pages/OrderDetailPage";
 
 const privateRoutes = [
   { path: URL_CONSTANTS.PROFILE, component: ProfilePage },
@@ -37,6 +38,7 @@ const publicRoutes = [
   { path: URL_CONSTANTS.FORGOT_PASSWORD, component: ForgotPasswordPage },
   { path: URL_CONSTANTS.RESET_PASSWORD, component: ResetPasswordPage },
   { path: URL_CONSTANTS.FILTER, component: FilterPage },
+  { path: URL_CONSTANTS.ORDER_DETAIL, component: OrderDetailPage },
 ];
 const AppRouter = () => {
   const auth = useSelector((state) => state.auth);

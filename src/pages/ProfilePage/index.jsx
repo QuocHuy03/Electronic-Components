@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import huydev from "../../json/address.json";
@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import OrderStatus from "../../types/order.type";
 import { formatPrice } from "../../utils/fomatPrice";
 import { persistor } from "../../stores/app.store";
+import { Link } from "react-router-dom";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -55,30 +56,38 @@ export default function ProfilePage() {
     }));
   };
 
-  const handleChangePassword = async (e) => {
-    let data = {
+  const handleChangePasswordData = useMemo(() => {
+    return {
       old_password: inputChangePass.old_password,
       password: inputChangePass.password,
       confirm_password: inputChangePass.confirm_password,
     };
-    e.preventDefault();
-    try {
-      const response = await userService.changePassword(data);
-      if (response.status === true) {
-        setValidationErrors([]);
-        createNotification("success", "topRight", response.message);
-        await dispatch(logout(refreshToken));
-      } else {
-        if (response.status === false) {
+  }, [inputChangePass]);
+
+  const handleChangePassword = useCallback(
+    async (e) => {
+      e.preventDefault();
+      try {
+        const response = await userService.changePassword(
+          handleChangePasswordData
+        );
+        if (response.status === true) {
           setValidationErrors([]);
-          createNotification("error", "topRight", response.message);
+          createNotification("success", "topRight", response.message);
+          await dispatch(logout(refreshToken));
+        } else {
+          if (response.status === false) {
+            setValidationErrors([]);
+            createNotification("error", "topRight", response.message);
+          }
+          setValidationErrors(response.errors);
         }
-        setValidationErrors(response.errors);
+      } catch (error) {
+        console.error("An error occurred:", error);
       }
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-  };
+    },
+    [dispatch, refreshToken, handleChangePasswordData]
+  );
 
   const handleCancel = () => {
     // Reset the form
@@ -130,38 +139,43 @@ export default function ProfilePage() {
       }
     }, [user]);
 
-    const handleSelectProvince = (e) => {
+    const handleSelectProvince = useCallback((e) => {
       setSelectedProvince(e.target.value);
 
       setInputs((prevInputs) => ({
         ...prevInputs,
         city: e.target.value,
       }));
-    };
+    }, []);
 
-    const handleSelectDistrict = (e) => {
+    const handleSelectDistrict = useCallback((e) => {
       setSelectedDistrict(e.target.value);
       setInputs((prevInputs) => ({
         ...prevInputs,
         district: e.target.value,
       }));
-    };
+    }, []);
 
-    const handleSelectCommune = (e) => {
+    const handleSelectCommune = useCallback((e) => {
       setSelectedCommune(e.target.value);
       setInputs((prevInputs) => ({
         ...prevInputs,
         commune: e.target.value,
       }));
-    };
+    }, []);
 
-    const filteredDistricts = districts?.filter(
-      (district) => district.province_id === Number(selectedProvince)
-    );
+    const filteredDistricts = useMemo(() => {
+      return districts?.filter(
+        (district) => district.province_id === Number(selectedProvince)
+      );
+    }, [districts, selectedProvince]);
 
-    const filteredWards = wards?.filter(
-      (ward) => ward.district_id === Number(selectedDistrict)
-    );
+    const filteredWards = useMemo(() => {
+      return wards?.filter(
+        (ward) => ward.district_id === Number(selectedDistrict)
+      );
+    }, [wards, selectedDistrict]);
+
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
@@ -227,13 +241,12 @@ export default function ProfilePage() {
                   </label>
                   <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                     <input
-                      placeholder="demoemial@gmail.com"
                       className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                       type="email"
                       name="email"
                       disabled
                       onChange={handleChangeInput}
-                      value={inputs.email}
+                      value={user?.email}
                     />
                   </div>
                 </div>
@@ -656,13 +669,14 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                 Orders Processing
+                                Orders Processing
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
                                 {
                                   isOrders?.filter(
                                     (item) =>
-                                      item.orderStatus === OrderStatus.PROCESSING
+                                      item.orderStatus ===
+                                      OrderStatus.PROCESSING
                                   ).length
                                 }
                               </span>
@@ -685,10 +699,10 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                 Orders Shipped
+                                Orders Shipped
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
-                              {
+                                {
                                   isOrders?.filter(
                                     (item) =>
                                       item.orderStatus === OrderStatus.SHIPPED
@@ -722,10 +736,10 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                 Orders Delivered
+                                Orders Delivered
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
-                              {
+                                {
                                   isOrders?.filter(
                                     (item) =>
                                       item.orderStatus === OrderStatus.DELIVERED
@@ -759,7 +773,7 @@ export default function ProfilePage() {
                                     Action
                                   </td>
                                 </tr>
-                                {isOrders.length > 0 ? (
+                                {isOrders?.length > 0 ? (
                                   isOrders?.map((item, index) => {
                                     let statusClass = "text-sm rounded p-2 ";
                                     let statusText = "";
@@ -842,12 +856,12 @@ export default function ProfilePage() {
                                           </span>
                                         </td>
                                         <td className="text-center py-4">
-                                          <button
-                                            type="button"
-                                            className="w-[116px] h-[46px] bg-yellow-400 text-black font-bold"
+                                          <Link
+                                            to={`/order/${item.code}`}
+                                            className="px-2 py-3 rounded-sm bg-yellow-400 text-black font-bold"
                                           >
                                             View Details
-                                          </button>
+                                          </Link>
                                         </td>
                                       </tr>
                                     );

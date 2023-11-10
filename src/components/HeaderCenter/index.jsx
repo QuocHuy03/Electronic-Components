@@ -32,7 +32,11 @@ export default function HeaderCenter() {
                   alt="logo"
                 />
               </Link>
+<<<<<<< HEAD
+              <div className="w-[417px] h-[44px]">
+=======
               <div className="w-[517px] h-[44px]">
+>>>>>>> 6b9da2a83a6e91a80c49225029b1f8a4a9415d11
                 <div className="w-full h-full flex items-center border border-qgray-border bg-white search-com">
                   <div className="flex-1 h-full">
                     <form className="h-full">
@@ -44,6 +48,9 @@ export default function HeaderCenter() {
                     </form>
                   </div>
                   <div className="w-[1px] h-[22px] bg-gray-200" />
+<<<<<<< HEAD
+           
+=======
                   <div className="flex-1 flex items-center px-4">
                     <button
                       type="button"
@@ -78,6 +85,7 @@ export default function HeaderCenter() {
                       </span>
                     </button>
                   </div>
+>>>>>>> 6b9da2a83a6e91a80c49225029b1f8a4a9415d11
                   <button
                     className=" w-[93px] h-full text-sm font-600 bg-yellow-400"
                     type="button"
@@ -263,7 +271,11 @@ export default function HeaderCenter() {
             <img
               width={152}
               height={36}
+<<<<<<< HEAD
+              src="https://i.imgur.com/gSR0WOr.jpg"
+=======
               src="/assets/images/logo.svg"
+>>>>>>> 6b9da2a83a6e91a80c49225029b1f8a4a9415d11
               alt="logo"
             />
           </div>

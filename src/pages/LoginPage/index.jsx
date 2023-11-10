@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,15 +25,17 @@ const getGoogleAuthUrl = () => {
 };
 export default function LoginPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-  const [isPassword, setIsPassword] = useState("");
-  const handlePasswordChange = (e) => {
-    setIsPassword(e.target.value);
-  };
+  const togglePasswordVisibility = useCallback(() => {
+    setPasswordVisible((prevVisible) => !prevVisible);
+  }, []);
 
-  const oauthURL = getGoogleAuthUrl();
+  const [isPassword, setIsPassword] = useState("");
+  const handlePasswordChange = useCallback((e) => {
+    setIsPassword(e.target.value);
+  }, []);
+
+  const oauthURL = useMemo(() => getGoogleAuthUrl(), []);
+
   const navigate = useNavigate();
   const [validationErrors, setValidationErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);
@@ -46,40 +49,45 @@ export default function LoginPage() {
 
   const { email, password } = inputs;
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setInputs((inputs) => ({ ...inputs, [name]: value }));
-  };
+    setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-    let data = {
-      email,
-      password: isPassword,
-    };
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setSubmitted(true);
+      const data = {
+        email,
+        password: isPassword,
+      };
 
-    try {
-      const response = await dispatch(login(data));
-      if (response.status === true) {
-        setValidationErrors([]);
-        createNotification("success", "topRight", response.message);
-        if (redirectTo) {
-          navigate(redirectTo);
-        } else {
-          navigate("/");
-        }
-      } else {
-        if (response.response?.status === false) {
+      try {
+        const response = await dispatch(login(data));
+        if (response.status === true) {
           setValidationErrors([]);
-          createNotification("error", "topRight", response.response.message);
+          createNotification("success", "topRight", response.message);
+          if (redirectTo) {
+            navigate(redirectTo);
+          } else {
+            navigate("/");
+          }
+        } else {
+          if (response.response?.status === false) {
+            setValidationErrors([]);
+            createNotification("error", "topRight", response.response.message);
+          }
+          setValidationErrors(response.response.errors);
         }
-        setValidationErrors(response.response.errors);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    },
+    [dispatch, navigate, redirectTo, email, isPassword]
+  );
+
+
   return (
     <Layout>
       <div className="w-full  pt-0 pb-0">

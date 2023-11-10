@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Layout from "../../components/Layout";
 import { productService } from "../../services/product.service";
 import { commentService } from "../../services/comment.service";
@@ -8,13 +8,16 @@ import { addToCart } from "../../stores/cart/actions";
 import createNotification from "../../utils/notification";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
-
 import {
   calculateDiscountPercentage,
   formatPrice,
 } from "../../utils/fomatPrice";
+import { AppContext } from "../../contexts/AppContextProvider";
+import { URL_CONSTANTS } from "../../constants/url.constants";
 
 export default function DetailProductPage() {
+  const { accessToken } = useContext(AppContext);
+
   const [isSeeMore, setIsSeeMore] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isReview, setIsReview] = useState(true);
@@ -25,27 +28,31 @@ export default function DetailProductPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
- 
-  const toggleSeeMore = () => {
-    setIsSeeMore(!isSeeMore);
-  };
-  const toggleReview = () => {
-    setIsReview(!isReview);
-  };
-  const handleRating = (rate) => {
-    setRating(rate);
-  };
 
-  const handleImageClick = (index) => {
+  const toggleSeeMore = useCallback(() => {
+    setIsSeeMore(!isSeeMore);
+  }, [isSeeMore]);
+
+  const toggleReview = useCallback(() => {
+    setIsReview(!isReview);
+  }, [isReview]);
+
+  const handleRating = useCallback((rate) => {
+    setRating(rate);
+  }, []);
+
+  const handleImageClick = useCallback((index) => {
     setSelectedImageIndex(index);
-  };
+  }, []);
 
   const { slug } = useParams();
   const [isSlug, setSlug] = useState(null);
   const [validationErrors, setValidationErrors] = useState([]);
+
   const [inputs, setInputs] = useState({
     comment: "",
   });
+
   const [detailProduct, setDetailProduct] = useState(null);
   const [isComment, setIsComment] = useState(null);
 
@@ -55,10 +62,14 @@ export default function DetailProductPage() {
     }
   }, [slug]);
 
+  const queryKey = useMemo(() => ["edit-product", isSlug], [isSlug]);
+
   const { data: detailProductData, isLoading: isDetailProductLoading } =
-    useQuery({
-      queryKey: ["edit-product", isSlug],
-      queryFn: () => productService.fetchProductBySlug(isSlug),
+    useQuery(queryKey, async () => {
+      if (isSlug) {
+        return await productService.fetchProductBySlug(isSlug);
+      }
+    }, {
       staleTime: 500,
       enabled: !!isSlug,
     });
@@ -72,10 +83,9 @@ export default function DetailProductPage() {
     }
   );
 
-  const filteredRelated =
-    related?.filter(
-      (huydev) => huydev.slugProduct !== detailProductData?.slugProduct
-    ) ?? [];
+  const filteredRelated = useMemo(() => related?.filter(
+    (huydev) => huydev.slugProduct !== detailProductData?.slugProduct
+  ) ?? [], [related, detailProductData]);
 
   useEffect(() => {
     if (detailProductData) {
@@ -83,7 +93,7 @@ export default function DetailProductPage() {
     }
   }, [detailProductData]);
 
-  const fetchCommentData = async () => {
+  const fetchCommentData = useCallback(async () => {
     if (detailProduct) {
       try {
         const commentData = await commentService.fetchByProductComments(
@@ -94,30 +104,38 @@ export default function DetailProductPage() {
         console.error("Error fetching comment data:", error);
       }
     }
-  };
-  useEffect(() => {
-    fetchCommentData();
   }, [detailProduct]);
 
-  const handleColorClick = (color) => {
+  useEffect(() => {
+    fetchCommentData();
+  }, [detailProduct, fetchCommentData]);
+
+  // tổng, trung bình đánh giá
+  const totalRating = useMemo(() => isComment?.reduce(
+    (total, comment) => total + parseInt(comment.rating),
+    0
+  ), [isComment]);
+
+  const averageRating = useMemo(() => totalRating / isComment?.length, [totalRating, isComment]);
+
+  const handleColorClick = useCallback((color) => {
     if (color === "") {
       setShowColorError(true);
     } else {
       setSelectedColor(color);
       setShowColorError(false);
     }
-  };
-  // useEffect(() => {
-  //   if (detailProduct && detailProduct?.colors && detailProduct?.colors.length > 0) {
-  //     setSelectedColor(detailProduct?.colors[0].nameColor);
-  //   }
-  // }, [detailProduct]);
+  }, []);
 
-  const buyCart = async (product) => {
+  const buyCart = useCallback(async (product) => {
     if (!selectedColor) {
       setShowColorError(true);
       return;
     }
+    if (!accessToken) {
+      return navigate(URL_CONSTANTS.LOGIN);
+    }
+
     const response = await dispatch(
       addToCart({
         productID: product._id,
@@ -130,14 +148,14 @@ export default function DetailProductPage() {
     } else {
       createNotification("error", "topRight", response.message);
     }
-  };
+  }, [selectedColor, accessToken, dispatch, navigate, quantity]);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setInputs((inputs) => ({ ...inputs, [name]: value }));
-  };
+  }, []);
 
-  const handleComment = async (e) => {
+  const handleComment = useCallback(async (e) => {
     e.preventDefault();
     let data = {
       rating: rating,
@@ -164,20 +182,22 @@ export default function DetailProductPage() {
     } catch (error) {
       console.log(error);
     }
-  };
-  const increaseQuantity = () => {
-    setQuantity(quantity + 1);
-  };
+  }, [rating, inputs, detailProduct, fetchCommentData]);
 
-  const decreaseQuantity = () => {
+  const increaseQuantity = useCallback(() => {
+    setQuantity(quantity + 1);
+  }, [quantity]);
+
+  const decreaseQuantity = useCallback(() => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
     }
-  };
+  }, [quantity]);
 
-  const handleTabClick = (index) => {
+  const handleTabClick = useCallback((index) => {
     setActiveTab(index);
-  };
+  }, []);
+
 
   return (
     <Layout>
@@ -286,71 +306,31 @@ export default function DetailProductPage() {
                             className="flex space-x-[10px] items-center mb-6 aos-init aos-animate"
                           >
                             <div className="flex">
-                              <svg
-                                width={18}
-                                height={17}
-                                viewBox="0 0 18 17"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                  fill="#FFA800"
-                                />
-                              </svg>
-                              <svg
-                                width={18}
-                                height={17}
-                                viewBox="0 0 18 17"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                  fill="#FFA800"
-                                />
-                              </svg>
-                              <svg
-                                width={18}
-                                height={17}
-                                viewBox="0 0 18 17"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                  fill="#FFA800"
-                                />
-                              </svg>
-                              <svg
-                                width={18}
-                                height={17}
-                                viewBox="0 0 18 17"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                  fill="#FFA800"
-                                />
-                              </svg>
-                              <svg
-                                width={18}
-                                height={17}
-                                viewBox="0 0 18 17"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
-                                  fill="#FFA800"
-                                />
-                              </svg>
+                              {Array.from(
+                                { length: Math.min(5, averageRating) },
+                                (_, index) => (
+                                  <span key={index}>
+                                    <svg
+                                      width={18}
+                                      height={17}
+                                      viewBox="0 0 18 17"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M9 0L11.0206 6.21885H17.5595L12.2694 10.0623L14.2901 16.2812L9 12.4377L3.70993 16.2812L5.73056 10.0623L0.440492 6.21885H6.97937L9 0Z"
+                                        fill="#FFA800"
+                                      />
+                                    </svg>
+                                  </span>
+                                )
+                              )}
                             </div>
-                            <span className="text-[13px] font-normal text-qblack">
-                              6 Reviews
+                            <span className="text-[13px] font-normal text-black">
+                              {isComment?.length} Reviews
                             </span>
                           </div>
+
                           <div
                             data-aos="fade-up"
                             className="flex space-x-2 items-center mb-7 aos-init aos-animate"
@@ -398,9 +378,7 @@ export default function DetailProductPage() {
                               ))}
                             </div>
                             {showColorError && (
-                              <span
-                                style={{ color: "red", marginTop: "20px" }}
-                              >
+                              <span style={{ color: "red", marginTop: "20px" }}>
                                 (Vui lòng chọn màu)
                               </span>
                             )}
@@ -429,27 +407,7 @@ export default function DetailProductPage() {
                                 </button>
                               </div>
                             </div>
-                            <div className="w-[60px] h-full flex justify-center items-center border border-qgray-border">
-                              <button type="button">
-                                <span>
-                                  <svg
-                                    width={24}
-                                    height={24}
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M17 1C14.9 1 13.1 2.1 12 3.7C10.9 2.1 9.1 1 7 1C3.7 1 1 3.7 1 7C1 13 12 22 12 22C12 22 23 13 23 7C23 3.7 20.3 1 17 1Z"
-                                      stroke="#D5D5D5"
-                                      strokeWidth={2}
-                                      strokeMiterlimit={10}
-                                      strokeLinecap="square"
-                                    />
-                                  </svg>
-                                </span>
-                              </button>
-                            </div>
+                       
                             <div className="flex-1 h-full">
                               <button
                                 type="button"
@@ -614,12 +572,12 @@ export default function DetailProductPage() {
                         </h6>
                         <div className="w-full">
                           <div className="review-wrapper w-full">
-                            <div className="w-full reviews mb-[60px]">
-                              <div className="w-full comments mb-[60px]">
+                            <div className="w-full reviews">
+                              <div className="w-full comments">
                                 {isComment?.map((item, index) => (
                                   <div
                                     key={index}
-                                    className="comment-item bg-white px-10 py-[32px] mb-2.5"
+                                    className="comment-item bg-white mb-2.5"
                                   >
                                     <div className="comment-author flex justify-between items-center mb-3">
                                       <div className="flex space-x-3 items-center">
@@ -667,10 +625,10 @@ export default function DetailProductPage() {
                                         </div>
                                         <div>
                                           <p className="text-[18px] font-medium text-qblack">
-                                            Rafiqul Islam
+                                            {item.userID.fullname}
                                           </p>
                                           <p className="text-[13px] font-normal text-qgray">
-                                            London,UK
+                                            {item.userID?.address}
                                           </p>
                                         </div>
                                       </div>
@@ -701,12 +659,12 @@ export default function DetailProductPage() {
                                         </span>
                                       </div>
                                     </div>
-                                    <div className="comment mb-[30px]">
-                                      <p className="text-[15px] text-qgray leading-7 text-normal">
+                                    <div className="comment">
+                                      <p className="text-[15px] text-gray leading-7 text-normal">
                                         {item.comment}
                                       </p>
                                     </div>
-                                    <div className="sub-comment-item bg-white px-10 pt-[32px] border-t">
+                                    {/* <div className="sub-comment-item bg-white px-10 pt-[32px] border-t">
                                       <div className="comment-author mb-3">
                                         <div className="flex space-x-3 items-center">
                                           <div className="w-[50px] h-[50px] rounded-full overflow-hidden relative">
@@ -766,14 +724,14 @@ export default function DetailProductPage() {
                                           the printing and typesetting industry.
                                         </p>
                                       </div>
-                                    </div>
+                                    </div> */}
                                   </div>
                                 ))}
                               </div>
                               <div className="w-full flex justify-center">
                                 <button
                                   type="button"
-                                  className="black-btn w-[300px] h-[50px] text-sm font-semibold"
+                                  className="bg-black text-white w-[300px] h-[50px] text-sm font-semibold"
                                 >
                                   Load More
                                 </button>

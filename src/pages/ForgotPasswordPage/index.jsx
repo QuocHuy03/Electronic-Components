@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useCallback, useState } from "react";
 import Layout from "../../components/Layout";
 import { userService } from "../../services/user.service";
 import createNotification from "../../utils/notification";
@@ -9,12 +10,13 @@ export default function ForgotPasswordPage() {
   const [inputs, setInputs] = useState({
     email: "",
   });
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setInputs((inputs) => ({ ...inputs, [name]: value }));
-  };
+    setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
+
     e.preventDefault();
     setSubmitted(true);
     let data = {
@@ -36,7 +38,7 @@ export default function ForgotPasswordPage() {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [inputs]);
   return (
     <Layout>
       <div className="w-full  pt-0 pb-0">

@@ -1152,7 +1152,7 @@ export default function HomePage() {
                       display: "block",
                       width: 0,
                       height: 0,
-                      minWidth: "90%",
+                      minWidth: "60%",
                       maxWidth: "90%",
                       minHeight: "90%",
                       maxHeight: "90%",
