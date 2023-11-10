@@ -31,7 +31,9 @@ const fetchProductBySlug = async (slug) => {
 
 const fetchProductsByCategory = async (category) => {
   try {
-    const response = await http.get(`/product/getProductsOfCategory/${category}`);
+    const response = await http.get(
+      `/product/getProductsOfCategory/${category}`
+    );
     return response.result;
   } catch (error) {
     console.error(error);
@@ -43,5 +45,4 @@ export const productService = {
   fetchProductBySlug,
   getProductOfBrand,
   fetchProductsByCategory,
-
 };

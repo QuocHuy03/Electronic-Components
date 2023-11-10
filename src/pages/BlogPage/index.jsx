@@ -16,6 +16,7 @@ export default function BlogPage() {
     }
   );
 
+
   return (
     <Layout>
       <div className="w-full  pt-[0px] pb-[0px]">

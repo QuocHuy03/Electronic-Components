@@ -1,3 +1,4 @@
+
 import React, { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
@@ -34,6 +35,7 @@ export default function LoginPage() {
   }, []);
 
   const oauthURL = useMemo(() => getGoogleAuthUrl(), []);
+
   const navigate = useNavigate();
   const [validationErrors, setValidationErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);
@@ -84,6 +86,7 @@ export default function LoginPage() {
     },
     [dispatch, navigate, redirectTo, email, isPassword]
   );
+
 
   return (
     <Layout>

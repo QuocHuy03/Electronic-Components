@@ -1,5 +1,9 @@
 body {
+<<<<<<< HEAD
   font-family: 'Roboto', sans-serif;
+=======
+  font-family: "SF Pro Display", sans-serif;
+>>>>>>> 6b9da2a83a6e91a80c49225029b1f8a4a9415d11
 }
 
 @tailwind base;

@@ -1,3 +1,4 @@
+
 import React, { useCallback, useState } from "react";
 import Layout from "../../components/Layout";
 import { userService } from "../../services/user.service";
@@ -9,13 +10,13 @@ export default function ForgotPasswordPage() {
   const [inputs, setInputs] = useState({
     email: "",
   });
-
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
   }, []);
 
   const handleSubmit = useCallback(async (e) => {
+
     e.preventDefault();
     setSubmitted(true);
     let data = {
