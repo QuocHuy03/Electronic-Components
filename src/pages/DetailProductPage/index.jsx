@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Layout from "../../components/Layout";
 import { productService } from "../../services/product.service";
 import { commentService } from "../../services/comment.service";
@@ -17,7 +23,6 @@ import { URL_CONSTANTS } from "../../constants/url.constants";
 
 export default function DetailProductPage() {
   const { accessToken } = useContext(AppContext);
-
   const [isSeeMore, setIsSeeMore] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isReview, setIsReview] = useState(true);
@@ -69,9 +74,6 @@ export default function DetailProductPage() {
       if (isSlug) {
         return await productService.fetchProductBySlug(isSlug);
       }
-    }, {
-      staleTime: 500,
-      enabled: !!isSlug,
     });
 
   const { data: related, isLoading: loadingRelated } = useQuery(
@@ -83,9 +85,13 @@ export default function DetailProductPage() {
     }
   );
 
-  const filteredRelated = useMemo(() => related?.filter(
-    (huydev) => huydev.slugProduct !== detailProductData?.slugProduct
-  ) ?? [], [related, detailProductData]);
+  const filteredRelated = useMemo(
+    () =>
+      related?.filter(
+        (huydev) => huydev.slugProduct !== detailProductData?.slugProduct
+      ) ?? [],
+    [related, detailProductData]
+  );
 
   useEffect(() => {
     if (detailProductData) {
@@ -111,12 +117,23 @@ export default function DetailProductPage() {
   }, [detailProduct, fetchCommentData]);
 
   // tổng, trung bình đánh giá
-  const totalRating = useMemo(() => isComment?.reduce(
-    (total, comment) => total + parseInt(comment.rating),
-    0
-  ), [isComment]);
+  const totalRating = useMemo(
+    () =>
+      isComment?.reduce(
+        (total, comment) => total + parseInt(comment.rating),
+        0
+      ),
+    [isComment]
+  );
 
-  const averageRating = useMemo(() => totalRating / isComment?.length, [totalRating, isComment]);
+  const averageRating = useMemo(
+    () => totalRating / isComment?.length,
+    [totalRating, isComment]
+  );
+
+  useEffect(() => {
+    fetchCommentData();
+  }, [detailProduct]);
 
   const handleColorClick = useCallback((color) => {
     if (color === "") {
@@ -127,62 +144,74 @@ export default function DetailProductPage() {
     }
   }, []);
 
-  const buyCart = useCallback(async (product) => {
-    if (!selectedColor) {
-      setShowColorError(true);
-      return;
-    }
-    if (!accessToken) {
-      return navigate(URL_CONSTANTS.LOGIN);
-    }
+  // useEffect(() => {
+  //   if (detailProduct && detailProduct?.colors && detailProduct?.colors.length > 0) {
+  //     setSelectedColor(detailProduct?.colors[0].nameColor);
+  //   }
+  // }, [detailProduct]);
 
-    const response = await dispatch(
-      addToCart({
-        productID: product._id,
-        color: selectedColor,
-        quantity,
-      })
-    );
-    if (response.status === true) {
-      createNotification("success", "topRight", response.message);
-    } else {
-      createNotification("error", "topRight", response.message);
-    }
-  }, [selectedColor, accessToken, dispatch, navigate, quantity]);
+  const buyCart = useCallback(
+    async (product) => {
+      if (!selectedColor) {
+        setShowColorError(true);
+        return;
+      }
+      if (!accessToken) {
+        return navigate(URL_CONSTANTS.LOGIN);
+      }
+
+      const response = await dispatch(
+        addToCart({
+          productID: product._id,
+          color: selectedColor,
+          quantity,
+        })
+      );
+      if (response.status === true) {
+        createNotification("success", "topRight", response.message);
+      } else {
+        createNotification("error", "topRight", response.message);
+      }
+    },
+    [selectedColor, accessToken, dispatch, navigate, quantity]
+  );
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setInputs((inputs) => ({ ...inputs, [name]: value }));
   }, []);
 
-  const handleComment = useCallback(async (e) => {
-    e.preventDefault();
-    let data = {
-      rating: rating,
-      comment: inputs.comment,
-      productID: detailProduct?._id,
-    };
+  const handleComment = useCallback(
+    async (e) => {
+      e.preventDefault();
+      let data = {
+        rating: rating,
+        comment: inputs.comment,
+        productID: detailProduct?._id,
+      };
 
-    try {
-      const response = await commentService.fetchPostComment(data);
-      if (response.status === true) {
-        setValidationErrors([]);
-        setRating(0);
-        setInputs({ ...inputs, comment: "" });
-        createNotification("success", "topRight", response.message);
-        fetchCommentData();
-      } else {
-        if (response?.status === false) {
+      try {
+        const response = await commentService.fetchPostComment(data);
+        if (response.status === true) {
           setValidationErrors([]);
+          setRating(0);
           setInputs({ ...inputs, comment: "" });
-          createNotification("error", "topRight", response.message);
+          createNotification("success", "topRight", response.message);
+          fetchCommentData();
+        } else {
+          if (response?.status === false) {
+            setValidationErrors([]);
+            setInputs({ ...inputs, comment: "" });
+            createNotification("error", "topRight", response.message);
+          }
+          setValidationErrors(response.errors);
         }
-        setValidationErrors(response.errors);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [rating, inputs, detailProduct, fetchCommentData]);
+    },
+    [rating, inputs, detailProduct, fetchCommentData]
+  );
 
   const increaseQuantity = useCallback(() => {
     setQuantity(quantity + 1);
@@ -197,7 +226,6 @@ export default function DetailProductPage() {
   const handleTabClick = useCallback((index) => {
     setActiveTab(index);
   }, []);
-
 
   return (
     <Layout>
@@ -407,7 +435,27 @@ export default function DetailProductPage() {
                                 </button>
                               </div>
                             </div>
-                       
+                            <div className="w-[60px] h-full flex justify-center items-center border border-qgray-border">
+                              <button type="button">
+                                <span>
+                                  <svg
+                                    width={24}
+                                    height={24}
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M17 1C14.9 1 13.1 2.1 12 3.7C10.9 2.1 9.1 1 7 1C3.7 1 1 3.7 1 7C1 13 12 22 12 22C12 22 23 13 23 7C23 3.7 20.3 1 17 1Z"
+                                      stroke="#D5D5D5"
+                                      strokeWidth={2}
+                                      strokeMiterlimit={10}
+                                      strokeLinecap="square"
+                                    />
+                                  </svg>
+                                </span>
+                              </button>
+                            </div>
                             <div className="flex-1 h-full">
                               <button
                                 type="button"
@@ -659,12 +707,21 @@ export default function DetailProductPage() {
                                         </span>
                                       </div>
                                     </div>
+
                                     <div className="comment">
                                       <p className="text-[15px] text-gray leading-7 text-normal">
                                         {item.comment}
                                       </p>
                                     </div>
                                     {/* <div className="sub-comment-item bg-white px-10 pt-[32px] border-t">
+=======
+                                    <div className="comment mb-[30px]">
+                                      <p className="text-[15px] text-qgray leading-7 text-normal">
+                                        {item.comment}
+                                      </p>
+                                    </div>
+                                    <div className="sub-comment-item bg-white px-10 pt-[32px] border-t">
+>>>>>>> 6b9da2a83a6e91a80c49225029b1f8a4a9415d11
                                       <div className="comment-author mb-3">
                                         <div className="flex space-x-3 items-center">
                                           <div className="w-[50px] h-[50px] rounded-full overflow-hidden relative">
@@ -724,6 +781,7 @@ export default function DetailProductPage() {
                                           the printing and typesetting industry.
                                         </p>
                                       </div>
+<<<<<<< HEAD
                                     </div> */}
                                   </div>
                                 ))}

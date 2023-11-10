@@ -7,7 +7,6 @@ import React, {
   useState,
 } from "react";
 
-import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../contexts/AppContextProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { orders } from "../../stores/order/actions";
