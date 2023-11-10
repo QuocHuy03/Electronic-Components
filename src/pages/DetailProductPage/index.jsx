@@ -415,8 +415,8 @@ export default function DetailProductPage() {
                             data-aos="fade-up"
                             className="quantity-card-wrapper w-full flex items-center h-[50px] space-x-[10px] mb-[30px] aos-init aos-animate"
                           >
-                            <div className="w-[120px] h-full px-[26px] flex items-center border border-gray-border">
-                              <div className="flex justify-between items-center w-full">
+                            <div className="w-[120px] h-full px-[26px] flex items-center border border-gray-border rounded-lg">
+                              <div className="flex justify-between items-center w-full ">
                                 <button
                                   type="button"
                                   onClick={decreaseQuantity}
