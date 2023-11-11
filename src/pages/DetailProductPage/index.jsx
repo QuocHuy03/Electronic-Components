@@ -21,6 +21,7 @@ import {
 } from "../../utils/fomatPrice";
 import { AppContext } from "../../contexts/AppContextProvider";
 import { URL_CONSTANTS } from "../../constants/url.constants";
+import "./style.css";
 
 export default function DetailProductPage() {
   const { accessToken } = useContext(AppContext);
@@ -72,11 +73,18 @@ export default function DetailProductPage() {
   const queryKey = useMemo(() => ["edit-product", isSlug], [isSlug]);
 
   const { data: detailProductData, isLoading: isDetailProductLoading } =
-    useQuery(queryKey, async () => {
-      if (isSlug) {
-        return await productService.fetchProductBySlug(isSlug);
+    useQuery(
+      queryKey,
+      async () => {
+        if (isSlug) {
+          return await productService.fetchProductBySlug(isSlug);
+        }
+      },
+      {
+        staleTime: 500,
+        enabled: !!isSlug,
       }
-    });
+    );
 
   const { data: related, isLoading: loadingRelated } = useQuery(
     ["related", detailProductData?.brandID],
@@ -112,7 +120,6 @@ export default function DetailProductPage() {
         console.error("Error fetching comment data:", error);
       }
     }
-
   }, [detailProduct]);
 
   useEffect(() => {
@@ -414,8 +421,8 @@ export default function DetailProductPage() {
                             data-aos="fade-up"
                             className="quantity-card-wrapper w-full flex items-center h-[50px] space-x-[10px] mb-[30px] aos-init aos-animate"
                           >
-                            <div className="w-[120px] h-full px-[26px] flex items-center border border-gray-border">
-                              <div className="flex justify-between items-center w-full">
+                            <div className="w-[120px] h-full px-[26px] flex items-center border border-gray-border rounded-lg">
+                              <div className="flex justify-between items-center w-full ">
                                 <button
                                   type="button"
                                   onClick={decreaseQuantity}
@@ -605,8 +612,6 @@ export default function DetailProductPage() {
                                     key={index}
 
                                     className="comment-item bg-white mb-2.5 rounded-2xl"
-
-
                                   >
                                     <div className="comment-author flex justify-between items-center mb-3">
                                       <div className="flex space-x-3 items-center mt-3 ml-3">
@@ -688,22 +693,11 @@ export default function DetailProductPage() {
                                         </span>
                                       </div>
                                     </div>
-
-
-                                    <div className="comment">
+                                    <div className="comment ml-5">
                                       <p className="text-[15px] text-gray leading-7 text-normal">
                                         {item.comment}
                                       </p>
                                     </div>
-                                    {/* <div className="sub-comment-item bg-white px-10 pt-[32px] border-t">
-=======
-                                    <div className="comment mb-[30px]">
-                                      <p className="text-[15px] text-qgray leading-7 text-normal">
-                                        {item.comment}
-                                      </p>
-                                    </div>
-                                    <div className="sub-comment-item bg-white px-10 pt-[32px] border-t">
->>>>>>> 6b9da2a83a6e91a80c49225029b1f8a4a9415d11
                                       <div className="comment-author mb-3">
                                         <div className="flex space-x-3 items-center">
                                           <div className="w-[50px] h-[50px] rounded-full overflow-hidden relative">
@@ -763,18 +757,13 @@ export default function DetailProductPage() {
                                           the printing and typesetting industry.
                                         </p>
                                       </div>
-<<<<<<< HEAD
-                                    </div> */}
-
                                   </div>
                                 ))}
                               </div>
                               <div className="w-full flex justify-center">
                                 <button
                                   type="button"
-
                                   className="bg-black text-white w-[170px] h-[50px] text-sm font-semibold rounded-3xl"
-
                                 >
                                   Load More
                                 </button>

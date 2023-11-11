@@ -1,4 +1,6 @@
 
+
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Layout from "../../components/Layout";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../contexts/AppContextProvider";
@@ -28,6 +30,7 @@ export default function CheckoutPage() {
   const { carts, user } = useContext(AppContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const history = useHistory();
   const [provinces, setProvinces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [districts, setDistricts] = useState([]);
@@ -47,6 +50,11 @@ export default function CheckoutPage() {
     }
   );
 
+
+
+  const handleClickPayment = (itemId) => {
+    setActiveItem(itemId);
+  };
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setInputs((prevInputs) => ({

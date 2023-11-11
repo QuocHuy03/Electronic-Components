@@ -33,7 +33,7 @@ export default function HomePage() {
             </div>
             <div
               data-aos="fade-up"
-              className="best-services w-full bg-white flex flex-col space-y-10 lg:space-y-0 lg:flex-row lg:justify-between lg:items-center lg:h-[110px] px-10 lg:py-0 py-10 aos-init"
+              className="best-services w-[96%] ml-2 bg-white flex flex-col space-y-10 lg:space-y-0 lg:flex-row lg:justify-between lg:items-center lg:h-[110px] px-10 lg:py-0 py-10 aos-init"
             >
               <div className="item">
                 <div className="flex space-x-5 items-center">
@@ -241,7 +241,7 @@ export default function HomePage() {
       <div className="section-style-one new-products mb-[60px]">
         <div className="section-wrapper w-full ">
           <div className="max-w-6xl mx-auto">
-            <div className=" section-title flex justify-between items-center mb-5">
+            <div className=" section-title flex justify-between items-center mb-5 w-[96%] ml-2">
               <div>
                 <h1 className="sm:text-3xl text-xl font-600 text-qblacktext leading-none">
                   New Arrivals
@@ -279,7 +279,7 @@ export default function HomePage() {
                   {data?.map((item) => (
                     <div data-aos="fade-up" className="item aos-init">
                       <div
-                        className="product-card-one w-full h-full bg-white relative group overflow-hidden rounded-2xl"
+                        className="product-card-one w-[96%] h-full bg-white relative group overflow-hidden rounded-xl ml-2"
                         style={{
                           boxShadow: "rgba(0, 0, 0, 0.05) 0px 15px 64px 0px",
                         }}
@@ -365,7 +365,7 @@ export default function HomePage() {
         data-aos="fade-up"
         className="w-full brand-section-wrapper mb-[60px] aos-init aos-animate"
       >
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto w-[96%]">
           <div className=" section-title flex justify-between items-center mb-5">
             <div>
               <h1 className="sm:text-3xl text-xl font-600 text-qblacktext">
@@ -391,9 +391,6 @@ export default function HomePage() {
                       padding: 0,
                       position: "absolute",
                       inset: 0,
-
-
-
                     }}
                   >
                     <img
@@ -429,7 +426,7 @@ export default function HomePage() {
       </div>
       {/* Khuyến Mãi */}
       <div>
-        <div className="w-full lg:h-[460px] mb-[60px]">
+        <div className="w-[96%] lg:h-[460px] mb-[60px] ml-2">
           <div className="max-w-6xl mx-auto h-full">
             <div className="lg:flex xl:space-x-[30px] lg:space-x-5 items-center h-full">
               <div
@@ -742,7 +739,7 @@ export default function HomePage() {
         </div>
       </div>
       {/* Best Saller */}
-      <div className="section-wrapper w-full best-sallers-section mb-[60px]">
+      <div className="section-wrapper w-[96%] ml-2 best-sallers-section mb-[60px]">
         <div className="max-w-6xl mx-auto">
           <div className=" section-title flex justify-between items-center mb-5">
             <div>

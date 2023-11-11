@@ -53,11 +53,11 @@ export default function CartPage() {
     [dispatch]
   );
 
-
   const handleDeleteAll = useCallback(async () => {
     const response = await dispatch(deleteToCartAll());
     // Xử lý logic sau khi xóa tất cả mục
   }, [dispatch]);
+
   return (
     <Layout>
       <div className="w-full pt-0 pb-0">
