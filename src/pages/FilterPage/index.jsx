@@ -516,87 +516,127 @@ export default function FilterPage() {
                     </svg>
                   </button>
                 </div>
-                <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 xl:gap-[30px] gap-5 mb-[40px]">
+                <div className="flex flex-wrap gap-1 place-content-start  bg-gray-50 pt-2 pb-2 pl-2">
                   {loadingProduct ? (
                     <Loading />
                   ) : (
                     filteredData?.map((item) => (
-                      <div data-aos="fade-up" className="aos-init aos-animate">
+                      <div data-aos="fade-up" className="bg-white mb-2 w-[calc(25%-5px)]">
                         <div
-                          className="product-card-one w-full h-full bg-white relative group overflow-hidden"
-                          style={{
-                            boxShadow: "rgba(0, 0, 0, 0.05) 0px 15px 64px 0px",
-                          }}
+                          className="product-card relative w-full h-full p-4 flex flex-col bg-white justify-between"
+                          data-content-region-name="forYouListProduct"
+                          data-track-content="true"
+                          data-content-name={230402670}
+                          data-content-index={0}
+                          data-content-target="productDetail"
                         >
-                          <Link
-                            to={`/product/${item.slugProduct}`}
-                            className="p-img"
-                          >
-                            <img
-                              className="product-card-img w-full p-[25px]"
-                              src={item.images[0].imagePath}
-                              alt="Product Image"
-                              style={{
-                                objectFit: "cover",
-                              }}
-                            />
-                          </Link>
-                          <div className="product-card-details px-[30px] pb-[30px] relative">
-                            <div className="absolute w-full h-10 px-[30px] left-0 top-40 group-hover:top-[85px] transition-all duration-300 ease-in-out">
-                              <button
-                                type="button"
-                                className="bg-yellow-400 items-center flex h-full w-full  opacity-1 justify-center"
-                              >
-                                <div className="flex items-center space-x-3">
-                                  <span>
-                                    <svg
-                                      width={14}
-                                      height={16}
-                                      viewBox="0 0 14 16"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="fill-current"
-                                    >
-                                      <path d="M12.5664 4.14176C12.4665 3.87701 12.2378 3.85413 11.1135 3.85413H10.1792V3.43576C10.1792 2.78532 10.089 2.33099 9.86993 1.86359C9.47367 1.01704 8.81003 0.425438 7.94986 0.150881C7.53106 0.0201398 6.90607 -0.0354253 6.52592 0.0234083C5.47246 0.193372 4.57364 0.876496 4.11617 1.85052C3.89389 2.32772 3.80368 2.78532 3.80368 3.43576V3.8574H2.8662C1.74187 3.8574 1.51313 3.88028 1.41326 4.15483C1.36172 4.32807 0.878481 8.05093 0.6723 9.65578C0.491891 11.0547 0.324369 12.3752 0.201948 13.3688C-0.0106763 15.0815 -0.00423318 15.1077 0.00220999 15.1371V15.1404C0.0312043 15.2515 0.317925 15.5424 0.404908 15.6274L0.781834 16H13.1785L13.4588 15.7483C13.5844 15.6339 14 15.245 14 15.0521C14 14.9214 12.5922 4.21694 12.5664 4.14176ZM12.982 14.8037C12.9788 14.8266 12.953 14.8952 12.9079 14.9443L12.8435 15.0162H1.13943L0.971907 14.8331L1.63233 9.82901C1.86429 8.04766 2.07047 6.4951 2.19289 5.56684C2.24766 5.16154 2.27343 4.95563 2.28631 4.8543C2.72123 4.85103 4.62196 4.84776 6.98661 4.84776H11.6901L11.6966 4.88372C11.7481 5.1452 12.9594 14.5128 12.982 14.8037ZM4.77338 3.8574V3.48479C4.77338 3.23311 4.80559 2.88664 4.84103 2.72649C5.03111 1.90935 5.67864 1.24584 6.48726 1.03339C6.82553 0.948403 7.37964 0.97782 7.71791 1.10202H7.72113C8.0755 1.22296 8.36545 1.41907 8.63284 1.71978C9.06453 2.19698 9.2095 2.62516 9.2095 3.41615V3.8574H4.77338Z" />
-                                    </svg>
-                                  </span>
+                          <div className="relative flex-1 flex-grow-0 flex-shrink-0 flex-basis-auto mb-2">
+                            <div className="relative mb-1">
+                              <div className="relative pb-[100%]">
+                                <div
+                                  height="100%"
+                                  width="100%"
+                                  className="inline-block overflow-hidden h-full w-full transition-transform duration-300 ease-in-out absolute inset-0 object-contain"
+                                >
                                   <Link to={`/product/${item.slugProduct}`}>
-                                    <span>Add To Cart</span>
+                                    <img
+                                      src={item.images[0].imagePath}
+                                      loading="lazy"
+                                      hover="zoom"
+                                      decoding="async"
+                                      alt="Laptop ACER Nitro 16 Phoenix AN16-41-R5M4 (Ryzen 5 7535HS/RAM 8GB/RTX 4050/512GB SSD/ Windows 11)"
+                                      style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "contain",
+                                        position: "absolute",
+                                        top: 0,
+                                        left: 0,
+                                      }}
+                                    />
                                   </Link>
                                 </div>
-                              </button>
+                              </div>
                             </div>
-                            <div className="reviews flex space-x-[1px] mb-3">
-                              <span className="text-sm italic">
-                                (Tiết kiệm:{" "}
-                                {calculateDiscountPercentage(
-                                  item?.initial_price,
-                                  item?.price_has_dropped
-                                )}
-                                )
-                              </span>
+                            <div className="mb-1">
+                              <div
+                                type="body"
+                                color="textSecondary"
+                                className="product-brand-name border-gray-300 opacity-100 text-gray-500 font-medium text-sm leading-[20px] overflow-hidden whitespace-nowrap overflow-ellipsis transition duration-300 ease-in-out delay-0s"
+                                style={{
+                                  textTransform: "uppercase",
+                                  display: "inline",
+                                }}
+                              >
+                                ACER
+                              </div>
                             </div>
-                            <Link
-                              to={`/product/${item.slugProduct}`}
-                              className="p-name"
-                            >
-                              <p className="title mb-2 text-[15px] font-600 text-neutral-950 font-bold leading-[24px] line-clamp-2 hover:text-qyellow cursor-pointer">
-                                {item.nameProduct}
-                              </p>
-                            </Link>
-                            <p className="price">
-                              <span className="main-price text-qgray line-through font-500 text-[15px]">
-                                {formatPrice(item.initial_price)}đ
-                              </span>
-                              <span className="offer-price text-qred font-500 text-[15px] ml-2">
-                                {formatPrice(item.price_has_dropped)} đ
-                              </span>
-                            </p>
+                            <div className="h-12">
+                              <div
+                                type="caption"
+                                className="att-product-card-title  border-gray-300 opacity-100 text-gray-600 font-normal text-sm leading-4 overflow-hidden custom-line-clamp"
+                                color="textPrimary"
+                              >
+                                <Link to={`/product/${item.slugProduct}`}>
+                                  <h3
+                                    title={item.nameProduct}
+                                    className="text-sm font-normal leading-4 inline"
+                                  >
+                                    {item.nameProduct}
+                                  </h3>
+                                </Link>
+                              </div>
+                            </div>
+                            <div className="relative mt-1 mb-1 pr-0 flex items-center">
+                              <div className="flex flex-col items-start h-10">
+                                <div
+                                  type="subtitle"
+                                  className="att-product-detail-latest-price opacity-100 text-blue-700 font-bold text-lg leading-6 overflow-hidden whitespace-normal overflow-ellipsis mt-1"
+                                  color="primary500"
+                                >
+                                  {formatPrice(item.price_has_dropped)}đ
+                                </div>
+                                <div class="flex h-4">
+                                  <div
+                                    type="caption"
+                                    class="att-product-detail-retail-price m-0.25 opacity-100 text-gray-500 font-normal text-xs leading-4 overflow-hidden overflow-ellipsis line-through mt-1"
+                                    color="textSecondary"
+                                  >
+                                    {formatPrice(item.initial_price)} đ
+                                  </div>
+                                  <div
+                                    type="caption"
+                                    color="primary500"
+                                    class="opacity-100 text-blue-500 font-normal text-xs leading-4 overflow-hidden overflow-ellipsis ml-2 mt-1"
+                                  >
+                                    -{" "}
+                                    {calculateDiscountPercentage(
+                                      item?.initial_price,
+                                      item?.price_has_dropped
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="ml-10">
+                                <button
+                                  className="w-10 h-10 border-2 border-green-500 rounded-full p-3 flex-shrink-0 order-first"
+                                  onClick={() => handleAddToCart()}
+                                >
+                                  <img
+                                    src="https://i.imgur.com/ZCeBSHN.png"
+                                    alt=""
+                                    style={{ transform: "scale(2.5)" }}
+                                  />
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     ))
                   )}
+                 
+                      
                 </div>
               </div>
             </div>
