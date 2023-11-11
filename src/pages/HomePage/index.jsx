@@ -391,9 +391,6 @@ export default function HomePage() {
                       padding: 0,
                       position: "absolute",
                       inset: 0,
-
-
-
                     }}
                   >
                     <img

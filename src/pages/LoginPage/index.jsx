@@ -29,14 +29,12 @@ export default function LoginPage() {
     setPasswordVisible((prevVisible) => !prevVisible);
   }, []);
 
-
   const [isPassword, setIsPassword] = useState("");
   const handlePasswordChange = useCallback((e) => {
     setIsPassword(e.target.value);
   }, []);
 
   const oauthURL = useMemo(() => getGoogleAuthUrl(), []);
-
   const navigate = useNavigate();
   const [validationErrors, setValidationErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);

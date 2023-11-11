@@ -75,27 +75,17 @@ export default function ProfilePage() {
         await dispatch(logout(refreshToken));
       } else {
         if (response.status === false) {
-
           setValidationErrors([]);
-          createNotification("success", "topRight", response.message);
-          await dispatch(logout(refreshToken));
-        } else {
-          if (response.status === false) {
-            setValidationErrors([]);
-            createNotification("error", "topRight", response.message);
-          }
-          setValidationErrors(response.errors);
+          createNotification("error", "topRight", response.message);
         }
-      }
-     } catch (error) {
-        console.error("An error occurred:", error);
-     }
-      
 
-    
+        setValidationErrors(response.errors);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   }, [dispatch, refreshToken, handleChangePasswordData]);
   
-
 
   const handleCancel = () => {
     // Reset the form
@@ -154,6 +144,7 @@ export default function ProfilePage() {
         city: e.target.value,
       }));
     }, []);
+    
 
     const handleSelectDistrict = useCallback((e) => {
       setSelectedDistrict(e.target.value);
@@ -162,7 +153,7 @@ export default function ProfilePage() {
         district: e.target.value,
       }));
     }, []);
-
+    
 
     const handleSelectCommune = useCallback((e) => {
       setSelectedCommune(e.target.value);
@@ -186,8 +177,6 @@ export default function ProfilePage() {
     }, [wards, selectedDistrict]);
 
     
-
-
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {

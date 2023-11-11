@@ -1,5 +1,3 @@
-
-
 import React, { useCallback, useState } from "react";
 import Layout from "../../components/Layout";
 import { userService } from "../../services/user.service";
@@ -18,8 +16,6 @@ export default function ForgotPasswordPage() {
   }, []);
 
   const handleSubmit = useCallback(async (e) => {
-
-
     e.preventDefault();
     setSubmitted(true);
     let data = {

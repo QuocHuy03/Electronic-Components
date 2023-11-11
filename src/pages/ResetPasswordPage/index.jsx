@@ -26,7 +26,6 @@ export default function ResetPasswordPage() {
     setPasswordConfirmVisible((prevVisible) => !prevVisible);
   }, []);
 
-
   const [isPassword, setIsPassword] = useState("");
   const [isPasswordConfirm, setIsPasswordConfirm] = useState("");
 
@@ -37,7 +36,6 @@ export default function ResetPasswordPage() {
     password: "",
     confirm_password: "",
   });
-
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
