@@ -24,10 +24,52 @@ export default function CartPage() {
 
   const handleUpdateCart = useCallback(
     async (item, operation) => {
+      //   const dataToSend = {
+      //     current: 0,
+      //     previous: 0,
+      //     initialQuantity: 0,
+      //   };
+
+      //     isOrder.products.map((orderProduct) => {
+      //       if (orderProduct.productID === productID) { // nếu trùng thì nó mới update quantity ban đầu còn thêm mới sản phẩm thì nó luôn luôn = 0
+      //         const orderProductQuantity = parseInt(orderProduct.quantity) || 0;
+      //         dataToSend.initialQuantity += orderProductQuantity;
+      //       }
+      //     });
+
+      //   if (selectedProduct) {
+      //     const price = parseFloat(selectedProduct.price_has_dropped) || 0;
+      //     const quantity = parseInt(product.quantity) || 0;
+      //     if (dataToSend.initialQuantity !== quantity) {
+      //       // Kiểm tra xem `initialQuantity` và `quantity` có khác nhau không
+      //       // Nếu có sự khác biệt, tức là `quantity` không bằng `initialQuantity`
+
+      //       if (quantity > dataToSend.initialQuantity) {
+      //         // Nếu `quantity` lớn hơn `initialQuantity`
+      //         // (Nghĩa là số lượng đặt hàng lớn hơn số lượng ban đầu)
+
+      //         dataToSend.current += quantity - dataToSend.initialQuantity;
+      //         // Ta cập nhật `current` bằng cách thêm vào nó sự khác biệt giữa `quantity` và `initialQuantity`.
+      //         // Điều này thể hiện sự tăng lên so với số lượng ban đầu.
+      //       } else {
+      //         // Nếu `quantity` nhỏ hơn `initialQuantity`
+      //         // (Nghĩa là số lượng đặt hàng nhỏ hơn số lượng ban đầu)
+
+      //         dataToSend.previous += dataToSend.initialQuantity - quantity;
+      //         // Ta cập nhật `previous` bằng cách thêm vào nó sự khác biệt giữa `initialQuantity` và `quantity`.
+      //         // Điều này thể hiện sự giảm xuống so với số lượng ban đầu.
+      //       }
+      //     }
+      //     product.quantity = dataToSend.initialQuantity;
+      //     product.updateQuantity = dataToSend;
+      //   }
+      // });
       const updatedItem = { ...item };
       const quantityCart = parseInt(updatedItem.quantity, 10);
       if (operation === "increment") {
-        updatedItem.quantity = quantityCart + 1;
+        if (updatedItem.quantity < 10) {
+          updatedItem.quantity = quantityCart + 1;
+        }
       } else if (operation === "decrement") {
         if (updatedItem.quantity > 1) {
           updatedItem.quantity = quantityCart - 1;

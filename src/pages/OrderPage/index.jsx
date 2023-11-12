@@ -81,7 +81,7 @@ export default function OrderPage() {
   useEffect(() => {
     console.log('useEffect triggered');
     dispatchOrder();
-  }, [dispatchOrder]);
+  }, []);
 
   return (
     <Layout>

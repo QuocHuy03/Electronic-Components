@@ -31,6 +31,8 @@ export default function CheckoutPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+
+
   const [provinces, setProvinces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [districts, setDistricts] = useState([]);

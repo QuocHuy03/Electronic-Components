@@ -13,6 +13,7 @@ import OrderStatus from "../../types/order.type";
 import { formatPrice } from "../../utils/fomatPrice";
 import { persistor } from "../../stores/app.store";
 import { Link } from "react-router-dom";
+import Pagination from "../../components/Pagination";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -65,27 +66,30 @@ export default function ProfilePage() {
   }, [inputChangePass]);
 
 
-  const handleChangePassword = useCallback(async (e) => {
-    e.preventDefault();
-    try {
-      const response = await userService.changePassword(handleChangePasswordData);
-      if (response.status === true) {
-        setValidationErrors([]);
-        createNotification("success", "topRight", response.message);
-        await dispatch(logout(refreshToken));
-      } else {
-        if (response.status === false) {
+  const handleChangePassword = useCallback(
+    async (e) => {
+      e.preventDefault();
+      try {
+        const response = await userService.changePassword(
+          handleChangePasswordData
+        );
+        if (response.status === true) {
           setValidationErrors([]);
-          createNotification("error", "topRight", response.message);
+          createNotification("success", "topRight", response.message);
+          await dispatch(logout(refreshToken));
+        } else {
+          if (response.status === false) {
+            setValidationErrors([]);
+            createNotification("error", "topRight", response.message);
+          }
+          setValidationErrors(response.errors);
         }
-
-        setValidationErrors(response.errors);
+      } catch (error) {
+        console.error("An error occurred:", error);
       }
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-  }, [dispatch, refreshToken, handleChangePasswordData]);
-  
+    },
+    [dispatch, refreshToken, handleChangePasswordData]
+  );
 
   const handleCancel = () => {
     // Reset the form
@@ -144,7 +148,6 @@ export default function ProfilePage() {
         city: e.target.value,
       }));
     }, []);
-    
 
     const handleSelectDistrict = useCallback((e) => {
       setSelectedDistrict(e.target.value);
@@ -153,7 +156,6 @@ export default function ProfilePage() {
         district: e.target.value,
       }));
     }, []);
-    
 
     const handleSelectCommune = useCallback((e) => {
       setSelectedCommune(e.target.value);
@@ -163,20 +165,18 @@ export default function ProfilePage() {
       }));
     }, []);
 
-    
     const filteredDistricts = useMemo(() => {
       return districts?.filter(
         (district) => district.province_id === Number(selectedProvince)
       );
     }, [districts, selectedProvince]);
-    
+
     const filteredWards = useMemo(() => {
       return wards?.filter(
         (ward) => ward.district_id === Number(selectedDistrict)
       );
     }, [wards, selectedDistrict]);
 
-    
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
@@ -194,7 +194,7 @@ export default function ProfilePage() {
         console.error("An error occurred:", error);
       }
     };
-    
+
     return (
       <form onSubmit={handleSubmit}>
         <div className="flex space-x-8">
@@ -421,6 +421,116 @@ export default function ProfilePage() {
           </button>
         </div>
       </form>
+    );
+  };
+
+  const ListOrder = ({ isOrders }) => {
+    const renderOrderItem = (item, index) => {
+      let statusClass = "text-sm rounded p-2 ";
+      let statusText = "";
+
+      switch (item.orderStatus) {
+        case OrderStatus.DELIVERED:
+          statusClass += "text-green-500 bg-green-100";
+          statusText = "Đã Giao Hàng";
+          break;
+
+        case OrderStatus.PROCESSING:
+          statusClass += "text-blue-500 bg-blue-100";
+          statusText = "Đang Xử Lý";
+          break;
+
+        case OrderStatus.SHIPPED:
+        case OrderStatus.SHIPPED_CONFIRMED:
+          statusClass += "text-yellow-500 bg-yellow-100";
+          statusText = "Đang Giao Hàng";
+          break;
+
+        case OrderStatus.ON_HOLD:
+          statusClass += "text-orange-500 bg-orange-100";
+          statusText = "Tạm Giữ & Chậm Trễ";
+          break;
+
+        case OrderStatus.CANCELLED:
+          statusClass += "text-red-500 bg-red-100";
+          statusText = "Đã Hủy";
+          break;
+
+        case OrderStatus.BACKORDERED:
+          statusClass += "text-purple-500 bg-purple-100";
+          statusText = "Chờ Hàng Về Kho";
+          break;
+
+        case OrderStatus.REFUNDED:
+          statusClass += "text-gray-500 bg-gray-100";
+          statusText = "Đã Hoàn Tiền";
+          break;
+
+        default:
+          statusClass += "text-white bg-black";
+          statusText = "Lỗi";
+          break;
+      }
+
+      return (
+        <tr className="bg-white border-b hover:bg-gray-50" key={index}>
+          <td className="text-center py-4">
+            <span className="text-lg text-qgray font-medium">#{index + 1}</span>
+          </td>
+          <td className="text-center py-4 px-2">
+            <span className="text-base text-qgray whitespace-nowrap">
+              {formatDate(item.createdAt)}
+            </span>
+          </td>
+          <td className="text-center py-4 px-2">
+            <span className={`text-sm rounded ${statusClass}`}>
+              {statusText}
+            </span>
+          </td>
+          <td className="text-center py-4 px-2">
+            <span className="text-base text-qblack whitespace-nowrap px-2">
+              {formatPrice(item.totalPrice)}
+            </span>
+          </td>
+          <td className="text-center py-4">
+            <Link
+              to={`/order/${item.code}`}
+              className="px-2 py-3 rounded-sm bg-yellow-400 text-white font-bold"
+            >
+              View
+            </Link>
+            {" "}
+            <Link
+              to={`/order/${item.code}`}
+              className="px-2 py-3 rounded-sm bg-red-500 text-white font-bold"
+            >
+              Cancel
+            </Link>
+          </td>
+        </tr>
+      );
+    };
+    return (
+      <div className="relative w-full overflow-x-auto sm:rounded-lg">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <tbody>
+            <tr className="text-base text-gray-400 whitespace-nowrap px-2 border-b default-border-bottom ">
+              <td className="py-4 block whitespace-nowrap text-center">
+                Order
+              </td>
+              <td className="py-4 whitespace-nowrap text-center">Date</td>
+              <td className="py-4 whitespace-nowrap text-center">Status</td>
+              <td className="py-4 whitespace-nowrap text-center">Amount</td>
+              <td className="py-4 whitespace-nowrap text-center">Action</td>
+            </tr>
+          </tbody>
+          <Pagination
+            data={isOrders}
+            itemsPerPage={4}
+            renderItem={renderOrderItem}
+          />
+        </table>
+      </div>
     );
   };
 
@@ -755,132 +865,7 @@ export default function ProfilePage() {
                         <UpdateProfile user={user} />
                       ) : activeTab === 2 ? (
                         <React.Fragment>
-                          <div className="relative w-full overflow-x-auto sm:rounded-lg">
-                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                              <tbody>
-                                <tr className="text-base text-gray-400 whitespace-nowrap px-2 border-b default-border-bottom ">
-                                  <td className="py-4 block whitespace-nowrap text-center">
-                                    Order
-                                  </td>
-                                  <td className="py-4 whitespace-nowrap text-center">
-                                    Date
-                                  </td>
-                                  <td className="py-4 whitespace-nowrap text-center">
-                                    Status
-                                  </td>
-                                  <td className="py-4 whitespace-nowrap text-center">
-                                    Amount
-                                  </td>
-                                  <td className="py-4 whitespace-nowrap text-center">
-                                    Action
-                                  </td>
-                                </tr>
-                                {isOrders?.length > 0 ? (
-                                  isOrders?.map((item, index) => {
-                                    let statusClass = "text-sm rounded p-2 ";
-                                    let statusText = "";
-
-                                    switch (item.orderStatus) {
-                                      case OrderStatus.DELIVERED:
-                                        statusClass +=
-                                          "text-green-500 bg-green-100";
-                                        statusText = "Đã Giao Hàng";
-                                        break;
-
-                                      case OrderStatus.PROCESSING:
-                                        statusClass +=
-                                          "text-blue-500 bg-blue-100";
-                                        statusText = "Đang Xử Lý";
-                                        break;
-
-                                      case OrderStatus.SHIPPED:
-                                      case OrderStatus.SHIPPED_CONFIRMED:
-                                        statusClass +=
-                                          "text-yellow-500 bg-yellow-100";
-                                        statusText = "Đang Giao Hàng";
-                                        break;
-
-                                      case OrderStatus.ON_HOLD:
-                                        statusClass +=
-                                          "text-orange-500 bg-orange-100";
-                                        statusText = "Tạm Giữ & Chậm Trễ";
-                                        break;
-
-                                      case OrderStatus.CANCELLED:
-                                        statusClass +=
-                                          "text-red-500 bg-red-100";
-                                        statusText = "Đã Hủy";
-                                        break;
-
-                                      case OrderStatus.BACKORDERED:
-                                        statusClass +=
-                                          "text-purple-500 bg-purple-100";
-                                        statusText = "Chờ Hàng Về Kho";
-                                        break;
-
-                                      case OrderStatus.REFUNDED:
-                                        statusClass +=
-                                          "text-gray-500 bg-gray-100";
-                                        statusText = "Đã Hoàn Tiền";
-                                        break;
-
-                                      default:
-                                        statusClass += "text-white bg-black";
-                                        statusText = "Lỗi";
-                                        break;
-                                    }
-
-                                    return (
-                                      <tr
-                                        className="bg-white border-b hover:bg-gray-50"
-                                        key={index}
-                                      >
-                                        <td className="text-center py-4">
-                                          <span className="text-lg text-qgray font-medium">
-                                            #{index + 1}
-                                          </span>
-                                        </td>
-                                        <td className="text-center py-4 px-2">
-                                          <span className="text-base text-qgray whitespace-nowrap">
-                                            {formatDate(item.createdAt)}
-                                          </span>
-                                        </td>
-                                        <td className="text-center py-4 px-2">
-                                          <span
-                                            className={`text-sm rounded ${statusClass}`}
-                                          >
-                                            {statusText}
-                                          </span>
-                                        </td>
-                                        <td className="text-center py-4 px-2">
-                                          <span className="text-base text-qblack whitespace-nowrap px-2">
-                                            {formatPrice(item.totalPrice)}
-                                          </span>
-                                        </td>
-                                        <td className="text-center py-4">
-                                          <Link
-                                            to={`/order/${item.code}`}
-                                            className="px-2 py-3 rounded-sm bg-yellow-400 text-black font-bold"
-                                          >
-                                            View Details
-                                          </Link>
-                                        </td>
-                                      </tr>
-                                    );
-                                  })
-                                ) : (
-                                  <tr className="bg-white border-b hover:bg-gray-50">
-                                    <td
-                                      colSpan="5"
-                                      className="text-center py-4 text-yellow-400"
-                                    >
-                                      Order Not Empty ...
-                                    </td>
-                                  </tr>
-                                )}
-                              </tbody>
-                            </table>
-                          </div>
+                          <ListOrder isOrders={isOrders} />
                         </React.Fragment>
                       ) : activeTab === 3 ? (
                         <React.Fragment>
