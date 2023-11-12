@@ -77,7 +77,7 @@ export default function OrderPage() {
 
   useEffect(() => {
     dispatchOrder();
-  }, [dispatchOrder]);
+  }, []);
 
   return (
     <Layout>
