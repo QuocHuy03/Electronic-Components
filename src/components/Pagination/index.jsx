@@ -1,19 +1,27 @@
 import React from "react";
 import { usePagination } from "../../hooks/usePagination";
 
-export default function Pagination({ data, itemsPerPage, renderItem }) {
+export default function Pagination({ div, data, itemsPerPage, renderItem }) {
   const { currentPage, currentData, nextPage, prevPage, maxPages, goToPage } =
     usePagination(data, itemsPerPage);
   return (
     <React.Fragment>
-      {currentData.map((item, index) => renderItem(item, index))}
+      {div ? (
+        <div className={div}>
+          {currentData.map((item, index) => renderItem(item, index))}
+        </div>
+      ) : (
+        currentData.map((item, index) => renderItem(item, index))
+      )}
       <div className="mt-[1rem] opacity-1">
         <div className="w-full text-center opacity-1">
           <div className="inline-flex">
             <button
               onClick={prevPage}
               disabled={currentPage === 1}
-              className={`${currentPage === 1 ? "bg-gray-200" : "bg-white"} z-[1] w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.25rem] border border-solid border-[rgb(228, 229, 240)]`}
+              className={`${
+                currentPage === 1 ? "bg-gray-200" : "bg-white"
+              } z-[1] w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.25rem] border border-solid border-[rgb(228, 229, 240)]`}
             >
               <svg
                 fill="none"
@@ -54,7 +62,9 @@ export default function Pagination({ data, itemsPerPage, renderItem }) {
             <button
               onClick={nextPage}
               disabled={currentPage === maxPages}
-              className={`${currentPage === maxPages ? "bg-gray-200" : "bg-white"} ml-[0.5rem] z-[1] w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.25rem] border border-solid border-[rgb(228, 229, 240)]`}
+              className={`${
+                currentPage === maxPages ? "bg-gray-200" : "bg-white"
+              } ml-[0.5rem] z-[1] w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.25rem] border border-solid border-[rgb(228, 229, 240)]`}
             >
               <svg
                 fill="none"
