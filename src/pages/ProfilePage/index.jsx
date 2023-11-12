@@ -494,16 +494,16 @@ export default function ProfilePage() {
           <td className="text-center py-4">
             <Link
               to={`/order/${item.code}`}
-              className="px-2 py-3 rounded-sm bg-yellow-400 text-black font-bold"
+              className="px-2 py-3 rounded-sm bg-yellow-400 text-white font-bold"
             >
-              View Details
+              View
             </Link>
             {" "}
             <Link
               to={`/order/${item.code}`}
-              className="px-2 py-3 rounded-sm bg-yellow-400 text-black font-bold"
+              className="px-2 py-3 rounded-sm bg-red-500 text-white font-bold"
             >
-              View Details
+              Cancel
             </Link>
           </td>
         </tr>
