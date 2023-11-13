@@ -26,7 +26,7 @@ export default function HeaderCenter() {
             <div className="flex justify-between items-center h-full">
               <Link to={URL_CONSTANTS.HOME} className="cursor-pointer">
                 <img
-                className="mt-2"
+                  className="mt-2"
                   width={152}
                   height={36}
                   src="https://i.imgur.com/ZEyJnBt.png"
@@ -43,41 +43,6 @@ export default function HeaderCenter() {
                         placeholder="Search Product..."
                       />
                     </form>
-                  </div>
-                  <div className="w-[1px] h-[22px] bg-gray-200" />
-                  <div className="flex-1 flex items-center px-4">
-                    <button
-                      type="button"
-                      className="w-full text-xs font-500 text-qgray flex justify-between items-center"
-                    >
-                      <span>All Categories</span>
-                      <span>
-                        <svg
-                          width={10}
-                          height={5}
-                          viewBox="0 0 10 5"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="9.18359"
-                            y="0.90918"
-                            width="5.78538"
-                            height="1.28564"
-                            transform="rotate(135 9.18359 0.90918)"
-                            fill="#8E8E8E"
-                          />
-                          <rect
-                            x="5.08984"
-                            y={5}
-                            width="5.78538"
-                            height="1.28564"
-                            transform="rotate(-135 5.08984 5)"
-                            fill="#8E8E8E"
-                          />
-                        </svg>
-                      </span>
-                    </button>
                   </div>
                   <button
                     className=" w-[93px] h-full text-sm font-600 bg-yellow-400"
@@ -177,7 +142,8 @@ export default function HeaderCenter() {
                               </span>
                             </div>
                             <div className="product-action-btn">
-                              <Link to={URL_CONSTANTS.CART}
+                              <Link
+                                to={URL_CONSTANTS.CART}
                                 style={{
                                   backgroundColor: "#f0f1f3",
                                 }}
@@ -186,7 +152,10 @@ export default function HeaderCenter() {
                                 <span>View Cart</span>
                               </Link>
                               <div className="w-full h-[50px] cursor-pointer">
-                                <Link to={`/checkout/${uuidv4()}`} className="bg-yellow-400 flex h-full w-full opacity-1 leading-0 font-bold items-center justify-center">
+                                <Link
+                                  to={`/checkout/${uuidv4()}`}
+                                  className="bg-yellow-400 flex h-full w-full opacity-1 leading-0 font-bold items-center justify-center"
+                                >
                                   <span className="text-sm">Checkout Now</span>
                                 </Link>
                               </div>

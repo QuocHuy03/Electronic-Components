@@ -49,6 +49,7 @@ export default function HomePage() {
     <Layout>
       {/* Banner */}
 
+
       <div className="w-full banner-wrapper mb-[60px] " data-aos="fade-up">
         <div className="max-w-6xl mx-auto">
           <div className="main-wrapper w-full">
@@ -321,11 +322,21 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
+
+      <div className="w-full banner-wrapper mb-[20px]" data-aos="fade-up">
+        <div className="max-w-6xl mx-auto">
+          <div className="main-wrapper w-full">
+            <div className="banner-card xl:flex xl:space-x-[30px] xl:h-[600px] mb-[30px]">
+              <div className="w-full mt-[30px]">
+                <Slider />
+
               </div>
             </div>
             <div
               data-aos="fade-up"
-              className="best-services w-[100%] ml-2 bg-white flex flex-col space-y-10 lg:space-y-0 lg:flex-row lg:justify-between lg:items-center lg:h-[110px] px-10 lg:py-0 py-10 aos-init"
+
+              className="best-services bg-white flex flex-col space-y-10 lg:space-y-0 lg:flex-row lg:justify-between lg:items-center lg:h-[110px] px-5 lg:py-0 py-10 aos-init"
+
             >
               <div className="item">
                 <div className="flex space-x-5 items-center">
@@ -532,29 +543,24 @@ export default function HomePage() {
       </div>
       {/* Product */}
 
-      <div className="section-style-one new-products mb-[60px]">
+      <div className="section-style-one new-products mb-[20px]">
         <div className="section-wrapper w-full  ">
-          <div className="max-w-6xl mx-auto bg-white rounded-md">
-            <div
-              className="relative flex justify-between items-center pl-4 pr-4 h-14 bg-white rounded-md"
-              style={{ paddingLeft: 16 }}
-            >
-              <a
-                target="_self"
+          <div className="max-w-6xl mx-auto rounded-md">
+            <div className="relative flex justify-between px-4 items-center h-14 bg-white rounded-md">
+              <Link
                 className="no-underline text-transparent cursor-pointer"
-                href="/c/san-pham-hot"
+                to={"/"}
               >
                 <div
                   type="title"
-                  color="textTitle"
-                  className="border-l-1 border-gray-300 bg-opacity-70 text-gray-700 font-bold text-lg leading-7 overflow-hidden whitespace-normal transition duration-300 ease-in-out delay-0s"
+                  className="border-l-1 border-gray-300 bg-opacity-70 text-gray-700 font-[500] text-lg leading-7 overflow-hidden whitespace-normal transition duration-300 ease-in-out delay-0s"
                 >
                   SẢN PHẨM NỔI BẬT
                 </div>
-              </a>
+              </Link>
               <Link to={URL_CONSTANTS.FILTER}>
                 <div className="flex space-x-2 items-center">
-                  <p className="text-base font-600 text-qblack">Xem thêm</p>
+                  <p className="text-base font-[500] text-black">Xem thêm</p>
                   <span className="animate-right-dir">
                     <svg
                       width={17}
@@ -576,20 +582,13 @@ export default function HomePage() {
                 </div>
               </Link>
             </div>
-            <div className="flex flex-wrap gap-1 place-content-start  bg-gray-50 pt-2 pb-2 pl-2">
+            <div className="flex flex-wrap gap-1 place-content-start bg-gray-50 py-2">
               {data?.map((item) => (
                 <div
                   data-aos="fade-up"
                   className="bg-white mb-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
                 >
-                  <div
-                    className="product-card relative w-full h-full p-4 flex flex-col bg-white justify-between"
-                    data-content-region-name="forYouListProduct"
-                    data-track-content="true"
-                    data-content-name={230402670}
-                    data-content-index={0}
-                    data-content-target="productDetail"
-                  >
+                  <div className="relative w-full h-full p-4 flex flex-col bg-white justify-between">
                     <div className="relative flex-1 flex-grow-0 flex-shrink-0 flex-basis-auto mb-2">
                       <div className="relative mb-1">
                         <div className="relative pb-[100%]">
@@ -679,7 +678,7 @@ export default function HomePage() {
                         </div>
                         <div className="ml-10">
                           <button
-                            className="w-10 h-10 border-2 border-green-500 rounded-full p-3 flex-shrink-0 order-first"
+                            className="w-8 h-8 border-[1px] border-blue-400 rounded-full p-[11px] flex-shrink-0 order-first"
                             onClick={() => handleAddToCart()}
                           >
                             <img
@@ -700,392 +699,43 @@ export default function HomePage() {
       </div>
 
       {/* Shop By Brand */}
-      <div
-        data-aos="fade-up"
-        className="w-full brand-section-wrapper mb-[60px] aos-init aos-animate"
-      >
-        <div className="max-w-6xl mx-auto w-[96%]">
-          <div className=" section-title flex justify-between items-center mb-5">
-            <div>
-              <h1 className="sm:text-3xl text-xl font-600 text-qblacktext">
-                Shop by Brand
-              </h1>
+      <div data-aos="fade-up" className="w-full mb-[20px] aos-init aos-animate">
+        <div className="max-w-6xl mx-auto bg-white rounded-[8px]">
+          <div className="relative flex justify-between items-center py-4 pl-4">
+            <div
+              type="title"
+              color="textTitle"
+              className="border-l-1 border-gray-300 bg-opacity-70 text-gray-700 font-[500] text-lg leading-7"
+            >
+              DANH MỤC NỔI BẬT
             </div>
           </div>
-          <div className="grid lg:grid-cols-6 sm:grid-cols-4 grid-cols-2">
+          <div
+            className="flex flex-wrap gap-[16px] text-center items-center"
+            style={{
+              padding: "8px 16px 24px",
+            }}
+          >
             {brand?.map((item) => (
-              <div className="item">
-                <div className="w-full h-[130px] bg-white border border-primarygray flex justify-center items-center relative">
-                  <span
-                    style={{
-                      boxSizing: "border-box",
-                      display: "block",
-                      overflow: "hidden",
-                      width: "initial",
-                      height: "initial",
-                      background: "none",
-                      opacity: 1,
-                      border: 0,
-                      margin: 0,
-                      padding: 0,
-                      position: "absolute",
-                      inset: 0,
-                    }}
-                  >
-                    <img
-                      alt="logo"
-                      src={item.image}
-                      decoding="async"
-                      data-nimg="fill"
-                      sizes="100vw"
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        boxSizing: "border-box",
-                        padding: 0,
-                        border: "none",
-                        margin: "auto",
-                        display: "block",
-                        width: 0,
-                        height: 0,
-                        minWidth: "60%",
-                        maxWidth: "90%",
-                        minHeight: "90%",
-                        maxHeight: "90%",
-                        objectFit: "scale-down",
-                      }}
-                    />
-                    <noscript />
-                  </span>
+              <div className="flex flex-grow flex-shrink flex-1 items-center">
+                <div className="relative inline-block overflow-hidden h-[56px] w-[56px]">
+                  <img alt="logo" src={item.image} />
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-      {/* Khuyến Mãi */}
-      <div>
-        <div className="w-[96%] lg:h-[460px] mb-[60px] ml-2">
-          <div className="max-w-6xl mx-auto h-full">
-            <div className="lg:flex xl:space-x-[30px] lg:space-x-5 items-center h-full">
-              <div
-                data-aos="fade-right"
-                className="campaign-countdown lg:w-1/2 h-full w-full mb-5 lg:mb-0 aos-init aos-animate"
-                style={{
-                  background:
-                    'url("https://shopo-next.vercel.app/assets/images/campaign-cover-countdown.jpg") 0% 0% / cover no-repeat',
-                }}
-              >
-                <div className="w-full xl:p-12 p-5">
-                  <div className="countdown-wrapper w-full flex lg:justify-between justify-evenly mb-10">
-                    <div className="countdown-item">
-                      <div className="countdown-number sm:w-[100px] sm:h-[100px] w-[50px] h-[50px] rounded-full bg-white flex justify-center items-center">
-                        <span className="font-700 sm:text-[30px] text-[14px] text-[#EB5757]">
-                          131
-                        </span>
-                      </div>
-                      <p className="sm:text-[18px] text-[12px] font-500 text-center leading-8">
-                        Days
-                      </p>
-                    </div>
-                    <div className="countdown-item">
-                      <div className="countdown-number sm:w-[100px] sm:h-[100px] w-[50px] h-[50px] rounded-full bg-white flex justify-center items-center">
-                        <span className="font-700 sm:text-[30px] text-[14px] text-[#2F80ED]">
-                          8
-                        </span>
-                      </div>
-                      <p className="sm:text-[18px] text-[12px] font-500 text-center leading-8">
-                        Hours
-                      </p>
-                    </div>
-                    <div className="countdown-item">
-                      <div className="countdown-number sm:w-[100px] sm:h-[100px] w-[50px] h-[50px] rounded-full bg-white flex justify-center items-center">
-                        <span className="font-700 sm:text-[30px] text-[14px] text-[#219653]">
-                          12
-                        </span>
-                      </div>
-                      <p className="sm:text-[18px] text-[12px] font-500 text-center leading-8">
-                        Minutes
-                      </p>
-                    </div>
-                    <div className="countdown-item">
-                      <div className="countdown-number sm:w-[100px] sm:h-[100px] w-[50px] h-[50px] rounded-full bg-white flex justify-center items-center">
-                        <span className="font-700 sm:text-[30px] text-[14px] text-[#EF5DA8]">
-                          8
-                        </span>
-                      </div>
-                      <p className="sm:text-[18px] text-[12px] font-500 text-center leading-8">
-                        Seconds
-                      </p>
-                    </div>
-                  </div>
-                  <div className="countdown-title mb-4">
-                    <h1 className="text-[44px] text-black font-600">
-                      WOO! Flash Sale
-                    </h1>
-                  </div>
-                  <div className="inline-flex space-x-2 items-center border-b border-qyellow">
-                    <span className="text-sm font-600 tracking-wide leading-7">
-                      Shop Now
-                    </span>
-                    <span>
-                      <svg
-                        width={7}
-                        height={11}
-                        viewBox="0 0 7 11"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <rect
-                          x="2.08984"
-                          y="0.636719"
-                          width="6.94219"
-                          height="1.54271"
-                          transform="rotate(45 2.08984 0.636719)"
-                          fill="#1D1D1D"
-                        />
-                        <rect
-                          x={7}
-                          y="5.54492"
-                          width="6.94219"
-                          height="1.54271"
-                          transform="rotate(135 7 5.54492)"
-                          fill="#1D1D1D"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div
-                data-aos="fade-left"
-                className="download-app flex-1 lg:h-full h-[430px] xl:p-12 p-5 aos-init aos-animate"
-                style={{
-                  background:
-                    'url("https://shopo-next.vercel.app/assets/images/download-app-cover.png") 0% 0% / cover no-repeat',
-                }}
-              >
-                <div className="flex flex-col h-full justify-between">
-                  <div className="get-app">
-                    <p className="text-[13px] font-600 text-qblack mb-3">
-                      MOBILE APP VERSION
-                    </p>
-                    <h1 className="text-[30px] font-600 text-qblack leading-10 mb-8">
-                      Get Our
-                      <span className="text-qred border-b-2 border-qred mx-2">
-                        Mobile App
-                      </span>
-                      <br /> It’s Make easy for you life !
-                    </h1>
-                    <div className="flex space-x-5 items-center">
-                      <div>
-                        <a href="/#">
-                          <span
-                            style={{
-                              boxSizing: "border-box",
-                              display: "inline-block",
-                              overflow: "hidden",
-                              width: "initial",
-                              height: "initial",
-                              background: "none",
-                              opacity: 1,
-                              border: 0,
-                              margin: 0,
-                              padding: 0,
-                              position: "relative",
-                              maxWidth: "100%",
-                            }}
-                          >
-                            <span
-                              style={{
-                                boxSizing: "border-box",
-                                display: "block",
-                                width: "initial",
-                                height: "initial",
-                                background: "none",
-                                opacity: 1,
-                                border: 0,
-                                margin: 0,
-                                padding: 0,
-                                maxWidth: "100%",
-                              }}
-                            >
-                              <img
-                                alt
-                                aria-hidden="true"
-                                src="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27170%27%20height=%2769%27/%3e"
-                                style={{
-                                  display: "block",
-                                  maxWidth: "100%",
-                                  width: "initial",
-                                  height: "initial",
-                                  background: "none",
-                                  opacity: 1,
-                                  border: 0,
-                                  margin: 0,
-                                  padding: 0,
-                                }}
-                              />
-                            </span>
-                            <img
-                              alt
-                              src="/_next/image?url=%2Fassets%2Fimages%2Fplay-store.png&w=384&q=75"
-                              decoding="async"
-                              data-nimg="intrinsic"
-                              srcSet="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fplay-store.png&w=256&q=75"
-                              style={{
-                                position: "absolute",
-                                inset: 0,
-                                boxSizing: "border-box",
-                                padding: 0,
-                                border: "none",
-                                margin: "auto",
-                                display: "block",
-                                width: 0,
-                                height: 0,
-                                minWidth: "100%",
-                                maxWidth: "100%",
-                                minHeight: "100%",
-                                maxHeight: "100%",
-                              }}
-                            />
-                          </span>
-                        </a>
-                      </div>
-                      <div>
-                        <a href="/#">
-                          <span
-                            style={{
-                              boxSizing: "border-box",
-                              display: "inline-block",
-                              overflow: "hidden",
-                              width: "initial",
-                              height: "initial",
-                              background: "none",
-                              opacity: 1,
-                              border: 0,
-                              margin: 0,
-                              padding: 0,
-                              position: "relative",
-                              maxWidth: "100%",
-                            }}
-                          >
-                            <span
-                              style={{
-                                boxSizing: "border-box",
-                                display: "block",
-                                width: "initial",
-                                height: "initial",
-                                background: "none",
-                                opacity: 1,
-                                border: 0,
-                                margin: 0,
-                                padding: 0,
-                                maxWidth: "100%",
-                              }}
-                            >
-                              <img
-                                alt
-                                aria-hidden="true"
-                                src="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27170%27%20height=%2769%27/%3e"
-                                style={{
-                                  display: "block",
-                                  maxWidth: "100%",
-                                  width: "initial",
-                                  height: "initial",
-                                  background: "none",
-                                  opacity: 1,
-                                  border: 0,
-                                  margin: 0,
-                                  padding: 0,
-                                }}
-                              />
-                            </span>
-                            <img
-                              alt
-                              src="/_next/image?url=%2Fassets%2Fimages%2Fapple-store.png&w=384&q=75"
-                              decoding="async"
-                              data-nimg="intrinsic"
-                              srcSet="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fapple-store.png&w=256&q=75"
-                              style={{
-                                position: "absolute",
-                                inset: 0,
-                                boxSizing: "border-box",
-                                padding: 0,
-                                border: "none",
-                                margin: "auto",
-                                display: "block",
-                                width: 0,
-                                height: 0,
-                                minWidth: "100%",
-                                maxWidth: "100%",
-                                minHeight: "100%",
-                                maxHeight: "100%",
-                              }}
-                            />
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="app-screen w-full h-full relative">
-                    <span
-                      style={{
-                        boxSizing: "border-box",
-                        display: "block",
-                        overflow: "hidden",
-                        width: "initial",
-                        height: "initial",
-                        background: "none",
-                        opacity: 1,
-                        border: 0,
-                        margin: 0,
-                        padding: 0,
-                        position: "absolute",
-                        inset: 0,
-                      }}
-                    >
-                      <img
-                        alt
-                        src="/_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=3840&q=75"
-                        decoding="async"
-                        data-nimg="fill"
-                        sizes="100vw"
-                        srcSet="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fapp-screen.png&w=1920&q=75"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          boxSizing: "border-box",
-                          padding: 0,
-                          border: "none",
-                          margin: "auto",
-                          display: "block",
-                          width: 0,
-                          height: 0,
-                          minWidth: "100%",
-                          maxWidth: "100%",
-                          minHeight: "100%",
-                          maxHeight: "100%",
-                          objectFit: "contain",
-                        }}
-                      />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
       {/* Tin tức */}
-      <div className="section-wrapper w-[96%] ml-2 best-sallers-section mb-[60px]">
-        <div className="max-w-6xl mx-auto bg-white rounded-8">
-          <div class="relative flex justify-between items-center pl-4 pr-4 h-14 bg-transparent">
-            <div
-              type="title"
-              color="textTitle"
-              class="m-0 p-0 border border-solid border-t-1 border-transparent opacity-100 text-gray-700 font-bold no-underline text-base leading-7 overflow-hidden whitespace-normal max-w-none min-w-none transition-colors duration-300 ease-in-out"
+      <div className="mb-[20px]">
+        <div className="max-w-6xl mx-auto rounded-8">
+          <div class="relative flex justify-between items-center bg-white px-4 h-14">
+            <Link
+              className="no-underline text-transparent cursor-pointer"
+              to={"/"}
             >
+
               TIN CÔNG NGHỆ
             </div>
             <div>
@@ -1206,8 +856,20 @@ export default function HomePage() {
             </div>
             <div>
               <a href="/sallers">
+
+              <div
+                type="title"
+                className="border-l-1 border-gray-300 bg-opacity-70 text-gray-700 font-[500] text-lg leading-7 overflow-hidden whitespace-normal transition duration-300 ease-in-out delay-0s"
+              >
+                TIN TỨC
+              </div>
+            </Link>
+
+            <Link to={URL_CONSTANTS.BLOG}>
+              <a>
+
                 <div className="flex space-x-2 items-center">
-                  <p className="text-base font-600 text-qblack">View More</p>
+                  <p className="text-base font-[500] text-black">Xem thêm</p>
                   <span className="animate-right-dir">
                     <svg
                       width={17}
@@ -1228,318 +890,75 @@ export default function HomePage() {
                   </span>
                 </div>
               </a>
-            </div>
+            </Link>
           </div>
-          <div className="section-content">
-            <div className="w-full ">
-              <div className="grid xl:grid-cols-6 lg:grid-cols-5 sm:grid-cols-3 grid-cols-1 xl:gap-[30px] gap-5">
-                <div
-                  data-aos="fade-left"
-                  data-aos-duration={500}
-                  className="item w-full flex flex-col items-center aos-init"
+
+          <div className="place-content-start py-2">
+            <div className="w-full">
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <Carousel
+                  delay={4000}
+                  navigation={false}
+                  pagination={false}
+                  spaceBetween={1}
+                  breakpoints={{
+                    640: {
+                      slidesPerView: 2,
+                      spaceBetween: 10,
+                    },
+                    768: {
+                      slidesPerView: 5,
+                      spaceBetween: 10,
+                    },
+                    1024: {
+                      slidesPerView: 5,
+                      spaceBetween: 20,
+                    },
+                  }}
                 >
-                  <div className="w-[170px] h-[170px] rounded-full bg-white flex justify-center items-center overflow-hidden mb-2 relative">
-                    <span
-                      style={{
-                        boxSizing: "border-box",
-                        display: "block",
-                        overflow: "hidden",
-                        width: "initial",
-                        height: "initial",
-                        background: "none",
-                        opacity: 1,
-                        border: 0,
-                        margin: 0,
-                        padding: 0,
-                        position: "absolute",
-                        inset: 0,
-                      }}
-                    >
-                      <img
-                        alt
-                        sizes="100vw"
-                        src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fsaller-1.png&w=3840&q=75"
-                        decoding="async"
-                        data-nimg="fill"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          boxSizing: "border-box",
-                          padding: 0,
-                          border: "none",
-                          margin: "auto",
-                          display: "block",
-                          width: 0,
-                          height: 0,
-                          minWidth: "100%",
-                          maxWidth: "100%",
-                          minHeight: "100%",
-                          maxHeight: "100%",
-                          objectFit: "scale-down",
-                        }}
-                      />
-                    </span>
-                  </div>
-                  <p className="text-base font-500 text-center cursor-pointer hover:text-qyellow">
-                    Shopno BD
-                  </p>
-                </div>
-                <div
-                  data-aos="fade-left"
-                  data-aos-duration={400}
-                  className="item w-full flex flex-col items-center aos-init"
-                >
-                  <div className="w-[170px] h-[170px] rounded-full bg-white flex justify-center items-center overflow-hidden mb-2 relative">
-                    <span
-                      style={{
-                        boxSizing: "border-box",
-                        display: "block",
-                        overflow: "hidden",
-                        width: "initial",
-                        height: "initial",
-                        background: "none",
-                        opacity: 1,
-                        border: 0,
-                        margin: 0,
-                        padding: 0,
-                        position: "absolute",
-                        inset: 0,
-                      }}
-                    >
-                      <img
-                        alt
-                        sizes="100vw"
-                        src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fsaller-2.png&w=3840&q=75"
-                        decoding="async"
-                        data-nimg="fill"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          boxSizing: "border-box",
-                          padding: 0,
-                          border: "none",
-                          margin: "auto",
-                          display: "block",
-                          width: 0,
-                          height: 0,
-                          minWidth: "100%",
-                          maxWidth: "100%",
-                          minHeight: "100%",
-                          maxHeight: "100%",
-                          objectFit: "scale-down",
-                        }}
-                      />
-                    </span>
-                  </div>
-                  <p className="text-base font-500 text-center cursor-pointer hover:text-qyellow">
-                    Eecoms Shop
-                  </p>
-                </div>
-                <div
-                  data-aos="fade-left"
-                  data-aos-duration={300}
-                  className="item w-full flex flex-col items-center aos-init"
-                >
-                  <div className="w-[170px] h-[170px] rounded-full bg-white flex justify-center items-center overflow-hidden mb-2 relative">
-                    <span
-                      style={{
-                        boxSizing: "border-box",
-                        display: "block",
-                        overflow: "hidden",
-                        width: "initial",
-                        height: "initial",
-                        background: "none",
-                        opacity: 1,
-                        border: 0,
-                        margin: 0,
-                        padding: 0,
-                        position: "absolute",
-                        inset: 0,
-                      }}
-                    >
-                      <img
-                        alt
-                        sizes="100vw"
-                        src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fsaller-3.png&w=3840&q=75"
-                        decoding="async"
-                        data-nimg="fill"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          boxSizing: "border-box",
-                          padding: 0,
-                          border: "none",
-                          margin: "auto",
-                          display: "block",
-                          width: 0,
-                          height: 0,
-                          minWidth: "100%",
-                          maxWidth: "100%",
-                          minHeight: "100%",
-                          maxHeight: "100%",
-                          objectFit: "scale-down",
-                        }}
-                      />
-                    </span>
-                  </div>
-                  <p className="text-base font-500 text-center cursor-pointer hover:text-qyellow">
-                    Fusion X
-                  </p>
-                </div>
-                <div
-                  data-aos="fade-left"
-                  data-aos-duration={200}
-                  className="item w-full flex flex-col items-center aos-init"
-                >
-                  <div className="w-[170px] h-[170px] rounded-full bg-white flex justify-center items-center overflow-hidden mb-2 relative">
-                    <span
-                      style={{
-                        boxSizing: "border-box",
-                        display: "block",
-                        overflow: "hidden",
-                        width: "initial",
-                        height: "initial",
-                        background: "none",
-                        opacity: 1,
-                        border: 0,
-                        margin: 0,
-                        padding: 0,
-                        position: "absolute",
-                        inset: 0,
-                      }}
-                    >
-                      <img
-                        alt
-                        sizes="100vw"
-                        src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fsaller-4.png&w=3840&q=75"
-                        decoding="async"
-                        data-nimg="fill"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          boxSizing: "border-box",
-                          padding: 0,
-                          border: "none",
-                          margin: "auto",
-                          display: "block",
-                          width: 0,
-                          height: 0,
-                          minWidth: "100%",
-                          maxWidth: "100%",
-                          minHeight: "100%",
-                          maxHeight: "100%",
-                          objectFit: "scale-down",
-                        }}
-                      />
-                    </span>
-                  </div>
-                  <p className="text-base font-500 text-center cursor-pointer hover:text-qyellow">
-                    Rikayi Rox
-                  </p>
-                </div>
-                <div
-                  data-aos="fade-left"
-                  data-aos-duration={100}
-                  className="item w-full flex flex-col items-center aos-init"
-                >
-                  <div className="w-[170px] h-[170px] rounded-full bg-white flex justify-center items-center overflow-hidden mb-2 relative">
-                    <span
-                      style={{
-                        boxSizing: "border-box",
-                        display: "block",
-                        overflow: "hidden",
-                        width: "initial",
-                        height: "initial",
-                        background: "none",
-                        opacity: 1,
-                        border: 0,
-                        margin: 0,
-                        padding: 0,
-                        position: "absolute",
-                        inset: 0,
-                      }}
-                    >
-                      <img
-                        alt
-                        sizes="100vw"
-                        src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fsaller-5.png&w=3840&q=75"
-                        decoding="async"
-                        data-nimg="fill"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          boxSizing: "border-box",
-                          padding: 0,
-                          border: "none",
-                          margin: "auto",
-                          display: "block",
-                          width: 0,
-                          height: 0,
-                          minWidth: "100%",
-                          maxWidth: "100%",
-                          minHeight: "100%",
-                          maxHeight: "100%",
-                          objectFit: "scale-down",
-                        }}
-                      />
-                    </span>
-                  </div>
-                  <p className="text-base font-500 text-center cursor-pointer hover:text-qyellow">
-                    Habbriyi
-                  </p>
-                </div>
-                <div
-                  data-aos="fade-left"
-                  data-aos-duration={100}
-                  className="item w-full flex flex-col items-center aos-init"
-                >
-                  <div className="w-[170px] h-[170px] rounded-full bg-white flex justify-center items-center overflow-hidden mb-2 relative">
-                    <span
-                      style={{
-                        boxSizing: "border-box",
-                        display: "block",
-                        overflow: "hidden",
-                        width: "initial",
-                        height: "initial",
-                        background: "none",
-                        opacity: 1,
-                        border: 0,
-                        margin: 0,
-                        padding: 0,
-                        position: "absolute",
-                        inset: 0,
-                      }}
-                    >
-                      <img
-                        alt
-                        sizes="100vw"
-                        src="https://shopo-next.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fsaller-6.png&w=3840&q=75"
-                        decoding="async"
-                        data-nimg="fill"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          boxSizing: "border-box",
-                          padding: 0,
-                          border: "none",
-                          margin: "auto",
-                          display: "block",
-                          width: 0,
-                          height: 0,
-                          minWidth: "100%",
-                          maxWidth: "100%",
-                          minHeight: "100%",
-                          maxHeight: "100%",
-                          objectFit: "scale-down",
-                        }}
-                      />
-                    </span>
-                  </div>
-                  <p className="text-base font-500 text-center cursor-pointer hover:text-qyellow">
-                    Rayhans
-                  </p>
-                </div>
-              </div>
+                  {blogData?.map((item) => (
+                    <SwiperSlide key={item.id}>
+                      <div className="bg-white p-2">
+                        <a
+                          target="_self"
+                          className="no-underline text-current cursor-pointer"
+                          href="https://phongvu.vn/cong-nghe/co-nen-mua-acer-nitro-phoenix-khong"
+                        >
+                          <div className="text-center">
+                            <div
+                              height={140}
+                              width="100%"
+                              className="relative inline-block overflow-hidden rounded-lg h-140 w-full transition-transform duration-300 ease-in"
+                            >
+                              <img
+                                src={`${item.imageBlog}`}
+                                loading="lazy"
+                                hover="zoom"
+                                decoding="async"
+                                alt="Top 5 lý do học sinh sinh viên nên mua laptop gaming Nitro 16 Phoenix, RTX 4050"
+                                style={{
+                                  width: "100%",
+                                  height: 140,
+                                  objectFit: "cover",
+                                }}
+                                className="object-cover w-full h-full"
+                              />
+                            </div>
+                            <div
+                              type="subtitle"
+                              className="mt-4 border-gray-300 opacity-400 text-base leading-6 overflow-hidden line-clamp-1 transition-color duration-300 ease-in"
+                            >
+                              {item.titleBlog}
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Carousel>
+              )}
             </div>
           </div>
         </div>

@@ -475,10 +475,15 @@ export default function ProfilePage() {
       return (
         <tr className="bg-white border-b hover:bg-gray-50" key={index}>
           <td className="text-center py-4">
-            <span className="text-lg text-qgray font-medium">#{index + 1}</span>
+            <Link
+              to={`/order/${item.code}`}
+              className="text-sm cursor-pointer text-blue-400 overflow-hidden max-w-[80px] whitespace-nowrap overflow-ellipsis inline-block font-medium"
+            >
+              {item.code}
+            </Link>
           </td>
           <td className="text-center py-4 px-2">
-            <span className="text-base text-qgray whitespace-nowrap">
+            <span className="text-sm text-gray whitespace-nowrap">
               {formatDate(item.createdAt)}
             </span>
           </td>
@@ -488,24 +493,18 @@ export default function ProfilePage() {
             </span>
           </td>
           <td className="text-center py-4 px-2">
-            <span className="text-base text-qblack whitespace-nowrap px-2">
+            <span className="text-sm text-black whitespace-nowrap px-2">
               {formatPrice(item.totalPrice)}
             </span>
           </td>
           <td className="text-center py-4">
-            <Link
+            <button
+              disabled={item.orderStatus !== OrderStatus.PROCESSING}
               to={`/order/${item.code}`}
-              className="px-2 py-3 rounded-sm bg-yellow-400 text-white font-bold"
-            >
-              View
-            </Link>
-            {" "}
-            <Link
-              to={`/order/${item.code}`}
-              className="px-2 py-3 rounded-sm bg-red-500 text-white font-bold"
+              className={`p-1 text-sm rounded-sm ${item.orderStatus !== OrderStatus.PROCESSING ? "bg-gray-300" : "bg-red-600"} text-white font-bold`}
             >
               Cancel
-            </Link>
+            </button>
           </td>
         </tr>
       );
