@@ -1,6 +1,6 @@
 
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Layout from "../../components/Layout";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../contexts/AppContextProvider";
@@ -30,6 +30,9 @@ export default function CheckoutPage() {
   const { carts, user } = useContext(AppContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+
+
   const [provinces, setProvinces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [districts, setDistricts] = useState([]);
@@ -50,10 +53,10 @@ export default function CheckoutPage() {
   );
 
 
+
   const handleClickPayment = (itemId) => {
     setActiveItem(itemId);
   };
-
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setInputs((prevInputs) => ({
@@ -146,6 +149,7 @@ export default function CheckoutPage() {
   const handleSubmitOrder = useCallback(
     async (e) => {
       e.preventDefault();
+      // console.log('handleSubmitOrder called');
 
       const updateResponse = await userService.updateMe(inputs);
       dispatch({
@@ -156,8 +160,13 @@ export default function CheckoutPage() {
       const paymentResponse = await dispatch(redirectPayment(orderData));
 
       if (paymentResponse && paymentResponse.paymentMethod === true) {
+        
+      console.log('handleSubmitOrder called');
+        
         history.push(paymentResponse.result);
       } else {
+      console.log('handleSubmitOrder called');
+
         navigate(paymentResponse.result);
       }
     },

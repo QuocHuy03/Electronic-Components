@@ -26,9 +26,10 @@ export default function HeaderCenter() {
             <div className="flex justify-between items-center h-full">
               <Link to={URL_CONSTANTS.HOME} className="cursor-pointer">
                 <img
+                className="mt-2"
                   width={152}
                   height={36}
-                  src="https://shopo-next.vercel.app/assets/images/logo.svg"
+                  src="https://i.imgur.com/ZEyJnBt.png"
                   alt="logo"
                 />
               </Link>

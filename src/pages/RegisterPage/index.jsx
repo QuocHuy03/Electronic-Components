@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { Link, useNavigate } from "react-router-dom";
@@ -84,7 +85,7 @@ export default function RegisterPage() {
       }
     },
     [dispatch, isPassword, isPasswordConfirm, inputs, navigate]
-  );
+  )
   return (
     <Layout>
       <div className="w-full  pt-0 pb-0">

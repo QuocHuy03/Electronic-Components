@@ -65,6 +65,7 @@ export default function ProfilePage() {
     };
   }, [inputChangePass]);
 
+
   const handleChangePassword = useCallback(
     async (e) => {
       e.preventDefault();
@@ -590,7 +591,7 @@ export default function ProfilePage() {
                               <path d="M13.1081 11.3378C13.9592 11.3378 14.811 11.3338 15.6621 11.3391C16.5019 11.3444 16.9952 11.843 16.9972 12.6862C16.9998 13.6813 17.0005 14.6765 16.9972 15.6716C16.9939 16.4822 16.48 16.9968 15.6687 16.9981C13.9546 17.0014 12.2411 17.0014 10.527 16.9981C9.72831 16.9961 9.21977 16.4935 9.21446 15.6962C9.20716 14.6791 9.20716 13.6614 9.21446 12.6443C9.21977 11.837 9.71237 11.3464 10.521 11.3398C11.3834 11.3325 12.2458 11.3378 13.1081 11.3378Z" />
                             </svg>
                           </span>
-                          <span className={`font-normal text-base`}>
+                          <span className={`font-normal text-base whitespace-nowrap`}>
                             Dashboard
                           </span>
                         </div>

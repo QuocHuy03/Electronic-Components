@@ -1,3 +1,4 @@
+
 import React, {
   useCallback,
   useContext,
@@ -5,6 +6,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+
 import { AppContext } from "../../contexts/AppContextProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { orders } from "../../stores/order/actions";
@@ -53,6 +55,7 @@ export default function OrderPage() {
   );
 
   const dispatchOrder = useCallback(async () => {
+    console.log('dispatchOrder function called');
     const data = {
       ...order,
       ...(paymentMomo && paymentMomo.transId !== null ? { paymentMomo } : {}),
@@ -76,6 +79,7 @@ export default function OrderPage() {
   }, [dispatch, order, paymentMomo, paymentVnpay, paymentMethod]);
 
   useEffect(() => {
+    console.log('useEffect triggered');
     dispatchOrder();
   }, []);
 

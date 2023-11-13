@@ -14,6 +14,7 @@ import { addToCart } from "../../stores/cart/actions";
 import createNotification from "../../utils/notification";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
+import './style.css'
 import {
   calculateDiscountPercentage,
   formatPrice,
@@ -139,6 +140,11 @@ export default function DetailProductPage() {
     () => totalRating / isComment?.length,
     [totalRating, isComment]
   );
+
+  useEffect(() => {
+    fetchCommentData();
+  }, [detailProduct]);
+
 
   const handleColorClick = useCallback((color) => {
     if (color === "") {
@@ -604,6 +610,7 @@ export default function DetailProductPage() {
                                 {isComment?.map((item, index) => (
                                   <div
                                     key={index}
+
                                     className="comment-item bg-white mb-2.5 rounded-2xl"
                                   >
                                     <div className="comment-author flex justify-between items-center mb-3">
@@ -691,6 +698,7 @@ export default function DetailProductPage() {
                                         {item.comment}
                                       </p>
                                     </div>
+                               
                                   </div>
                                 ))}
                               </div>

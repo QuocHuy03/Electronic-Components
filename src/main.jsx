@@ -7,7 +7,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import { AppContextProvider } from "./contexts/AppContextProvider.jsx";
 import { Provider } from "react-redux";
 import { persistor, store } from "./stores/app.store.js";
-import * as serviceWorker from './serviceWorker';
 import AppRouter from "./routes/AppRouter";
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -25,4 +24,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </BrowserRouter>
   // </React.StrictMode>
 );
-serviceWorker.unregister();
+

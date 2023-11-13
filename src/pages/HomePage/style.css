@@ -1,0 +1,8 @@
+.custom-line-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    max-width: unset;
+    min-width: unset;
+  }

@@ -61,28 +61,28 @@ export default function OrderDetailPage() {
               <div class="flex items-center space-x-28 ml-28">
                 <div>
                   <div className="relative">
-                    <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-6">
+                    <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-5">
                       <img
                         src="https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/orders-icon.png"
                         alt=""
                       />
                     </div>
-                    <div class="absolute top-1/2 left-[66%] w-48 h-1 bg-green-500 transform -translate-y-1/2"></div>
+                    <div class="absolute top-1/2 left-[63%] w-[190px] h-1 bg-green-500 transform -translate-y-1/2"></div>
                   </div>
-                  <div class="flex flex-col">
+                  <div class="flex flex-col mr-2">
                     <p class="font-bold">Đơn hàng đã đặt</p>
                     <p class="text-gray-500">13:08 08-02-2023</p>
                   </div>
                 </div>
                 <div>
                   <div className="relative">
-                    <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-8">
+                    <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-7">
                       <img
                         src="https://icon-library.com/images/money-order-icon/money-order-icon-14.jpg"
                         alt=""
                       />
                     </div>
-                    <div class="absolute top-1/2 left-[70%] w-44 h-1 bg-green-500 transform -translate-y-1/2"></div>
+                    <div class="absolute top-1/2 left-[71%] w-[175px] h-1 bg-green-500 transform -translate-y-1/2"></div>
                   </div>
                   <div class="flex flex-col">
                     <p class="font-bold">Đã xác nhận đơn </p>
@@ -97,7 +97,7 @@ export default function OrderDetailPage() {
                       alt=""
                     />
                   </div>
-                  <div class="absolute top-1/2 left-[64%] w-48 h-1 bg-green-500 transform -translate-y-1/2"></div>
+                  <div class="absolute top-1/2 left-[67%] w-[180px] h-1 bg-green-500 transform -translate-y-1/2"></div>
                   </div>
                   <div class="flex flex-col">
                     <p class="font-bold">Đã giao cho ĐVVC</p>
@@ -105,7 +105,7 @@ export default function OrderDetailPage() {
                   </div>
                 </div>
                 <div>
-                  <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-7">
+                  <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-6">
                     <img
                       src="https://cdn.iconscout.com/icon/premium/png-256-thumb/order-received-3112928-2602187.png?f=webp"
                       alt=""
