@@ -25,7 +25,7 @@ export default function HomePage() {
     }
   );
   const { data: blogData, isLoading } = useQuery(
-    ["blog"],
+    ["blog-home"],
     () => blogService.fetchAllBlogs(),
     {
       retry: 3,
@@ -41,7 +41,7 @@ export default function HomePage() {
       retryDelay: 1000,
     }
   );
-
+  
   return (
     <Layout>
       {/* Banner */}
@@ -51,7 +51,7 @@ export default function HomePage() {
             <div className="banner-card mb-[30px]">
               <div className="w-full mt-[30px]">
                 <Slider
-                  className="swiper-banner rounded-[12px]"
+                  className="swiper rounded-[12px]"
                   spaceBetween={2}
                   navigation={true}
                   pagination={false}
@@ -283,9 +283,12 @@ export default function HomePage() {
         <div className="section-wrapper w-full">
           <div className="relative top-[-92px]"></div>
           <div className="relative max-w-6xl mx-auto rounded-md min-h-[416px]">
-            <div className="relative flex justify-between px-4 items-center h-14 z-10" style={{
-              borderBottom: "1px solid rgba(255, 255, 255, 0.5)"
-            }}>
+            <div
+              className="relative flex justify-between px-4 items-center h-14 z-10"
+              style={{
+                borderBottom: "1px solid rgba(255, 255, 255, 0.5)",
+              }}
+            >
               <Link
                 className="no-underline text-transparent cursor-pointer"
                 to={"/"}
@@ -331,7 +334,7 @@ export default function HomePage() {
 
             <div className="relative p-[12px] w-full">
               <Slider
-                className="swiper-banner"
+                className="swiper"
                 spaceBetween={10}
                 navigation={true}
                 pagination={false}
@@ -339,10 +342,7 @@ export default function HomePage() {
               >
                 {data?.map((item, index) => (
                   <SwiperSlide key={index}>
-                    <div
-                      data-aos="fade-up"
-                      className="bg-white w-full"
-                    >
+                    <div data-aos="fade-up" className="bg-white w-full">
                       <div className="relative w-full h-full p-4 flex flex-col bg-white justify-between">
                         <div className="relative flex-1 flex-grow-0 flex-shrink-0 flex-basis-auto">
                           <div className="relative">
@@ -614,7 +614,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Shop By Brand */}
+      {/* Shop By Category */}
       <div data-aos="fade-up" className="w-full mb-[20px] aos-init aos-animate">
         <div className="max-w-6xl mx-auto bg-white rounded-[8px]">
           <div className="relative flex justify-between items-center py-4 pl-4">
@@ -701,36 +701,22 @@ export default function HomePage() {
 
           <div className="place-content-start py-2">
             <div className="w-full">
-              {isLoading ? (
+              {blogData?.length === 0 ? (
                 <Loading />
               ) : (
                 <Slider
-                  delay={4000}
-                  navigation={false}
+                  className="swiper rounded-[12px]"
+                  spaceBetween={2}
+                  navigation={true}
                   pagination={false}
-                  spaceBetween={1}
-                  breakpoints={{
-                    640: {
-                      slidesPerView: 2,
-                      spaceBetween: 10,
-                    },
-                    768: {
-                      slidesPerView: 5,
-                      spaceBetween: 10,
-                    },
-                    1024: {
-                      slidesPerView: 5,
-                      spaceBetween: 20,
-                    },
-                  }}
+                  slidesPerView={4}
                 >
-                  {blogData?.map((item) => (
-                    <SwiperSlide key={item.id}>
+                  {blogData?.map((item, index) => (
+                    <SwiperSlide key={index}>
                       <div className="bg-white p-2">
-                        <a
-                          target="_self"
+                        <Link
                           className="no-underline text-current cursor-pointer"
-                          href="https://phongvu.vn/cong-nghe/co-nen-mua-acer-nitro-phoenix-khong"
+                          to={`tin-tuc/${item.slugBlog}`}
                         >
                           <div className="text-center">
                             <div
@@ -740,10 +726,7 @@ export default function HomePage() {
                             >
                               <img
                                 src={`${item.imageBlog}`}
-                                loading="lazy"
-                                hover="zoom"
-                                decoding="async"
-                                alt="Top 5 lý do học sinh sinh viên nên mua laptop gaming Nitro 16 Phoenix, RTX 4050"
+                                alt={item.titleBlog}
                                 style={{
                                   width: "100%",
                                   height: 140,
@@ -759,10 +742,12 @@ export default function HomePage() {
                               {item.titleBlog}
                             </div>
                           </div>
-                        </a>
+                        </Link>
                       </div>
                     </SwiperSlide>
                   ))}
+                  <div className="navigation slider-prev" />
+                  <div className="navigation slider-next" />
                 </Slider>
               )}
             </div>

@@ -15,16 +15,16 @@ body {
     cursor: pointer;
     z-index: 10;
 }
-.swiper-banner .navigation.slider-prev {
+.swiper .navigation.slider-prev {
     left: 0;
 }
 
-.swiper-banner .navigation {
+.swiper .navigation {
     top: 48%;
     visibility: visible;
 }
 
-.swiper-banner .navigation.slider-next {
+.swiper .navigation.slider-next {
     right: 0;
     transform: rotate(-180deg);
 }
