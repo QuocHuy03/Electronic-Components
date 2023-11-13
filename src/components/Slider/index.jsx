@@ -21,7 +21,7 @@ export default function Slider() {
     <>
       <Swiper className="mySwiper" navigation>
         {data?.map((item) => (
-          <SwiperSlide>
+          <SwiperSlide className="rounded-xl">
             <img src={item.imagePath} alt={item.nameImage} />
           </SwiperSlide>
         ))}

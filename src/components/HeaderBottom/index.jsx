@@ -193,16 +193,8 @@ export default function HeaderBottom() {
                   <li className="relative ">
                     <Link to={URL_CONSTANTS.HOME}>
                       <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
-                        <span>Homepage</span>
+                        <span>Home</span>
                       </span>
-                    </Link>
-                  </li>
-                  <li className="relative">
-                    <Link to={URL_CONSTANTS.FILTER}>
-                      <span className="flex items-center text-sm font-600 cursor-pointer text-black transition duration-300">
-                        <span>Shop</span>
-                      </span>
-
                     </Link>
                   </li>
                   <li>
