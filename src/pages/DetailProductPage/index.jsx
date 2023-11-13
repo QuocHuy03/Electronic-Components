@@ -14,7 +14,7 @@ import { addToCart } from "../../stores/cart/actions";
 import createNotification from "../../utils/notification";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
-import './style.css'
+import "./style.css";
 import {
   calculateDiscountPercentage,
   formatPrice,
@@ -36,14 +36,15 @@ export default function DetailProductPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
+  const [isLoadingCart, setIsLoadingCart] = useState(false);
 
-  const toggleSeeMore = useCallback(() => {
-    setIsSeeMore(!isSeeMore);
-  }, [isSeeMore]);
+  // const toggleSeeMore = useCallback(() => {
+  //   setIsSeeMore(!isSeeMore);
+  // }, [isSeeMore]);
 
-  const toggleReview = useCallback(() => {
-    setIsReview(!isReview);
-  }, [isReview]);
+  // const toggleReview = useCallback(() => {
+  //   setIsReview(!isReview);
+  // }, [isReview]);
 
   const handleRating = useCallback((rate) => {
     setRating(rate);
@@ -56,6 +57,11 @@ export default function DetailProductPage() {
   const { slug } = useParams();
   const [isSlug, setSlug] = useState(null);
   const [validationErrors, setValidationErrors] = useState([]);
+  const [visibleItems, setVisibleItems] = useState(2);
+
+  const handleLoadMore = () => {
+    setVisibleItems((prevVisibleItems) => prevVisibleItems + 2);
+  };
 
   const [inputs, setInputs] = useState({
     comment: "",
@@ -145,7 +151,6 @@ export default function DetailProductPage() {
     fetchCommentData();
   }, [detailProduct]);
 
-
   const handleColorClick = useCallback((color) => {
     if (color === "") {
       setShowColorError(true);
@@ -164,7 +169,7 @@ export default function DetailProductPage() {
       if (!accessToken) {
         return navigate(URL_CONSTANTS.LOGIN);
       }
-
+      setIsLoadingCart(true);
       const response = await dispatch(
         addToCart({
           productID: product._id,
@@ -177,6 +182,7 @@ export default function DetailProductPage() {
       } else {
         createNotification("error", "topRight", response.message);
       }
+      setIsLoadingCart(false);
     },
     [selectedColor, accessToken, dispatch, navigate, quantity]
   );
@@ -447,7 +453,11 @@ export default function DetailProductPage() {
                                 onClick={() => buyCart(detailProduct)}
                                 className="bg-black text-white text-sm font-semibold w-full h-full rounded-lg"
                               >
-                                Thêm vào giỏ hàng
+                                {isLoadingCart ? (
+                                  <Loading />
+                                ) : (
+                                  "Thêm vào giỏ hàng"
+                                )}
                               </button>
                             </div>
                           </div>
@@ -600,17 +610,16 @@ export default function DetailProductPage() {
                         data-aos="fade-up"
                         className="w-full tab-content-item aos-init aos-animate"
                       >
-                        <h6 className="text-[18px] font-medium text-qblack mb-2">
+                        <h6 className="text-[18px] font-medium text-black mb-2">
                           Bình Luận
                         </h6>
                         <div className="w-full">
                           <div className="review-wrapper w-full">
                             <div className="w-full reviews">
                               <div className="w-full comments">
-                                {isComment?.map((item, index) => (
+                                {isComment?.slice(0, visibleItems).map((item, index) => (
                                   <div
                                     key={index}
-
                                     className="comment-item bg-white mb-2.5 rounded-2xl"
                                   >
                                     <div className="comment-author flex justify-between items-center mb-3">
@@ -698,27 +707,29 @@ export default function DetailProductPage() {
                                         {item.comment}
                                       </p>
                                     </div>
-                               
                                   </div>
                                 ))}
                               </div>
                               <div className="w-full flex justify-center">
-                                <button
-                                  type="button"
-                                  className="bg-black text-white w-[170px] h-[50px] text-sm font-semibold rounded-3xl"
-                                >
-                                  Load More
-                                </button>
+                                {isComment &&
+                                  visibleItems < isComment.length && (
+                                    <span
+                                      className="text-[#1990FF] cursor-pointer text-center"
+                                      onClick={handleLoadMore}
+                                    >
+                                      Xem thêm
+                                    </span>
+                                  )}
                               </div>
                             </div>
                             <form
                               onSubmit={handleComment}
-                              className="write-review w-full"
+                              className="write-review w-full mt-2"
                             >
-                              <h1 className="text-2xl font-medium text-qblack mb-5">
+                              <h1 className="text-[18px] font-medium text-black">
                                 Đánh giá và nhận xét
                               </h1>
-                              <div className="flex space-x-1 items-center mb-[30px]">
+                              <div className="flex space-x-1 items-center mb-[5px]">
                                 <div className="star-rating flex">
                                   <button
                                     type="button"
@@ -821,7 +832,7 @@ export default function DetailProductPage() {
                                     </svg>
                                   </button>
                                 </div>
-                                <span className="text-qblack text-[15px] font-normal mt-1">
+                                <span className="text-black text-[15px] font-normal mt-1">
                                   ({rating}.0)
                                 </span>
                               </div>
@@ -850,7 +861,7 @@ export default function DetailProductPage() {
                                 <div className="flex justify-end">
                                   <button
                                     type="submit"
-                                    className="bg-black text-white w-[200px] h-[50px] flex justify-center rounded-3xl"
+                                    className="bg-black text-white w-[200px] h-[50px] flex justify-center rounded"
                                   >
                                     <span className="flex space-x-1 items-center h-full">
                                       <span className="text-sm font-semibold">

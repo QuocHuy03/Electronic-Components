@@ -290,7 +290,7 @@ export default function HeaderCenter() {
                             Giỏ hàng chưa có sản phẩm nào
                           </p>
                           <Link
-                            to="/filter/all-product"
+                            to={URL_CONSTANTS.HOME}
                             className="p-2 bg-yellow-400 items-center flex h-full w-full justify-center opacity-1 leaning-6"
                           >
                             Mua Sắm Ngay
