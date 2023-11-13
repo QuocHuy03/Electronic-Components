@@ -16,6 +16,7 @@ import { blogService } from "../../services/blog.service";
 import Loading from "./../../components/Loading/index";
 import Carousel from "../../components/Carousel";
 import { SwiperSlide } from "swiper/react";
+import { categoryService } from "../../services/category.service";
 
 export default function HomePage() {
   const { data, isloading } = useQuery(
@@ -34,22 +35,297 @@ export default function HomePage() {
       retryDelay: 1000,
     }
   );
+  const { data: isCategories, isloading: loadingCategory } = useQuery(
+    ["categories"],
+    () => categoryService.fetchAllCategories(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
   console.log();
 
   return (
     <Layout>
       {/* Banner */}
-      <div className="w-full banner-wrapper mb-[60px]" data-aos="fade-up">
+
+      <div className="w-full banner-wrapper mb-[60px] " data-aos="fade-up">
         <div className="max-w-6xl mx-auto">
           <div className="main-wrapper w-full">
-            <div className="banner-card xl:flex xl:space-x-[30px] xl:h-[600px] mb-[30px]">
-              <div id="app" className="w-full mt-[30px]">
-                <Slider />
+            <div className="relative content-visibility-auto mb-24 min-h-600">
+              <div className="w-1232  w-full mx-auto  opacity-100 max-w-1232">
+                <div
+                  className="teko-row teko-row-space-around flex flex-wrap  opacity-100  border-opacity-100"
+                  style={{ height: 566 }}
+                >
+                  {/* danh mục  */}
+                  <div className="teko-col teko-col-2 pt-3">
+                    <div className="font-roboto leading-5">
+                      <div
+                        className="rounded-md bg-white relative overflow-hidden w-[170px] z-50 grid"
+                        width="12.375rem"
+                        height="28.5rem"
+                      >
+                        {loadingCategory ? (
+                          <Loading />
+                        ) : (
+                          isCategories?.map((item) => (
+                            <a
+                              data-testid="TekoLink"
+                              target="_self"
+                              className="  opacity-100 text-black no-underline"
+                            >
+                              <div className="flex items-center gap-1 p-1 rounded-md overflow-hidden">
+                                <Link
+                                  to={`/filter/${item.slugCategory}`}
+                                  className="flex items-center ml-1 mt-2 mb-2"
+                                >
+                                  <div className="w-[22px] h-[22px]">
+                                    <div className="relative inline-block overflow-hidden h-full w-full">
+                                      <img
+                                        src={item.imageCategory}
+                                        loading="lazy"
+                                        decoding="async"
+                                        style={{
+                                          width: "100%",
+                                          height: "90%",
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div
+                                    type="caption"
+                                    className="ml-2 opacity-100 text-inherit font-sm text-sm line-clamp-1 mt-1 break-word "
+                                    style={{ flex: "1 1 0%" }}
+                                  >
+                                    <p className="text-sm font-bold overflow-y-auto max-h-[3rem]">
+                                      {item.nameCategory}
+                                    </p>
+                                  </div>
+                                </Link>
+                              </div>
+                            </a>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  {/* ảnh banner  */}
+                  <div style={{ flex: "1 1 0%" }}>
+                    <div className="absolute left-[20px] right-[40px] top-[30px] z-0 mt-12 ml-5">
+                      <img
+                        src="https://lh3.googleusercontent.com/Zl1-L2wzzrhV0LV3mF-NDwX1MUTb-XLk1qievL_CLwLcT_e3OZDq55zqdCBvUIpph-Go2qq8mxre6wG_MT7CCjxlAqTSbrEw=w1920-rw"
+                        alt=""
+                        className="transform scale-150"
+                      />
+                    </div>
+                  </div>
+                  {/* 2 banner  */}
+                  <div className="teko-col teko-col-2 gap-2">
+                    <div className="flex flex-col gap-2 pt-3 ">
+                      <a
+                        data-testid="TekoLink"
+                        className="border-none border-1 border-transparent opacity-100 text-black no-underline"
+                        href="/p/promo"
+                      >
+                        <div
+                          className="relative inline-block overflow-hidden rounded-lg h-[170px] w-[170px] transition-transform ease-in-out duration-300"
+                          data-content-region-name="topRightBannerHomepage"
+                          data-track-content="true"
+                          data-content-name="Chương trình tổng hợp tháng 10"
+                          data-content-index={0}
+                          data-content-target="https://phongvu.vn/p/promo"
+                        >
+                          <img
+                            src="https://lh3.googleusercontent.com/7iRH6htrpI2HzoU92xxGWl68lVuKSO9XU9qBxcuuzpgIB3vgWz5WjOffN7WnWZ2VrWjQYRNwUu2LIGqIGmC-hhP32NjDr9Wx=w300-rw"
+                            loading="eager"
+                            hover="zoom"
+                            decoding="async"
+                            alt="Chương trình tổng hợp tháng 10"
+                            fetchpriority="high"
+                            style={{
+                              width: "100%",
+                              height: 180,
+                              objectFit: "cover",
+                            }}
+                          />
+                        </div>
+                      </a>
+                      <a
+                        data-testid="TekoLink"
+                        className="border-none border-1 border-transparent opacity-100 text-black no-underline"
+                        href="/p/chuong-trinh-khuyen-mai-phong-vu"
+                      >
+                        <div
+                          className="relative inline-block overflow-hidden rounded-lg h-[170px] w-[170px] transition-transform ease-in-out duration-300"
+                          data-content-region-name="topRightBannerHomepage"
+                          data-track-content="true"
+                          data-content-name="Chương trình học sinh sinh viên tháng 10"
+                          data-content-index={1}
+                          data-content-target="https://phongvu.vn/p/chuong-trinh-khuyen-mai-phong-vu"
+                        >
+                          <img
+                            src="https://lh3.googleusercontent.com/cPEu8E3KSvDqFyPgZlISP7W_KYCf4ZoMiQazpVyxC_rx_r4Ee62B-Iu9xVA13czlalt5J1u9vg6cxO7lnZt5vaY9jZlTOII=w300-rw"
+                            loading="eager"
+                            hover="zoom"
+                            decoding="async"
+                            alt="Chương trình học sinh sinh viên tháng 10"
+                            fetchpriority="high"
+                            style={{
+                              width: "100%",
+                              height: 180,
+                              objectFit: "cover",
+                            }}
+                          />
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                {/* 4 banner  */}
+                <div className="teko-row border-none border-1 border-transparent opacity-100 -mt-72">
+                  <div className="teko-col teko-col-12 border-none border-1 border-transparent opacity-100 z-10">
+                    <div
+                      className="teko-row flex border-none border-1 border-transparent opacity-100 z-10"
+                      style={{
+                        marginLeft: "-8px",
+                        marginRight: "-8px",
+                        paddingTop: "150px",
+                        rowGap: 16,
+                      }}
+                    >
+                      <div
+                        className="teko-col teko-col-3 block flex-none flex-0 flex-shrink-0 w-1/4 border-none border-1 border-transparent opacity-100 z-10"
+                        style={{ paddingLeft: 8, paddingRight: 8 }}
+                      >
+                        <a
+                          data-testid="TekoLink"
+                          className="css-1h3fn00"
+                          href="/p/laptop-1"
+                        >
+                          <div
+                            width="100%"
+                            className="relative inline-block overflow-hidden rounded-md w-full transition-transform duration-300 ease-in-out"
+                            data-content-region-name="bottomBanner"
+                            data-track-content="true"
+                            data-content-name="Laptop tháng 10"
+                            data-content-index={0}
+                            data-content-target="https://phongvu.vn/p/laptop-1"
+                          >
+                            <img
+                              src="https://lh3.googleusercontent.com/q6lovS2WzW4BMMGaBywk4Hdbmv9L_Yh84PWNkRyczxqgtFgALpiCb44s1VfdeaHXrixHWjr8XtX5Wgl0HfePwZvmHN1EObA=w308-rw"
+                              loading="eager"
+                              hover="zoom"
+                              decoding="async"
+                              alt="Laptop tháng 10"
+                              fetchpriority="high"
+                              name="Laptop tháng 10"
+                              style={{ width: "100%", height: "auto" }}
+                            />
+                          </div>
+                        </a>
+                      </div>
+                      <div
+                        className="teko-col teko-col-3 border-none border-1 border-transparent opacity-100 z-10"
+                        style={{ paddingLeft: 8, paddingRight: 8 }}
+                      >
+                        <a
+                          data-testid="TekoLink"
+                          className="css-1h3fn00"
+                          href="/p/thiet-bi-van-phong"
+                        >
+                          <div
+                            width="100%"
+                            className="relative inline-block overflow-hidden rounded-md w-full transition-transform duration-300 ease-in-out"
+                            data-content-region-name="bottomBanner"
+                            data-track-content="true"
+                            data-content-name="Thiết bị văn phòng tháng 10"
+                            data-content-index={1}
+                            data-content-target="https://phongvu.vn/p/thiet-bi-van-phong"
+                          >
+                            <img
+                              src="https://lh3.googleusercontent.com/2yhEgyBFQW5M47B7cszx-lChiW4BaHm2frYTsX-f0tW-hLaD7F246s-UqWxTGAlAgKVTHY7gj3z9hQDuI-fVYwEeX6LAQunz=w308-rw"
+                              loading="eager"
+                              hover="zoom"
+                              decoding="async"
+                              alt="Thiết bị văn phòng tháng 10"
+                              fetchpriority="high"
+                              name="Thiết bị văn phòng tháng 10"
+                              style={{ width: "100%", height: "auto" }}
+                            />
+                          </div>
+                        </a>
+                      </div>
+                      <div
+                        className="teko-col teko-col-3 border-none border-1 border-transparent opacity-100 z-10"
+                        style={{ paddingLeft: 8, paddingRight: 8 }}
+                      >
+                        <a
+                          data-testid="TekoLink"
+                          className="css-1h3fn00"
+                          href="/p/phong-vu-gaming"
+                        >
+                          <div
+                            width="100%"
+                            className="relative inline-block overflow-hidden rounded-md w-full transition-transform duration-300 ease-in-out"
+                            data-content-region-name="bottomBanner"
+                            data-track-content="true"
+                            data-content-name="Gaming tháng 10"
+                            data-content-index={2}
+                            data-content-target="https://phongvu.vn/p/phong-vu-gaming"
+                          >
+                            <img
+                              src="https://lh3.googleusercontent.com/NAL6SI3ErMnEySACqLpUSNfCF28AYVRPheYWufUcovyfmGjJUMXjKke_QJxnCKuCgz5sT2Cl6fPyI_TxS580_HVnvZefbs0=w308-rw"
+                              loading="eager"
+                              hover="zoom"
+                              decoding="async"
+                              alt="Gaming tháng 10"
+                              fetchpriority="high"
+                              name="Gaming tháng 10"
+                              style={{ width: "100%", height: "auto" }}
+                            />
+                          </div>
+                        </a>
+                      </div>
+                      <div
+                        className="teko-col teko-col-3 border-transparent opacity-100 z-10 rounded-xl"
+                        style={{ paddingLeft: 8, paddingRight: 8 }}
+                      >
+                        <a
+                          data-testid="TekoLink"
+                          className="css-1h3fn00"
+                          href="/p/dien-may"
+                        >
+                          <div
+                            width="100%"
+                            className="relative inline-block overflow-hidden rounded-md w-full transition-transform duration-300 ease-in-out"
+                            data-content-region-name="bottomBanner"
+                            data-track-content="true"
+                            data-content-name="Điện máy tháng 10"
+                            data-content-index={3}
+                            data-content-target="https://phongvu.vn/p/dien-may"
+                          >
+                            <img
+                              src="https://lh3.googleusercontent.com/qXkOnaasWJ9E9TT2M3mHrVQK-gXoDFUzXV1Dho-Ya7XFlWMTkil3-gcdxtndiEBAhDC_gb1rbx-V-FR3Okrj7HHU4YXZJnYy=w308-rw"
+                              loading="eager"
+                              hover="zoom"
+                              decoding="async"
+                              alt="Điện máy tháng 10"
+                              fetchpriority="high"
+                              name="Điện máy tháng 10"
+                              style={{ width: "100%", height: "auto" }}
+                            />
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div
               data-aos="fade-up"
-              className="best-services w-[96%] ml-2 bg-white flex flex-col space-y-10 lg:space-y-0 lg:flex-row lg:justify-between lg:items-center lg:h-[110px] px-10 lg:py-0 py-10 aos-init"
+              className="best-services w-[100%] ml-2 bg-white flex flex-col space-y-10 lg:space-y-0 lg:flex-row lg:justify-between lg:items-center lg:h-[110px] px-10 lg:py-0 py-10 aos-init"
             >
               <div className="item">
                 <div className="flex space-x-5 items-center">
@@ -251,6 +527,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+
+        
       </div>
       {/* Product */}
 
@@ -864,7 +1142,7 @@ export default function HomePage() {
                   }}
                 >
                   {blogData?.map((item) => (
-                    <SwiperSlide key={item.id} >
+                    <SwiperSlide key={item.id}>
                       <div className="grid xl:grid-cols-1 lg:grid-cols-4 sm:grid-cols-5 grid-cols-5 xl:gap-1 pb-2 pr-1 pl-4">
                         <div className="item w-full sm:w-1/2 lg:w-1/5 xl:w-full flex flex-col items-center ">
                           <a
@@ -908,7 +1186,6 @@ export default function HomePage() {
                             </div>
                           </a>
                         </div>
-                        
                       </div>
                     </SwiperSlide>
                   ))}
@@ -1267,6 +1544,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
     </Layout>
   );
 }
