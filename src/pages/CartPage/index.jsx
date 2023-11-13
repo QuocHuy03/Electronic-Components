@@ -12,6 +12,7 @@ import { formatPrice } from "../../utils/fomatPrice";
 import { AppContext } from "../../contexts/AppContextProvider";
 import { v4 as uuidv4 } from "uuid";
 import createNotification from "../../utils/notification";
+import { URL_CONSTANTS } from "../../constants/url.constants";
 
 export default function CartPage() {
   const dispatch = useDispatch();
@@ -187,44 +188,11 @@ export default function CartPage() {
                                 <td className="pl-10 py-4 w-[380px]">
                                   <div className="flex space-x-6 items-center">
                                     <div className="w-[80px] h-[80px] overflow-hidden flex justify-center items-center border border-[#EDEDED] relative">
-                                      <span
-                                        style={{
-                                          boxSizing: "border-box",
-                                          display: "block",
-                                          overflow: "hidden",
-                                          width: "initial",
-                                          height: "initial",
-                                          background: "none",
-                                          opacity: 1,
-                                          border: 0,
-                                          margin: 0,
-                                          padding: 0,
-                                          position: "absolute",
-                                          inset: 0,
-                                        }}
-                                      >
+                                      <span>
                                         <img
                                           alt={item.product.nameProduct}
-                                          sizes="100vw"
                                           src={item.product.image}
-                                          decoding="async"
-                                          data-nimg="fill"
                                           className="w-full h-full object-contain"
-                                          style={{
-                                            position: "absolute",
-                                            inset: 0,
-                                            boxSizing: "border-box",
-                                            padding: 0,
-                                            border: "none",
-                                            margin: "auto",
-                                            display: "block",
-                                            width: 0,
-                                            height: 0,
-                                            minWidth: "100%",
-                                            maxWidth: "100%",
-                                            minHeight: "100%",
-                                            maxHeight: "100%",
-                                          }}
                                         />
                                       </span>
                                     </div>
@@ -342,13 +310,13 @@ export default function CartPage() {
                         <span className="text-sm font-semibold">Apply</span>
                       </button>
                     </div>
-                    <div className="space-x-2.5">
-                      <div className="w-[220px] h-[50px] bg-[#F6F6F6] flex justify-center items-center">
+                    <Link to={URL_CONSTANTS.HOME} className="space-x-2.5">
+                      <div className="w-[150px] h-[50px] bg-[#F6F6F6] flex justify-center items-center">
                         <span className="text-sm font-semibold">
                           Continue Shopping
                         </span>
                       </div>
-                    </div>
+                    </Link>
                   </div>
                   <div className="w-full mt-[30px] flex sm:justify-end">
                     <div className="sm:w-[370px] w-full border border-[#EDEDED] px-[30px] py-[26px]">

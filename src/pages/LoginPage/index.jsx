@@ -1,4 +1,3 @@
-
 import React, { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
@@ -6,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../stores/authentication/actions";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import createNotification from "../../utils/notification";
+import Loading from "../../components/Loading";
 
 const getGoogleAuthUrl = () => {
   const url = `https://accounts.google.com/o/oauth2/v2/auth`;
@@ -37,7 +37,6 @@ export default function LoginPage() {
   const oauthURL = useMemo(() => getGoogleAuthUrl(), []);
   const navigate = useNavigate();
   const [validationErrors, setValidationErrors] = useState([]);
-  const [submitted, setSubmitted] = useState(false);
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
     email: "",
@@ -56,12 +55,10 @@ export default function LoginPage() {
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      setSubmitted(true);
       const data = {
         email,
         password: isPassword,
       };
-
       try {
         const response = await dispatch(login(data));
         if (response.status === true) {
@@ -131,7 +128,7 @@ export default function LoginPage() {
                             name="email"
                           />
                         </div>
-                        {submitted &&
+                        {
                           validationErrors &&
                           validationErrors.email && (
                             <p className="mt-1 text-red-500">
@@ -215,36 +212,25 @@ export default function LoginPage() {
                             )}
                           </div>
                         </div>
-                        {submitted &&
-                          validationErrors &&
-                          validationErrors.password && (
-                            <p className="mt-1 text-red-500">
-                              <li>{validationErrors.password.msg}</li>
-                            </p>
-                          )}
+                        {validationErrors && validationErrors.password && (
+                          <p className="mt-1 text-red-500">
+                            <li>{validationErrors.password.msg}</li>
+                          </p>
+                        )}
                       </div>
                     </div>
-                    <div className="forgot-password-area flex justify-between items-center mb-7">
-                      <div className="remember-checkbox flex items-center space-x-2.5">
-                        <button
-                          type="button"
-                          className="w-5 h-5 text-black flex justify-center items-center border border-light-gray"
-                        />
-                        <span className="text-base text-black">
-                          Remember Me
-                        </span>
-                      </div>
+                    <div className="forgot-password-area flex justify-end items-center mb-7">
                       <Link
                         to={URL_CONSTANTS.FORGOT_PASSWORD}
-                        className="text-base text-yellow-400"
+                        className="text-base text-blue-400"
                       >
-                        Forgot Password
+                        Forgot Password?
                       </Link>
                     </div>
                     <div className="signin-area mb-3.5">
                       <div className="flex justify-center">
-                        <button className="bg-black mb-6 text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center">
-                          <span>Log In</span>
+                        <button className="bg-black mb-4 text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center">
+                          <span>{loading ? <Loading /> : "Log In"}</span>
                         </button>
                       </div>
                       <Link
@@ -301,9 +287,9 @@ export default function LoginPage() {
                       </Link>
                     </div>
                     <div className="signup-area flex justify-center">
-                      <p className="text-base text-qgraytwo font-normal">
-                        Dont’t have an aceount ?
-                        <Link to={URL_CONSTANTS.REGISTER}>Sign Up</Link>
+                      <p className="text-base text-gray-400 font-normal">
+                        Dont’t have an account ?
+                        <Link to={URL_CONSTANTS.REGISTER}> Sign Up</Link>
                       </p>
                     </div>
                   </form>

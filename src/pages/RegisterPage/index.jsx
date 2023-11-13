@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,6 +6,7 @@ import { URL_CONSTANTS } from "../../constants/url.constants";
 import { history } from "../../helpers/history";
 import { register } from "../../stores/authentication/actions";
 import createNotification from "../../utils/notification";
+import Loading from "../../components/Loading";
 
 const initialValues = {
   fullname: "",
@@ -15,7 +15,6 @@ const initialValues = {
   password: "",
   confirm_password: "",
 };
-
 
 export default function RegisterPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -40,7 +39,6 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const [validationErrors, setValidationErrors] = useState([]);
   const [inputs, setInputs] = useState(initialValues);
-  const [submitted, setSubmitted] = useState(false);
 
   const loading = useSelector((state) => state.auth.loading);
   const accessToken = useSelector((state) => state.auth.accessToken);
@@ -60,7 +58,6 @@ export default function RegisterPage() {
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      setSubmitted(true);
       let data = {
         ...inputs,
         password: isPassword,
@@ -85,7 +82,7 @@ export default function RegisterPage() {
       }
     },
     [dispatch, isPassword, isPasswordConfirm, inputs, navigate]
-  )
+  );
   return (
     <Layout>
       <div className="w-full  pt-0 pb-0">
@@ -122,7 +119,7 @@ export default function RegisterPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="fname"
                         >
-                          Full Name*
+                          FullName*
                         </label>
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                           <input
@@ -133,20 +130,18 @@ export default function RegisterPage() {
                             name="fullname"
                           />
                         </div>
-                        {submitted &&
-                          validationErrors &&
-                          validationErrors.fullname && (
-                            <p className="mt-1 text-red-500">
-                              <li>{validationErrors.fullname.msg}</li>
-                            </p>
-                          )}
+                        {validationErrors && validationErrors.fullname && (
+                          <p className="mt-1 text-red-500">
+                            <li>{validationErrors.fullname.msg}</li>
+                          </p>
+                        )}
                       </div>
                       <div className="input-com w-full h-full">
                         <label
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="lname"
                         >
-                          User Name*
+                          UserName*
                         </label>
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                           <input
@@ -157,13 +152,11 @@ export default function RegisterPage() {
                             name="username"
                           />
                         </div>
-                        {submitted &&
-                          validationErrors &&
-                          validationErrors.username && (
-                            <p className="mt-1 text-red-500">
-                              <li>{validationErrors.username.msg}</li>
-                            </p>
-                          )}
+                        {validationErrors && validationErrors.username && (
+                          <p className="mt-1 text-red-500">
+                            <li>{validationErrors.username.msg}</li>
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="flex sm:flex-row flex-col space-y-5 sm:space-y-0 sm:space-x-5 mb-5">
@@ -183,13 +176,11 @@ export default function RegisterPage() {
                             type="email"
                           />
                         </div>
-                        {submitted &&
-                          validationErrors &&
-                          validationErrors.email && (
-                            <p className="mt-1 text-red-500">
-                              <li>{validationErrors.email.msg}</li>
-                            </p>
-                          )}
+                        {validationErrors && validationErrors.email && (
+                          <p className="mt-1 text-red-500">
+                            <li>{validationErrors.email.msg}</li>
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="input-item mb-5">
@@ -266,13 +257,11 @@ export default function RegisterPage() {
                             )}
                           </div>
                         </div>
-                        {submitted &&
-                          validationErrors &&
-                          validationErrors.password && (
-                            <p className="mt-1 text-red-500">
-                              <li>{validationErrors.password.msg}</li>
-                            </p>
-                          )}
+                        {validationErrors && validationErrors.password && (
+                          <p className="mt-1 text-red-500">
+                            <li>{validationErrors.password.msg}</li>
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -350,8 +339,7 @@ export default function RegisterPage() {
                             )}
                           </div>
                         </div>
-                        {submitted &&
-                          validationErrors &&
+                        {validationErrors &&
                           validationErrors.confirm_password && (
                             <p className="mt-1 text-red-500">
                               <li>{validationErrors.confirm_password.msg}</li>
@@ -360,30 +348,17 @@ export default function RegisterPage() {
                       </div>
                     </div>
 
-                    <div className="forgot-password-area mb-7">
-                      <div className="remember-checkbox flex items-center space-x-2.5">
-                        <button
-                          type="button"
-                          className="w-5 h-5 text-qblack flex justify-center items-center border border-light-gray"
-                        />
-                        <span className="text-base text-black">
-                          I agree all
-                          <span className="text-black">tarm and condition</span>
-                          in BigShop.
-                        </span>
-                      </div>
-                    </div>
                     <div className="signin-area mb-3">
                       <div className="flex justify-center">
                         <button className="bg-black text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center">
-                          <span>Create Account</span>
+                          <span>{loading ? <Loading /> : "Create Account"}</span>
                         </button>
                       </div>
                     </div>
                     <div className="signup-area flex justify-center">
-                      <p className="text-base text-gray-500 font-normal">
-                        Already have an Account?
-                        <Link to={URL_CONSTANTS.LOGIN}>Log In</Link>
+                      <p className="text-base text-gray-400 font-normal">
+                        Already have an Account ?
+                        <Link to={URL_CONSTANTS.LOGIN}> Log In</Link>
                       </p>
                     </div>
                   </form>
