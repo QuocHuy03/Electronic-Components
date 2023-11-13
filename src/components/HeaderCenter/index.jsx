@@ -405,7 +405,7 @@ export default function HeaderCenter() {
                 </div>
 
                 <div className="relative flex">
-                  <Link to={URL_CONSTANTS.LOGIN} className="box-icon rounded-[8px]">
+                  <Link to={URL_CONSTANTS.PROFILE} className="box-icon rounded-[8px]">
                     <img
                       src="https://shopjk.net/assets/frontend/theme_5/image/nam/profile.svg"
                       alt
