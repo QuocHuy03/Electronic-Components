@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import { AppContext } from "../../contexts/AppContextProvider";
@@ -6,6 +6,7 @@ import { formatPrice } from "../../utils/fomatPrice";
 import { deleteToCartItem } from "../../stores/cart/actions";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
+import "./index.css";
 
 export default function HeaderCenter() {
   const { carts } = useContext(AppContext);
@@ -16,8 +17,29 @@ export default function HeaderCenter() {
   );
   const handleDeleteItem = async (item) => {
     const response = await dispatch(deleteToCartItem(item));
-    console.log(response);
+    // console.log(response);
   };
+  const [isSearchBoard, setIsSearchBoard] = useState(false);
+  const searchBoardRef = useRef();
+  const handleSearch = () => {
+    setIsSearchBoard(true);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        searchBoardRef.current &&
+        !searchBoardRef.current.contains(event.target)
+      ) {
+        setIsSearchBoard(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
     <React.Fragment>
       <div className="w-full h-[86px] bg-white quomodo-shop-middle-bar lg:block hidden">
@@ -33,25 +55,118 @@ export default function HeaderCenter() {
                   alt="logo"
                 />
               </Link>
-              <div className="w-[417px] h-[44px]">
-                <div className="w-full h-full flex items-center border border-qgray-border bg-white search-com">
-                  <div className="flex-1 h-full">
-                    <form className="h-full">
-                      <input
-                        type="text"
-                        className="outline-none leading-4 font-medium h-full w-full text-xs pl-3"
-                        placeholder="Search Product..."
-                      />
-                    </form>
-                  </div>
-                  <button
-                    className=" w-[93px] h-full text-sm font-600 bg-yellow-400"
-                    type="button"
+              <div
+                className="relative opacity-1 max-h-full min-h-[1px]"
+                style={{
+                  paddingLeft: 8,
+                  paddingRight: 8,
+                }}
+              >
+                <div className="relative w-[517px] h-[44px]">
+                  <div
+                    className="flex bg-[#F5F5F5] border border-solid border-[#eaeaea] rounded-[8px]"
+                    onClick={handleSearch}
+                    ref={searchBoardRef}
                   >
-                    Search
-                  </button>
+                    <div className="inline-block w-full">
+                      <input
+                        className="block bg-[#F5F5F5] text-[14px] outline-none w-full py-[0.375rem] px-[0.75rem] min-h-[16px] h-full"
+                        placeholder="Nhập từ khoá cần tìm"
+                      />
+                    </div>
+                    <div className="inline-block">
+                      <button className="search-icon">
+                        <span
+                          size={26}
+                          color="#616161"
+                          className="icon-search"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className={`${
+                      isSearchBoard ? "block" : "hidden"
+                    } absolute bg-white rounded-[8px] py-[0.5rem] px-[0.8rem] z-[1000] w-full`}
+                    style={{
+                      boxShadow: "0 4px 6px 0 rgba(0, 0, 0, 0.1)",
+                    }}
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    <div className="flex justify-between items-center my-[4px]">
+                      <div
+                        fontWeight={500}
+                        color="#82869E"
+                        style={{
+                          color: "rgb(130, 134, 158)",
+                        }}
+                        className="font-[500] text-[14px] text-left overflow-hidden uppercase"
+                      >
+                        Lịch sử tìm kiếm
+                      </div>
+                      <div
+                        style={{
+                          color: "rgb(132, 135, 136)",
+                        }}
+                        className="cursor-pointer"
+                      >
+                        Xóa lịch sử
+                      </div>
+                    </div>
+                    <div
+                      className="flex p-[0.5rem] cursor-pointer rounded-[8px] items-center"
+                      style={{
+                        background: "rgb(245, 245, 245)",
+                      }}
+                    >
+                      <span
+                        size={20}
+                        className="history-search inline-block bg-[#757575]"
+                      />
+
+                      <div style={{ margin: "0px 0.6rem" }}>
+                        <div className="css-1488rru">ma</div>
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        margin: "8px 0px 4px",
+                      }}
+                    >
+                      <div className="flex justify-between items-center my-[4px]">
+                        <div
+                          fontWeight={500}
+                          color="#82869E"
+                          style={{
+                            color: "rgb(130, 134, 158)",
+                          }}
+                          className="font-[500] text-[14px] text-left overflow-hidden uppercase"
+                        >
+                          Từ khóa phổ biến
+                        </div>
+                      </div>
+                      <div
+                        className="flex pt-[4px] flex-wrap"
+                        style={{
+                          background: "rgb(255, 255, 255)",
+                        }}
+                      >
+                        <div
+                          className="h-[32px] leading-[32px] px-[16px] rounded-[999px] text-[14px] cursor-pointer"
+                          style={{
+                            background: "rgb(245, 245, 245)",
+                            color: "rgb(51, 51, 51)",
+                            margin: "0px 4px 10px",
+                          }}
+                        >
+                          máy in brother
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+
               <div className="flex space-x-6 items-center">
                 <div className="cart-wrapper group relative py-4">
                   <div className="cart relative cursor-pointer">
