@@ -4,6 +4,7 @@ import Layout from "../../components/Layout";
 import { useLocation } from "react-router-dom";
 import { userService } from "../../services/user.service";
 import createNotification from "../../utils/notification";
+import Loading from "../../components/Loading";
 
 export default function ResetPasswordPage() {
   const location = useLocation();
@@ -28,9 +29,8 @@ export default function ResetPasswordPage() {
 
   const [isPassword, setIsPassword] = useState("");
   const [isPasswordConfirm, setIsPasswordConfirm] = useState("");
-
-  const [validationErrors, setValidationErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
 
   const [inputs, setInputs] = useState({
     password: "",
@@ -71,6 +71,7 @@ export default function ResetPasswordPage() {
       } catch (error) {
         console.log(error);
       }
+      setSubmitted(false);
     },
     [isForgotPasswordToken, inputs]
   );
@@ -177,7 +178,7 @@ export default function ResetPasswordPage() {
                             )}
                           </div>
                         </div>
-                        {submitted &&
+                        {
                           validationErrors &&
                           validationErrors.password && (
                             <p className="mt-1 text-red-500">
@@ -260,7 +261,7 @@ export default function ResetPasswordPage() {
                             )}
                           </div>
                         </div>
-                        {submitted &&
+                        {
                           validationErrors &&
                           validationErrors.confirm_password && (
                             <p className="mt-1 text-red-500">
@@ -269,25 +270,13 @@ export default function ResetPasswordPage() {
                           )}
                       </div>
                     </div>
-
-                    <div className="forgot-password-area flex justify-between items-center mb-7">
-                      <div className="remember-checkbox flex items-center space-x-2.5">
-                        <button
-                          type="button"
-                          className="w-5 h-5 text-black flex justify-center items-center border border-light-gray"
-                        />
-                        <span className="text-base text-black">
-                          Remember Me
-                        </span>
-                      </div>
-                    </div>
                     <div className="signin-area mb-3.5">
                       <div className="flex justify-center">
                         <button
                           type="submit"
                           className="bg-black  mb-6 text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center"
                         >
-                          <span>Reset Password</span>
+                          <span>{submitted ? <Loading/> : "Reset Password"}</span>
                         </button>
                       </div>
                     </div>

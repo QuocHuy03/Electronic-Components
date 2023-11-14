@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import Layout from "../../components/Layout";
 import { userService } from "../../services/user.service";
 import createNotification from "../../utils/notification";
+import Loading from "../../components/Loading";
 
 export default function ForgotPasswordPage() {
   const [validationErrors, setValidationErrors] = useState([]);
@@ -37,6 +38,7 @@ export default function ForgotPasswordPage() {
     } catch (error) {
       console.log(error);
     }
+    setSubmitted(false)
   }, [inputs]);
   return (
     <Layout>
@@ -92,25 +94,13 @@ export default function ForgotPasswordPage() {
                       </div>
                     </div>
 
-                    <div className="forgot-password-area flex justify-between items-center mb-7">
-                      <div className="remember-checkbox flex items-center space-x-2.5">
-                        <button
-                          type="button"
-                          className="w-5 h-5 text-qblack flex justify-center items-center border border-light-gray"
-                        />
-                        <span className="text-base text-black">
-                          Remember Me
-                        </span>
-                      </div>
-                    </div>
-
                     <div className="signin-area mb-3.5">
                       <div className="flex justify-center">
                         <button
                           type="submit"
                           className="bg-black  mb-6 text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center"
                         >
-                          <span>Forgot Password</span>
+                          <span>{submitted ? <Loading/> : "Forgot Password"}</span>
                         </button>
                       </div>
                     </div>

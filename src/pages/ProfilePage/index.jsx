@@ -13,6 +13,7 @@ import OrderStatus from "../../types/order.type";
 import { formatPrice } from "../../utils/fomatPrice";
 import { persistor } from "../../stores/app.store";
 import { Link } from "react-router-dom";
+import Pagination from "../../components/Pagination";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -64,28 +65,30 @@ export default function ProfilePage() {
     };
   }, [inputChangePass]);
 
-
-  const handleChangePassword = useCallback(async (e) => {
-    e.preventDefault();
-    try {
-      const response = await userService.changePassword(handleChangePasswordData);
-      if (response.status === true) {
-        setValidationErrors([]);
-        createNotification("success", "topRight", response.message);
-        await dispatch(logout(refreshToken));
-      } else {
-        if (response.status === false) {
+  const handleChangePassword = useCallback(
+    async (e) => {
+      e.preventDefault();
+      try {
+        const response = await userService.changePassword(
+          handleChangePasswordData
+        );
+        if (response.status === true) {
           setValidationErrors([]);
-          createNotification("error", "topRight", response.message);
+          createNotification("success", "topRight", response.message);
+          await dispatch(logout(refreshToken));
+        } else {
+          if (response.status === false) {
+            setValidationErrors([]);
+            createNotification("error", "topRight", response.message);
+          }
+          setValidationErrors(response.errors);
         }
-
-        setValidationErrors(response.errors);
+      } catch (error) {
+        console.error("An error occurred:", error);
       }
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-  }, [dispatch, refreshToken, handleChangePasswordData]);
-  
+    },
+    [dispatch, refreshToken, handleChangePasswordData]
+  );
 
   const handleCancel = () => {
     // Reset the form
@@ -144,7 +147,6 @@ export default function ProfilePage() {
         city: e.target.value,
       }));
     }, []);
-    
 
     const handleSelectDistrict = useCallback((e) => {
       setSelectedDistrict(e.target.value);
@@ -153,7 +155,6 @@ export default function ProfilePage() {
         district: e.target.value,
       }));
     }, []);
-    
 
     const handleSelectCommune = useCallback((e) => {
       setSelectedCommune(e.target.value);
@@ -163,20 +164,18 @@ export default function ProfilePage() {
       }));
     }, []);
 
-    
     const filteredDistricts = useMemo(() => {
       return districts?.filter(
         (district) => district.province_id === Number(selectedProvince)
       );
     }, [districts, selectedProvince]);
-    
+
     const filteredWards = useMemo(() => {
       return wards?.filter(
         (ward) => ward.district_id === Number(selectedDistrict)
       );
     }, [wards, selectedDistrict]);
 
-    
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
@@ -194,7 +193,7 @@ export default function ProfilePage() {
         console.error("An error occurred:", error);
       }
     };
-    
+
     return (
       <form onSubmit={handleSubmit}>
         <div className="flex space-x-8">
@@ -424,6 +423,119 @@ export default function ProfilePage() {
     );
   };
 
+  const ListOrder = ({ isOrders }) => {
+    const renderOrderItem = (item, index) => {
+      let statusClass = "text-sm rounded p-2 ";
+      let statusText = "";
+
+      switch (item.orderStatus) {
+        case OrderStatus.DELIVERED:
+          statusClass += "text-green-500 bg-green-100";
+          statusText = "Đã Giao Hàng";
+          break;
+
+        case OrderStatus.PROCESSING:
+          statusClass += "text-blue-500 bg-blue-100";
+          statusText = "Đang Xử Lý";
+          break;
+
+        case OrderStatus.SHIPPED:
+        case OrderStatus.SHIPPED_CONFIRMED:
+          statusClass += "text-yellow-500 bg-yellow-100";
+          statusText = "Đang Giao Hàng";
+          break;
+
+        case OrderStatus.ON_HOLD:
+          statusClass += "text-orange-500 bg-orange-100";
+          statusText = "Tạm Giữ & Chậm Trễ";
+          break;
+
+        case OrderStatus.CANCELLED:
+          statusClass += "text-red-500 bg-red-100";
+          statusText = "Đã Hủy";
+          break;
+
+        case OrderStatus.BACKORDERED:
+          statusClass += "text-purple-500 bg-purple-100";
+          statusText = "Chờ Hàng Về Kho";
+          break;
+
+        case OrderStatus.REFUNDED:
+          statusClass += "text-gray-500 bg-gray-100";
+          statusText = "Đã Hoàn Tiền";
+          break;
+
+        default:
+          statusClass += "text-white bg-black";
+          statusText = "Lỗi";
+          break;
+      }
+
+      return (
+        <tr className="bg-white border-b hover:bg-gray-50" key={index}>
+          <td className="text-center py-4">
+            <Link
+              to={`/order/${item.code}`}
+              className="text-sm cursor-pointer text-blue-400 overflow-hidden max-w-[80px] whitespace-nowrap overflow-ellipsis inline-block font-medium"
+            >
+              {item.code}
+            </Link>
+          </td>
+          <td className="text-center py-4 px-2">
+            <span className="text-sm text-gray whitespace-nowrap">
+              {formatDate(item.createdAt)}
+            </span>
+          </td>
+          <td className="text-center py-4 px-2">
+            <span className={`text-sm rounded ${statusClass}`}>
+              {statusText}
+            </span>
+          </td>
+          <td className="text-center py-4 px-2">
+            <span className="text-sm text-black whitespace-nowrap px-2">
+              {formatPrice(item.totalPrice)}
+            </span>
+          </td>
+          <td className="text-center py-4">
+            <button
+              disabled={item.orderStatus !== OrderStatus.PROCESSING}
+              to={`/order/${item.code}`}
+              className={`p-1 text-sm rounded-sm ${
+                item.orderStatus !== OrderStatus.PROCESSING
+                  ? "bg-gray-300"
+                  : "bg-red-600"
+              } text-white font-bold`}
+            >
+              Cancel
+            </button>
+          </td>
+        </tr>
+      );
+    };
+    return (
+      <div className="relative w-full overflow-x-auto sm:rounded-lg">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <tbody>
+            <tr className="text-base text-gray-400 whitespace-nowrap px-2 border-b default-border-bottom ">
+              <td className="py-4 block whitespace-nowrap text-center">
+                Order
+              </td>
+              <td className="py-4 whitespace-nowrap text-center">Date</td>
+              <td className="py-4 whitespace-nowrap text-center">Status</td>
+              <td className="py-4 whitespace-nowrap text-center">Amount</td>
+              <td className="py-4 whitespace-nowrap text-center">Action</td>
+            </tr>
+          </tbody>
+          <Pagination
+            data={isOrders}
+            itemsPerPage={4}
+            renderItem={renderOrderItem}
+          />
+        </table>
+      </div>
+    );
+  };
+
   return (
     <Layout>
       <div className="w-full pt-0 pb-0">
@@ -482,7 +594,9 @@ export default function ProfilePage() {
                               <path d="M13.1081 11.3378C13.9592 11.3378 14.811 11.3338 15.6621 11.3391C16.5019 11.3444 16.9952 11.843 16.9972 12.6862C16.9998 13.6813 17.0005 14.6765 16.9972 15.6716C16.9939 16.4822 16.48 16.9968 15.6687 16.9981C13.9546 17.0014 12.2411 17.0014 10.527 16.9981C9.72831 16.9961 9.21977 16.4935 9.21446 15.6962C9.20716 14.6791 9.20716 13.6614 9.21446 12.6443C9.21977 11.837 9.71237 11.3464 10.521 11.3398C11.3834 11.3325 12.2458 11.3378 13.1081 11.3378Z" />
                             </svg>
                           </span>
-                          <span className={`font-normal text-base whitespace-nowrap`}>
+                          <span
+                            className={`font-normal text-base whitespace-nowrap`}
+                          >
                             Dashboard
                           </span>
                         </div>
@@ -545,41 +659,6 @@ export default function ProfilePage() {
                         <div
                           onClick={() => handleTabClick(3)}
                           className={`flex space-x-3 items-center cursor-pointer ${
-                            activeTab === 3
-                              ? "text-yellow-400"
-                              : "text-slate-500 hover:text-black"
-                          }`}
-                        >
-                          <span>
-                            <svg
-                              width={14}
-                              height={20}
-                              viewBox="0 0 14 20"
-                              fill="none"
-                              className="fill-current"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path d="M11.864 15.982C11.4632 12.6503 9.25877 11.1115 7.04363 11.0543C5.70166 11.0221 4.5422 11.5123 3.57598 12.4607C2.60976 13.4054 2.19465 14.5935 1.99067 16.0285C1.37873 15.7458 0.809733 15.506 0.272945 15.2126C0.147695 15.1446 0.0582333 14.8941 0.0582333 14.7259C0.0439189 13.5629 -0.0849134 12.3819 0.0940158 11.2475C0.365988 9.54055 1.99067 8.23794 3.71555 8.05544C4.60661 7.96239 5.46547 7.95166 6.35296 8.16995C6.88617 8.30236 7.51243 8.19142 8.06711 8.05902C10.2357 7.52938 13.1559 8.64948 13.7571 10.997C14.0577 12.1672 14.0577 13.3661 13.8751 14.5613C13.8107 14.9979 13.6068 15.32 13.1737 15.481C12.7336 15.6385 12.3042 15.8102 11.864 15.982Z" />
-                              <path d="M10.6071 3.72194C10.5928 5.77962 8.96814 7.38999 6.93193 7.36494C4.8814 7.33989 3.24241 5.7009 3.26388 3.69331C3.28535 1.59984 4.90287 -0.0212607 6.94982 0.000210833C9.01824 0.0181038 10.6215 1.64994 10.6071 3.72194Z" />
-                              <path d="M10.9467 16.0178C10.9109 18.2795 9.07512 19.9972 6.74188 19.9507C4.58041 19.9077 2.77681 18.0719 2.80902 15.9498C2.8448 13.7454 4.69493 11.9776 6.9387 12.0062C9.17174 12.0384 10.9789 13.8492 10.9467 16.0178ZM6.84208 18.4834C7.27509 18.462 7.76893 18.4262 8.26278 18.419C8.62779 18.4154 8.74947 18.2222 8.74947 17.8966C8.74947 17.1808 8.75305 16.4687 8.74589 15.753C8.74589 15.6599 8.70652 15.5025 8.65642 15.4882C8.32719 15.4059 8.40234 15.1482 8.38087 14.9263C8.36298 14.7367 8.34151 14.547 8.30572 14.3645C8.15542 13.6309 7.64011 13.2122 6.91723 13.2229C6.22299 13.2337 5.64683 13.7418 5.52874 14.4432C5.4679 14.8154 5.65041 15.2735 5.17088 15.5096C5.14941 15.5204 5.14941 15.5919 5.14941 15.6349C5.14941 16.4508 5.1351 17.2667 5.16015 18.0826C5.16372 18.19 5.34981 18.3689 5.4679 18.3868C5.90449 18.4477 6.34108 18.4548 6.84208 18.4834Z" />
-                              <path
-                                d="M7.78818 15.3706C7.81323 14.8159 7.93491 14.2684 7.41601 13.9069C7.09036 13.6815 6.70745 13.6851 6.40327 13.9499C5.95953 14.3328 6.03826 14.8481 6.08836 15.3706C6.66451 15.3706 7.19414 15.3706 7.78818 15.3706ZM6.76113 17.643C6.8828 17.643 7.00448 17.643 7.11899 17.643C7.15836 17.3209 7.22635 17.0239 7.21561 16.7304C7.21204 16.6088 7.02953 16.4978 6.92933 16.3797C6.83986 16.4835 6.6824 16.5837 6.67883 16.6911C6.67167 16.9988 6.72892 17.3137 6.76113 17.643Z"
-                                fill="white"
-                              />
-                              <path d="M7.78818 15.3706C7.19414 15.3706 6.66451 15.3706 6.08836 15.3706C6.03826 14.8445 5.95953 14.3328 6.40327 13.9499C6.71103 13.6851 7.09394 13.6815 7.41601 13.9069C7.93491 14.2684 7.81323 14.8159 7.78818 15.3706Z" />
-                              <path d="M6.76261 17.6421C6.7304 17.3129 6.67314 17.0016 6.6803 16.6902C6.68388 16.5865 6.84134 16.4827 6.9308 16.3789C7.031 16.4934 7.21351 16.6079 7.21709 16.7296C7.22782 17.0231 7.15983 17.3201 7.12046 17.6421C7.00595 17.6421 6.88786 17.6421 6.76261 17.6421Z" />
-                            </svg>
-                          </span>
-                          <span className=" font-normal text-base">
-                            Address
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="item group">
-                        <div
-                          onClick={() => handleTabClick(4)}
-                          className={`flex space-x-3 items-center cursor-pointer ${
                             activeTab === 4
                               ? "text-yellow-400"
                               : "text-slate-500 hover:text-black"
@@ -605,7 +684,7 @@ export default function ProfilePage() {
 
                       <div className="item group">
                         <div
-                          onClick={() => handleLogout(5)}
+                          onClick={() => handleLogout(4)}
                           className={`flex space-x-3 items-center cursor-pointer ${
                             activeTab === 5
                               ? "text-yellow-400"
@@ -755,313 +834,9 @@ export default function ProfilePage() {
                         <UpdateProfile user={user} />
                       ) : activeTab === 2 ? (
                         <React.Fragment>
-                          <div className="relative w-full overflow-x-auto sm:rounded-lg">
-                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                              <tbody>
-                                <tr className="text-base text-gray-400 whitespace-nowrap px-2 border-b default-border-bottom ">
-                                  <td className="py-4 block whitespace-nowrap text-center">
-                                    Order
-                                  </td>
-                                  <td className="py-4 whitespace-nowrap text-center">
-                                    Date
-                                  </td>
-                                  <td className="py-4 whitespace-nowrap text-center">
-                                    Status
-                                  </td>
-                                  <td className="py-4 whitespace-nowrap text-center">
-                                    Amount
-                                  </td>
-                                  <td className="py-4 whitespace-nowrap text-center">
-                                    Action
-                                  </td>
-                                </tr>
-                                {isOrders?.length > 0 ? (
-                                  isOrders?.map((item, index) => {
-                                    let statusClass = "text-sm rounded p-2 ";
-                                    let statusText = "";
-
-                                    switch (item.orderStatus) {
-                                      case OrderStatus.DELIVERED:
-                                        statusClass +=
-                                          "text-green-500 bg-green-100";
-                                        statusText = "Đã Giao Hàng";
-                                        break;
-
-                                      case OrderStatus.PROCESSING:
-                                        statusClass +=
-                                          "text-blue-500 bg-blue-100";
-                                        statusText = "Đang Xử Lý";
-                                        break;
-
-                                      case OrderStatus.SHIPPED:
-                                      case OrderStatus.SHIPPED_CONFIRMED:
-                                        statusClass +=
-                                          "text-yellow-500 bg-yellow-100";
-                                        statusText = "Đang Giao Hàng";
-                                        break;
-
-                                      case OrderStatus.ON_HOLD:
-                                        statusClass +=
-                                          "text-orange-500 bg-orange-100";
-                                        statusText = "Tạm Giữ & Chậm Trễ";
-                                        break;
-
-                                      case OrderStatus.CANCELLED:
-                                        statusClass +=
-                                          "text-red-500 bg-red-100";
-                                        statusText = "Đã Hủy";
-                                        break;
-
-                                      case OrderStatus.BACKORDERED:
-                                        statusClass +=
-                                          "text-purple-500 bg-purple-100";
-                                        statusText = "Chờ Hàng Về Kho";
-                                        break;
-
-                                      case OrderStatus.REFUNDED:
-                                        statusClass +=
-                                          "text-gray-500 bg-gray-100";
-                                        statusText = "Đã Hoàn Tiền";
-                                        break;
-
-                                      default:
-                                        statusClass += "text-white bg-black";
-                                        statusText = "Lỗi";
-                                        break;
-                                    }
-
-                                    return (
-                                      <tr
-                                        className="bg-white border-b hover:bg-gray-50"
-                                        key={index}
-                                      >
-                                        <td className="text-center py-4">
-                                          <span className="text-lg text-qgray font-medium">
-                                            #{index + 1}
-                                          </span>
-                                        </td>
-                                        <td className="text-center py-4 px-2">
-                                          <span className="text-base text-qgray whitespace-nowrap">
-                                            {formatDate(item.createdAt)}
-                                          </span>
-                                        </td>
-                                        <td className="text-center py-4 px-2">
-                                          <span
-                                            className={`text-sm rounded ${statusClass}`}
-                                          >
-                                            {statusText}
-                                          </span>
-                                        </td>
-                                        <td className="text-center py-4 px-2">
-                                          <span className="text-base text-qblack whitespace-nowrap px-2">
-                                            {formatPrice(item.totalPrice)}
-                                          </span>
-                                        </td>
-                                        <td className="text-center py-4">
-                                          <Link
-                                            to={`/order/${item.code}`}
-                                            className="px-2 py-3 rounded-sm bg-yellow-400 text-black font-bold"
-                                          >
-                                            View Details
-                                          </Link>
-                                        </td>
-                                      </tr>
-                                    );
-                                  })
-                                ) : (
-                                  <tr className="bg-white border-b hover:bg-gray-50">
-                                    <td
-                                      colSpan="5"
-                                      className="text-center py-4 text-yellow-400"
-                                    >
-                                      Order Not Empty ...
-                                    </td>
-                                  </tr>
-                                )}
-                              </tbody>
-                            </table>
-                          </div>
+                          <ListOrder isOrders={isOrders} />
                         </React.Fragment>
                       ) : activeTab === 3 ? (
-                        <React.Fragment>
-                          <div className="grid grid-cols-2 gap-[30px]">
-                            <div className="w-full bg-primarygray p-5 border">
-                              <div className="flex justify-between items-center">
-                                <p className="title text-[22px] font-semibold">
-                                  Address #1
-                                </p>
-                                <button
-                                  type="button"
-                                  className="border border-qgray w-[34px] h-[34px] rounded-full flex justify-center items-center"
-                                >
-                                  <svg
-                                    width={17}
-                                    height={19}
-                                    viewBox="0 0 17 19"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M15.7768 5.95215C15.6991 6.9104 15.6242 7.84603 15.5471 8.78237C15.3691 10.9285 15.1917 13.0747 15.0108 15.2209C14.9493 15.9473 14.9097 16.6773 14.8065 17.3988C14.6963 18.1726 14.0716 18.7161 13.2929 18.7196C10.3842 18.7323 7.47624 18.7337 4.56757 18.7189C3.70473 18.7146 3.08639 18.0794 3.00795 17.155C2.78181 14.493 2.57052 11.8302 2.35145 9.16821C2.2716 8.19442 2.1875 7.22133 2.10623 6.24824C2.09846 6.15638 2.09563 6.06451 2.08998 5.95286C6.65579 5.95215 11.2061 5.95215 15.7768 5.95215ZM5.25375 8.05803C5.25234 8.05803 5.25163 8.05803 5.25022 8.05803C5.27566 8.4573 5.3011 8.85657 5.32583 9.25584C5.46717 11.5228 5.60709 13.7891 5.75125 16.0561C5.77245 16.3897 5.99081 16.6038 6.28196 16.6024C6.58724 16.601 6.80066 16.3636 6.8056 16.0159C6.80702 15.9339 6.80136 15.8512 6.79571 15.7692C6.65367 13.4789 6.51304 11.1886 6.36888 8.89826C6.33849 8.41702 6.31164 7.93507 6.26146 7.45524C6.22966 7.1549 6.0318 6.99732 5.73076 6.99802C5.44526 6.99873 5.24033 7.2185 5.23043 7.52873C5.22619 7.7054 5.24598 7.88207 5.25375 8.05803ZM12.6102 8.05521C12.6088 8.05521 12.6074 8.05521 12.606 8.05521C12.6152 7.89055 12.6321 7.7259 12.6307 7.56195C12.6286 7.24465 12.4399 7.02417 12.1622 6.99873C11.888 6.97329 11.6484 7.16268 11.5961 7.46443C11.5665 7.63756 11.5615 7.81494 11.5502 7.9909C11.4626 9.38799 11.3749 10.7851 11.2887 12.1822C11.2103 13.4499 11.1276 14.7184 11.0576 15.9869C11.0379 16.3431 11.2463 16.5819 11.5495 16.6003C11.8562 16.6194 12.088 16.4017 12.1099 16.0505C12.2788 13.3856 12.4441 10.7208 12.6102 8.05521ZM9.45916 11.814C9.45916 10.4727 9.45986 9.13147 9.45916 7.79091C9.45916 7.25101 9.28603 6.99449 8.92845 6.99661C8.56805 6.99802 8.40198 7.24819 8.40198 7.79586C8.40127 10.4664 8.40127 13.1369 8.40268 15.8074C8.40268 15.948 8.37088 16.1289 8.44296 16.2194C8.56946 16.3763 8.76591 16.5748 8.93198 16.5741C9.09805 16.5734 9.29309 16.3727 9.41746 16.2151C9.48955 16.124 9.45704 15.9431 9.45704 15.8032C9.46057 14.4725 9.45916 13.1432 9.45916 11.814Z"
-                                      fill="#EB5757"
-                                    />
-                                    <path
-                                      d="M5.20143 2.75031C5.21486 2.49449 5.21839 2.2945 5.23747 2.09593C5.31733 1.25923 5.93496 0.648664 6.77449 0.637357C8.21115 0.618277 9.64923 0.618277 11.0859 0.637357C11.9254 0.648664 12.5438 1.25852 12.6236 2.09522C12.6427 2.2938 12.6462 2.49379 12.6582 2.73335C12.7854 2.739 12.9084 2.74889 13.0314 2.7496C13.9267 2.75101 14.8221 2.74677 15.7174 2.75172C16.4086 2.75525 16.8757 3.18774 16.875 3.81244C16.8742 4.43643 16.4078 4.87103 15.716 4.87174C11.1926 4.87386 6.66849 4.87386 2.14508 4.87174C1.45324 4.87103 0.986135 4.43713 0.985429 3.81314C0.984722 3.18915 1.45183 2.75525 2.14296 2.75243C3.15421 2.74677 4.16545 2.75031 5.20143 2.75031ZM11.5799 2.73335C11.5799 2.59625 11.5806 2.49096 11.5799 2.38637C11.5749 1.86626 11.4018 1.69313 10.876 1.69242C9.55878 1.69101 8.24225 1.68959 6.92501 1.69313C6.48546 1.69454 6.30031 1.87545 6.28265 2.3051C6.27699 2.4422 6.28194 2.58 6.28194 2.73335C8.05851 2.73335 9.7941 2.73335 11.5799 2.73335Z"
-                                      fill="#EB5757"
-                                    />
-                                  </svg>
-                                </button>
-                              </div>
-                              <div className="mt-5">
-                                <table>
-                                  <tbody>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>Name:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        Shuvo Khan
-                                      </td>
-                                    </tr>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>Email:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        rafiqulislamsuvobd@gmail.com
-                                      </td>
-                                    </tr>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>Phone:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        01792166627
-                                      </td>
-                                    </tr>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>country:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        Dhaka,Bangldesh
-                                      </td>
-                                    </tr>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>state:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        Barishal
-                                      </td>
-                                    </tr>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>City:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        banaripara
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                            <div className="w-full bg-primarygray p-5 border">
-                              <div className="flex justify-between items-center">
-                                <p className="title text-[22px] font-semibold">
-                                  Address #1
-                                </p>
-                                <button
-                                  type="button"
-                                  className="border border-qgray w-[34px] h-[34px] rounded-full flex justify-center items-center"
-                                >
-                                  <svg
-                                    width={17}
-                                    height={19}
-                                    viewBox="0 0 17 19"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M15.7768 5.95215C15.6991 6.9104 15.6242 7.84603 15.5471 8.78237C15.3691 10.9285 15.1917 13.0747 15.0108 15.2209C14.9493 15.9473 14.9097 16.6773 14.8065 17.3988C14.6963 18.1726 14.0716 18.7161 13.2929 18.7196C10.3842 18.7323 7.47624 18.7337 4.56757 18.7189C3.70473 18.7146 3.08639 18.0794 3.00795 17.155C2.78181 14.493 2.57052 11.8302 2.35145 9.16821C2.2716 8.19442 2.1875 7.22133 2.10623 6.24824C2.09846 6.15638 2.09563 6.06451 2.08998 5.95286C6.65579 5.95215 11.2061 5.95215 15.7768 5.95215ZM5.25375 8.05803C5.25234 8.05803 5.25163 8.05803 5.25022 8.05803C5.27566 8.4573 5.3011 8.85657 5.32583 9.25584C5.46717 11.5228 5.60709 13.7891 5.75125 16.0561C5.77245 16.3897 5.99081 16.6038 6.28196 16.6024C6.58724 16.601 6.80066 16.3636 6.8056 16.0159C6.80702 15.9339 6.80136 15.8512 6.79571 15.7692C6.65367 13.4789 6.51304 11.1886 6.36888 8.89826C6.33849 8.41702 6.31164 7.93507 6.26146 7.45524C6.22966 7.1549 6.0318 6.99732 5.73076 6.99802C5.44526 6.99873 5.24033 7.2185 5.23043 7.52873C5.22619 7.7054 5.24598 7.88207 5.25375 8.05803ZM12.6102 8.05521C12.6088 8.05521 12.6074 8.05521 12.606 8.05521C12.6152 7.89055 12.6321 7.7259 12.6307 7.56195C12.6286 7.24465 12.4399 7.02417 12.1622 6.99873C11.888 6.97329 11.6484 7.16268 11.5961 7.46443C11.5665 7.63756 11.5615 7.81494 11.5502 7.9909C11.4626 9.38799 11.3749 10.7851 11.2887 12.1822C11.2103 13.4499 11.1276 14.7184 11.0576 15.9869C11.0379 16.3431 11.2463 16.5819 11.5495 16.6003C11.8562 16.6194 12.088 16.4017 12.1099 16.0505C12.2788 13.3856 12.4441 10.7208 12.6102 8.05521ZM9.45916 11.814C9.45916 10.4727 9.45986 9.13147 9.45916 7.79091C9.45916 7.25101 9.28603 6.99449 8.92845 6.99661C8.56805 6.99802 8.40198 7.24819 8.40198 7.79586C8.40127 10.4664 8.40127 13.1369 8.40268 15.8074C8.40268 15.948 8.37088 16.1289 8.44296 16.2194C8.56946 16.3763 8.76591 16.5748 8.93198 16.5741C9.09805 16.5734 9.29309 16.3727 9.41746 16.2151C9.48955 16.124 9.45704 15.9431 9.45704 15.8032C9.46057 14.4725 9.45916 13.1432 9.45916 11.814Z"
-                                      fill="#EB5757"
-                                    />
-                                    <path
-                                      d="M5.20143 2.75031C5.21486 2.49449 5.21839 2.2945 5.23747 2.09593C5.31733 1.25923 5.93496 0.648664 6.77449 0.637357C8.21115 0.618277 9.64923 0.618277 11.0859 0.637357C11.9254 0.648664 12.5438 1.25852 12.6236 2.09522C12.6427 2.2938 12.6462 2.49379 12.6582 2.73335C12.7854 2.739 12.9084 2.74889 13.0314 2.7496C13.9267 2.75101 14.8221 2.74677 15.7174 2.75172C16.4086 2.75525 16.8757 3.18774 16.875 3.81244C16.8742 4.43643 16.4078 4.87103 15.716 4.87174C11.1926 4.87386 6.66849 4.87386 2.14508 4.87174C1.45324 4.87103 0.986135 4.43713 0.985429 3.81314C0.984722 3.18915 1.45183 2.75525 2.14296 2.75243C3.15421 2.74677 4.16545 2.75031 5.20143 2.75031ZM11.5799 2.73335C11.5799 2.59625 11.5806 2.49096 11.5799 2.38637C11.5749 1.86626 11.4018 1.69313 10.876 1.69242C9.55878 1.69101 8.24225 1.68959 6.92501 1.69313C6.48546 1.69454 6.30031 1.87545 6.28265 2.3051C6.27699 2.4422 6.28194 2.58 6.28194 2.73335C8.05851 2.73335 9.7941 2.73335 11.5799 2.73335Z"
-                                      fill="#EB5757"
-                                    />
-                                  </svg>
-                                </button>
-                              </div>
-                              <div className="mt-5">
-                                <table>
-                                  <tbody>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>Name:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        Shuvo Khan
-                                      </td>
-                                    </tr>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>Email:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        rafiqulislamsuvobd@gmail.com
-                                      </td>
-                                    </tr>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>Phone:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        01792166627
-                                      </td>
-                                    </tr>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>country:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        Dhaka,Bangldesh
-                                      </td>
-                                    </tr>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>state:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        Barishal
-                                      </td>
-                                    </tr>
-                                    <tr className="flex mb-3">
-                                      <td className="text-base text-qgraytwo w-[70px] block line-clamp-1">
-                                        <p>City:</p>
-                                      </td>
-                                      <td className="text-base text-qblack line-clamp-1 font-medium">
-                                        banaripara
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="w-[180px] h-[50px] mt-4">
-                            <button
-                              type="button"
-                              className="flex h-full w-full items-center justify-center opacity-1 text-sx font-bold leading-0"
-                            >
-                              <div className="w-full text-sm font-semibold">
-                                Add New Address
-                              </div>
-                            </button>
-                          </div>
-                        </React.Fragment>
-                      ) : activeTab === 4 ? (
                         <React.Fragment>
                           <form
                             onSubmit={handleChangePassword}

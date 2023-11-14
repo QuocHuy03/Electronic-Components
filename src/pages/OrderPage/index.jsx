@@ -55,6 +55,7 @@ export default function OrderPage() {
   );
 
   const dispatchOrder = useCallback(async () => {
+    console.log('dispatchOrder function called');
     const data = {
       ...order,
       ...(paymentMomo && paymentMomo.transId !== null ? { paymentMomo } : {}),
@@ -78,8 +79,9 @@ export default function OrderPage() {
   }, [dispatch, order, paymentMomo, paymentVnpay, paymentMethod]);
 
   useEffect(() => {
+    console.log('useEffect triggered');
     dispatchOrder();
-  }, [dispatchOrder]);
+  }, []);
 
   return (
     <Layout>

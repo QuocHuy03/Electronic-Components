@@ -26,7 +26,7 @@ const RangeComponent = ({ range, onPriceChange }) => {
           {...props}
           style={{
             ...props.style,
-            height: "5px",
+            height: "3px",
             width: "100%",
           }}
         >
@@ -39,8 +39,8 @@ const RangeComponent = ({ range, onPriceChange }) => {
           {...props}
           style={{
             ...props.style,
-            height: "15px",
-            width: "15px",
+            height: "10px",
+            width: "10px",
           }}
         />
       )}
