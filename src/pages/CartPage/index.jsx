@@ -23,7 +23,7 @@ import { couponService } from "../../services/coupon.service";
 import { useQuery } from "@tanstack/react-query";
 import { Empty } from "antd";
 import formatDate from "../../utils/fomatDate";
-import { applyCoupon, uncheckedCoupon } from "../../stores/discount/actions";
+import { applyCoupon, getCoupon, uncheckedCoupon } from "../../stores/coupon/actions";
 
 export default function CartPage() {
   const dispatch = useDispatch();
@@ -146,11 +146,7 @@ export default function CartPage() {
   );
 
   useEffect(() => {
-    const fetchDiscounts = async () => {
-      const data = await couponService.fetchCouponByUserID();
-      setIsDiscount(data);
-    };
-    fetchDiscounts();
+   dispatch(getCoupon())
   }, [isToggeDiscount]);
 
   useEffect(() => {
@@ -181,7 +177,7 @@ export default function CartPage() {
   }, [carts, isCoupons]);
 
   // Tính tổng giảm giá từ các coupon cho từng sản phẩm trong giỏ hàng
-  const totalDiscount = carts.reduce((total, cartItem) => {
+  const totalDiscount = carts?.reduce((total, cartItem) => {
     const productDiscount = isDiscount?.find((man) => {
       return man.coupon.some(
         (coupon) => coupon.productID === cartItem.productID

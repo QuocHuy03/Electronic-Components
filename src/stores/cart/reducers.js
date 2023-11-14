@@ -82,20 +82,39 @@ const initialState = {
 //   // }
 // }
 
-const handleCartAction = (state, actionType, payload) => {
-  return {
-    ...state,
-    loading: false,
-    error: null,
-    carts: [payload],
-  };
-};
-
 const handleError = (state, actionType, error) => {
   return {
     ...state,
     loading: false,
     error: error,
+  };
+};
+
+const updateCartItem = (state, action, condition) => {
+  const { productID } = action.payload;
+  const existingItemIndex = state.carts.findIndex(condition);
+
+  if (existingItemIndex !== -1) {
+    const updatedCarts = [...state.carts];
+    updatedCarts[existingItemIndex] = action.payload;
+    return {
+      ...state,
+      carts: updatedCarts,
+    };
+  } else {
+    return {
+      ...state,
+      carts: [...state.carts, action.payload],
+    };
+  }
+};
+
+const removeCartItem = (state, action) => {
+  const { productID } = action.payload;
+  const updatedCarts = state.carts.filter((item) => item._id !== productID);
+  return {
+    ...state,
+    carts: updatedCarts,
   };
 };
 
@@ -115,53 +134,22 @@ const cartReducer = (state = initialState, action) => {
       };
 
     case ADD_CART_SUCCESS:
-      const { productID: addProductID } = action.payload;
-      const existingItemPostIndex = state.carts.findIndex(
-        (item) => item.productID === addProductID
+      return updateCartItem(
+        state,
+        action,
+        (item) => item.productID === action.payload.productID
       );
-      if (existingItemPostIndex !== -1) {
-        const updatedCarts = [...state.carts];
-        updatedCarts[existingItemPostIndex] = action.payload;
-        return {
-          ...state,
-          carts: updatedCarts,
-        };
-      } else {
-        return {
-          ...state,
-          carts: [...state.carts, action.payload],
-        };
-      }
 
     case UPDATE_CART_SUCCESS:
-      const { productID: updateProductID } = action.payload;
-      const existingItemUpdateIndex = state.carts.findIndex(
-        (item) => item.productID === updateProductID
+      return updateCartItem(
+        state,
+        action,
+        (item) => item.productID === action.payload.productID
       );
-      // console.log(existingItemUpdateIndex);
-      // console.log(action.payload);
-      if (existingItemUpdateIndex !== -1) {
-        const updatedCarts = [...state.carts];
-        // console.log("update carts", updatedCarts);
-        updatedCarts[existingItemUpdateIndex] = action.payload;
-        return {
-          ...state,
-          carts: updatedCarts,
-        };
-      }
-      return state;
 
     case REMOVE_CART_SUCCESS:
-      const { productID: removeProductID } = action.payload;
-      // console.log(removeProductID);
-      const deleteCart = state.carts.filter(
-        (item) => item._id !== removeProductID
-      );
-      // console.log("delete cart", deleteCart);
-      return {
-        ...state,
-        carts: deleteCart,
-      };
+      return removeCartItem(state, action);
+
     case REMOVE_ALL_CART_SUCCESS:
       return {
         ...state,
@@ -178,5 +166,4 @@ const cartReducer = (state = initialState, action) => {
       return state;
   }
 };
-
 export default cartReducer;
