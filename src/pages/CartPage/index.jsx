@@ -20,7 +20,8 @@ import createNotification from "../../utils/notification";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import Modal from "../../components/Modal";
 import { couponService } from "../../services/coupon.service";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Empty } from "antd";
 
 export default function CartPage() {
   const dispatch = useDispatch();
@@ -134,7 +135,7 @@ export default function CartPage() {
     setIsDiscountPageOpen(true);
   };
 
-  const { data: isCoupons, isloading: loadingCoupon } = useQueryClient(
+  const { data: isCoupons, isloading: loadingCoupon } = useQuery(
     ["coupons"],
     () => couponService.fetchAllCoupons(),
     {
@@ -145,35 +146,29 @@ export default function CartPage() {
 
   useEffect(() => {
     const fetchDiscounts = async () => {
-      const data = await couponService.fetchCouponByUserID(user?._id);
+      const data = await couponService.fetchCouponByUserID();
       setIsDiscount(data);
     };
     fetchDiscounts();
   }, [isToggeDiscount]);
-
   useEffect(() => {
-    // Lấy danh sách coupons đã lưu trong localStorage (nếu có)
     const savedCoupons = JSON.parse(localStorage.getItem("listCoupons")) || {};
-    // Tạo một đối tượng để theo dõi coupon cho từng sản phẩm
     const productCouponMap = {};
     // Lặp qua từng sản phẩm trong giỏ hàng
     for (const cartItem of carts) {
       // Kiểm tra xem sản phẩm đã có coupon được lưu trong localStorage chưa
-      const savedCoupon = savedCoupons[cartItem.product._id];
-
+      const savedCoupon = savedCoupons[cartItem.productID];
       if (savedCoupon) {
         // Nếu đã có coupon cho sản phẩm này, sử dụng nó
-        productCouponMap[cartItem.product._id] = savedCoupon;
+        productCouponMap[cartItem.productID] = savedCoupon;
       } else {
         // Nếu chưa có coupon, tìm coupon từ danh sách isCoupons
         const coupon = isCoupons?.find(
-          (c) => c.product._id === cartItem.product._id
+          (c) => c.product._id === cartItem.productID
         );
         if (coupon) {
-          // Lưu coupon vào productCouponMap
-          productCouponMap[cartItem.product._id] = coupon;
-          // Lưu coupon vào localStorage
-          savedCoupons[cartItem.product._id] = coupon;
+          productCouponMap[cartItem.productID] = coupon;
+          savedCoupons[cartItem.productID] = coupon;
           localStorage.setItem("listCoupons", JSON.stringify(savedCoupons));
         }
       }
@@ -187,14 +182,14 @@ export default function CartPage() {
   const totalDiscount = carts.reduce((total, cartItem) => {
     const productDiscount = isDiscount?.find((man) => {
       return man.coupon.some(
-        (coupon) => coupon.productID === cartItem.product._id
+        (coupon) => coupon.productID === cartItem.productID
       );
     });
 
     // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
     if (productDiscount) {
       const productCoupon = productDiscount.coupon.find(
-        (coupon) => coupon.productID === cartItem.product._id
+        (coupon) => coupon.productID === cartItem.productID
       );
       return total + productCoupon.price;
     }
@@ -429,10 +424,10 @@ export default function CartPage() {
                       onClose={() => setIsDiscountPageOpen(false)}
                     >
                       <form>
-                        <div className="p-2">
-                          <div className="h-[320px] overflow-y-auto">
+                        <div className="p-3">
+                          <div className="overflow-y-auto">
                             <div
-                              className="rounded-[0.5rem] border-solid justify-start flex flex-wrap mb-[0.75rem] pb-[0.75rem] opacity-1 border"
+                              className="rounded-[0.5rem] border-solid justify-start flex flex-wrap p-[0.75rem] opacity-1 border"
                               style={{
                                 background: "rgb(246, 246, 246)",
                                 borderColor: "rgb(255, 255, 255)",
@@ -441,7 +436,7 @@ export default function CartPage() {
                               <div
                                 className="p-0 opacity-1 font-[500] text-[13px] leading-[24px] overflow-hidden"
                                 style={{
-                                  margin: "0.75rem 0px 0.25rem 1rem",
+                                  margin: "0.5rem 0px 0.25rem 0.5rem",
                                   color: "rgb(130, 134, 158)",
                                 }}
                               >
@@ -455,81 +450,94 @@ export default function CartPage() {
                                   background: "rgb(243, 245, 252)",
                                 }}
                               >
-                                <div className="teko-row teko-row-no-wrap teko-row-space-between css-1qrgscw">
-                                  <div className="teko-col css-1kuu3ui">
-                                    <div className="css-1ca50y">
-                                      <div width="100%" className="css-1ddnbai">
-                                        <img
-                                          src="https://shopfront-cdn.tekoapis.com/cart/gift-filled.png"
-                                          loading="lazy"
-                                          decoding="async"
+                                {loadingCoupon ? (
+                                  <Loading />
+                                ) : filterProductCoupon?.length > 0 ? (
+                                  filterProductCoupon?.map((huyit) => (
+                                    <div className="flex justify-between flex-nowrap opacity-1 ">
+                                      <div className="relative max-w-full min-h-[1px] mr-[0.75rem] opacity-1">
+                                        <div
+                                          className="rounded-[0.25rem] opacity-1 w-[90%] min-w-[76px] h-[76px] flex items-center justify-center"
                                           style={{
-                                            width: "100%",
-                                            height: "auto",
+                                            background: "rgb(248, 248, 252)",
                                           }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div
-                                    width="100%"
-                                    className="teko-col css-oi0lj1"
-                                    style={{
-                                      display: "flex",
-                                      flexDirection: "column",
-                                      justifyContent: "space-between",
-                                    }}
-                                  >
-                                    <div>
-                                      <div
-                                        type="body"
-                                        className="css-i5q8p4"
-                                        style={{ whiteSpace: "pre-line" }}
-                                      >
-                                        Giảm 15.500.000₫ (áp dụng vào giá sản
-                                        phẩm) 1x Sạc nhanh Samsung 15W Type C,
-                                        Trắng (EP-T1510NWEGWW) (Quà tặng) 1x Tai
-                                        nghe Samsung Galaxy Buds 2 (Đen)
-                                        (SM-R177NZKAXXV) (Quà tặng)
-                                      </div>
-                                      <div
-                                        type="caption"
-                                        color="textSecondary"
-                                        className="css-q3pfns"
-                                      >
-                                        Khuyến mãi áp dụng khi mua đủ 1 sản
-                                        phẩm, mua tối thiểu 1 sản phẩm
-                                      </div>
-                                    </div>
-                                    <div className="teko-row teko-row-space-between teko-row-bottom css-1cxmf7d">
-                                      <div className="teko-col css-17ajfcv">
-                                        <div
-                                          type="caption"
-                                          color="textSecondary"
-                                          className="css-1f5a6jh"
                                         >
-                                          HSD: 16/11/2023
+                                          <div
+                                            width="100%"
+                                            className="relative inline-block overflow-hidden w-full max-w-[32px] max-h-[32px]"
+                                          >
+                                            <img
+                                              src="https://shopfront-cdn.tekoapis.com/cart/gift-filled.png"
+                                              loading="lazy"
+                                              decoding="async"
+                                              style={{
+                                                width: "100%",
+                                                height: "auto",
+                                              }}
+                                            />
+                                          </div>
                                         </div>
                                       </div>
-                                      <a
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="unselect-promotion att-unselect-promotion-507549 css-kfv2zc"
-                                        color="link500"
+                                      <div
+                                        width="100%"
+                                        className="relative max-w-full min-h-[1px] w-full opacity-1"
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          justifyContent: "space-between",
+                                        }}
                                       >
-                                        <div
-                                          type="body"
-                                          className="button-text css-1c7714w"
-                                          color="link500"
-                                        >
-                                          Bỏ chọn
+                                        <div>
+                                          <div
+                                            className="discount-title"
+                                            style={{ whiteSpace: "pre-line" }}
+                                          >
+                                            Giảm 15.500.000₫ (áp dụng vào giá
+                                            sản phẩm) 1x Sạc nhanh Samsung 15W
+                                            Type C, Trắng (EP-T1510NWEGWW) (Quà
+                                            tặng) 1x Tai nghe Samsung Galaxy
+                                            Buds 2 (Đen) (SM-R177NZKAXXV) (Quà
+                                            tặng)
+                                          </div>
+                                          <div
+                                            style={{
+                                              color: "rgb(130, 134, 158)",
+                                            }}
+                                            className="font-[400] text-[12px] leading-[16px] overflow-hidden"
+                                          >
+                                            Khuyến mãi áp dụng khi mua đủ 1 sản
+                                            phẩm, mua tối thiểu 1 sản phẩm
+                                          </div>
                                         </div>
-                                      </a>
+                                        <div className="flex flex-wrap items-end justify-between mt-[0.5rem] opacity-1">
+                                          <div className="relative max-w-full min-h-[1px] opacity-1">
+                                            <div
+                                              className="opacity-1 font-[400] leading-[16px] text-[12px]"
+                                              style={{
+                                                color: "rgb(130, 134, 158)",
+                                              }}
+                                            >
+                                              HSD: 16/11/2023
+                                            </div>
+                                          </div>
+                                          <a
+                                            style={{
+                                              color: "rgb(25, 144, 255)",
+                                            }}
+                                            className="inline opacity-1 cursor-pointer"
+                                          >
+                                            <div className="leading-[20px] opacity-1 font-[400] text-[13px] overflow-hidden">
+                                              Bỏ chọn
+                                            </div>
+                                          </a>
+                                        </div>
+                                      </div>
                                     </div>
-                                  </div>
-                                </div>
+                                  ))
+                                ) : (
+                                  <Empty />
+                                )}
                               </div>
-                              <div className="css-apomyl" />
                             </div>
                           </div>
                         </div>
