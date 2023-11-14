@@ -60,7 +60,13 @@ body {
     line-height: 16px;
     padding: 0 5px;
 }
-
+.modal-open {
+    overflow: hidden;
+}
+.modal-open .modal {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
