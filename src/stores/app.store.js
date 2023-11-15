@@ -4,8 +4,8 @@ import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import authenticationReducer from "./authentication/reducers";
 import redirectReducer from "./redirect/reducers";
+import couponReducer from "./coupon/reducers"
 import cartReducer from "./cart/reducers";
-import discountReducer from "./discount/reducers";
 import orderReducer from "./order/reducers";
 
 const persistConfig = {
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
   auth: authenticationReducer,
   redirect: redirectReducer,
   cart: cartReducer,
-  discount: discountReducer,
+  coupon: couponReducer,
   order: orderReducer,
 });
 
