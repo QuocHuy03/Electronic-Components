@@ -11,9 +11,9 @@ const fetchAllCoupons = async () => {
   }
 };
 
-const fetchCouponByUserID = async (id) => {
+const fetchCouponByUserID = async () => {
   try {
-    const response = await http.get(`/coupon-user/getCouponUserByUserID/${id}`);
+    const response = await http.get(`/coupon-user/getCouponUserByUserID`);
     return response.result;
   } catch (error) {
     console.error(error);

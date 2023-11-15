@@ -1,11 +1,16 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Layout from "../../components/Layout";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   deleteToCartAll,
   deleteToCartItem,
-  getCart,
   updateToCart,
 } from "../../stores/cart/actions";
 import { formatPrice } from "../../utils/fomatPrice";
@@ -13,10 +18,19 @@ import { AppContext } from "../../contexts/AppContextProvider";
 import { v4 as uuidv4 } from "uuid";
 import createNotification from "../../utils/notification";
 import { URL_CONSTANTS } from "../../constants/url.constants";
+import Modal from "../../components/Modal";
+import { couponService } from "../../services/coupon.service";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Empty } from "antd";
 
 export default function CartPage() {
   const dispatch = useDispatch();
   const { carts, user } = useContext(AppContext);
+  const [isDiscountPageOpen, setIsDiscountPageOpen] = useState(false);
+  const modalDiscountRef = useRef();
+  const [filterProductCoupon, setFilterProductCoupon] = useState(null);
+  const [isToggeDiscount, setIsToggeDiscount] = useState(false);
+  const [isDiscount, setIsDiscount] = useState(null);
 
   const totalAmountAll = carts?.reduce(
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
@@ -100,6 +114,107 @@ export default function CartPage() {
     const response = await dispatch(deleteToCartAll());
     // Xử lý logic sau khi xóa tất cả mục
   }, [dispatch]);
+
+  const handleDocumentClick = (event) => {
+    if (
+      modalDiscountRef.current &&
+      !modalDiscountRef.current.contains(event.target)
+    ) {
+      setIsDiscountPageOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
+
+  const openDiscountPageModal = () => {
+    setIsDiscountPageOpen(true);
+  };
+
+  const { data: isCoupons, isloading: loadingCoupon } = useQuery(
+    ["coupons"],
+    () => couponService.fetchAllCoupons(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
+
+  useEffect(() => {
+    const fetchDiscounts = async () => {
+      const data = await couponService.fetchCouponByUserID();
+      setIsDiscount(data);
+    };
+    fetchDiscounts();
+  }, [isToggeDiscount]);
+  useEffect(() => {
+    const savedCoupons = JSON.parse(localStorage.getItem("listCoupons")) || {};
+    const productCouponMap = {};
+    // Lặp qua từng sản phẩm trong giỏ hàng
+    for (const cartItem of carts) {
+      // Kiểm tra xem sản phẩm đã có coupon được lưu trong localStorage chưa
+      const savedCoupon = savedCoupons[cartItem.productID];
+      if (savedCoupon) {
+        // Nếu đã có coupon cho sản phẩm này, sử dụng nó
+        productCouponMap[cartItem.productID] = savedCoupon;
+      } else {
+        // Nếu chưa có coupon, tìm coupon từ danh sách isCoupons
+        const coupon = isCoupons?.find(
+          (c) => c.product._id === cartItem.productID
+        );
+        if (coupon) {
+          productCouponMap[cartItem.productID] = coupon;
+          savedCoupons[cartItem.productID] = coupon;
+          localStorage.setItem("listCoupons", JSON.stringify(savedCoupons));
+        }
+      }
+    }
+    // Chuyển đối tượng productCouponMap thành mảng để setFilterProductCoupon
+    const filteredCoupons = Object.values(productCouponMap);
+    setFilterProductCoupon(filteredCoupons);
+  }, [carts, isCoupons]);
+
+  // Tính tổng giảm giá từ các coupon cho từng sản phẩm trong giỏ hàng
+  const totalDiscount = carts.reduce((total, cartItem) => {
+    const productDiscount = isDiscount?.find((man) => {
+      return man.coupon.some(
+        (coupon) => coupon.productID === cartItem.productID
+      );
+    });
+
+    // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
+    if (productDiscount) {
+      const productCoupon = productDiscount.coupon.find(
+        (coupon) => coupon.productID === cartItem.productID
+      );
+      return total + productCoupon.price;
+    }
+
+    return total;
+  }, 0);
+
+  const handleCouponChange = useCallback(async (huyit) => {
+    const data = {
+      couponID: huyit._id,
+    };
+
+    const response = await dispatch(
+      !isDiscount || isDiscount.length === 0
+        ? applyCoupon(data)
+        : uncheckedCoupon(data)
+    );
+
+    if (response.status === true) {
+      createNotification("success", "topright", response.message);
+      setIsToggeDiscount(!isDiscount || isDiscount.length === 0);
+    } else {
+      createNotification("error", "topright", response.message);
+    }
+  }, []);
 
   return (
     <Layout>
@@ -291,18 +406,11 @@ export default function CartPage() {
                     </React.Fragment>
                   </div>
                   <div className="w-full sm:flex justify-between">
-                    <div className="discount-code sm:w-[270px] w-full mb-5 sm:mb-0 h-[50px] flex">
-                      <div className="flex-1 h-full">
-                        <div className="input-com w-full h-full">
-                          <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                            <input
-                              placeholder="Discount Code"
-                              className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full h-full font-normal bg-white focus:ring-0 focus:outline-none "
-                              type="text"
-                            />
-                          </div>
-                        </div>
-                      </div>
+                    <div
+                      className="discount-code sm:w-[270px] w-full mb-5 sm:mb-0 h-[50px] flex"
+                      ref={modalDiscountRef}
+                      onClick={openDiscountPageModal}
+                    >
                       <button
                         type="button"
                         className="w-[90px] h-[50px] bg-black text-white"
@@ -310,6 +418,131 @@ export default function CartPage() {
                         <span className="text-sm font-semibold">Apply</span>
                       </button>
                     </div>
+                    <Modal
+                      onClickStopModal={(e) => e.stopPropagation()}
+                      isOpen={isDiscountPageOpen}
+                      onClose={() => setIsDiscountPageOpen(false)}
+                    >
+                      <form>
+                        <div className="p-3">
+                          <div className="overflow-y-auto">
+                            <div
+                              className="rounded-[0.5rem] border-solid justify-start flex flex-wrap p-[0.75rem] opacity-1 border"
+                              style={{
+                                background: "rgb(246, 246, 246)",
+                                borderColor: "rgb(255, 255, 255)",
+                              }}
+                            >
+                              <div
+                                className="p-0 opacity-1 font-[500] text-[13px] leading-[24px] overflow-hidden"
+                                style={{
+                                  margin: "0.5rem 0px 0.25rem 0.5rem",
+                                  color: "rgb(130, 134, 158)",
+                                }}
+                              >
+                                CHỌN 1 TRONG NHỮNG KHUYẾN MÃI SAU
+                              </div>
+                              <div
+                                width="100%"
+                                className="border border-solid rounded-[0.5rem] w-full mr-[1rem] my-[0.75rem] p-[0.75rem]"
+                                style={{
+                                  borderColor: "rgb(20, 53, 195)",
+                                  background: "rgb(243, 245, 252)",
+                                }}
+                              >
+                                {loadingCoupon ? (
+                                  <Loading />
+                                ) : filterProductCoupon?.length > 0 ? (
+                                  filterProductCoupon?.map((huyit) => (
+                                    <div className="flex justify-between flex-nowrap opacity-1 ">
+                                      <div className="relative max-w-full min-h-[1px] mr-[0.75rem] opacity-1">
+                                        <div
+                                          className="rounded-[0.25rem] opacity-1 w-[90%] min-w-[76px] h-[76px] flex items-center justify-center"
+                                          style={{
+                                            background: "rgb(248, 248, 252)",
+                                          }}
+                                        >
+                                          <div
+                                            width="100%"
+                                            className="relative inline-block overflow-hidden w-full max-w-[32px] max-h-[32px]"
+                                          >
+                                            <img
+                                              src="https://shopfront-cdn.tekoapis.com/cart/gift-filled.png"
+                                              loading="lazy"
+                                              decoding="async"
+                                              style={{
+                                                width: "100%",
+                                                height: "auto",
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div
+                                        width="100%"
+                                        className="relative max-w-full min-h-[1px] w-full opacity-1"
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          justifyContent: "space-between",
+                                        }}
+                                      >
+                                        <div>
+                                          <div
+                                            className="discount-title"
+                                            style={{ whiteSpace: "pre-line" }}
+                                          >
+                                            Giảm 15.500.000₫ (áp dụng vào giá
+                                            sản phẩm) 1x Sạc nhanh Samsung 15W
+                                            Type C, Trắng (EP-T1510NWEGWW) (Quà
+                                            tặng) 1x Tai nghe Samsung Galaxy
+                                            Buds 2 (Đen) (SM-R177NZKAXXV) (Quà
+                                            tặng)
+                                          </div>
+                                          <div
+                                            style={{
+                                              color: "rgb(130, 134, 158)",
+                                            }}
+                                            className="font-[400] text-[12px] leading-[16px] overflow-hidden"
+                                          >
+                                            Khuyến mãi áp dụng khi mua đủ 1 sản
+                                            phẩm, mua tối thiểu 1 sản phẩm
+                                          </div>
+                                        </div>
+                                        <div className="flex flex-wrap items-end justify-between mt-[0.5rem] opacity-1">
+                                          <div className="relative max-w-full min-h-[1px] opacity-1">
+                                            <div
+                                              className="opacity-1 font-[400] leading-[16px] text-[12px]"
+                                              style={{
+                                                color: "rgb(130, 134, 158)",
+                                              }}
+                                            >
+                                              HSD: 16/11/2023
+                                            </div>
+                                          </div>
+                                          <a
+                                            style={{
+                                              color: "rgb(25, 144, 255)",
+                                            }}
+                                            className="inline opacity-1 cursor-pointer"
+                                          >
+                                            <div className="leading-[20px] opacity-1 font-[400] text-[13px] overflow-hidden">
+                                              Bỏ chọn
+                                            </div>
+                                          </a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <Empty />
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </Modal>
                     <Link to={URL_CONSTANTS.HOME} className="space-x-2.5">
                       <div className="w-[150px] h-[50px] bg-[#F6F6F6] flex justify-center items-center">
                         <span className="text-sm font-semibold">
