@@ -162,23 +162,21 @@ export default function CartPage() {
     };
     fetchData();
   }, [carts, isCoupons]);
-console.log(discounts)
   // Tính tổng giảm giá từ các coupon cho từng sản phẩm trong giỏ hàng
   const totalDiscount = carts?.reduce((total, cartItem) => {
-    // const productDiscount = discounts?.find((man) => {
-    //   return man.coupon.some(
-    //     (coupon) => coupon.productID === cartItem.productID
-    //   );
-    // });
-    // // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
-    // if (productDiscount) {
-    //   const productCoupon = productDiscount.coupon.find(
-    //     (coupon) => coupon.productID === cartItem.productID
-    //   );
-    //   return total + parseInt(productCoupon.price);
-    // }
-    // // dispatch({ type: TOTAL_DISCOUNT_TO_PRODUCT, payload: total });
-    // return total;
+    const productDiscount = discounts?.find((man) => {
+      return man.coupon.some(
+        (coupon) => coupon.productID === cartItem.productID
+      );
+    });
+    // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
+    if (productDiscount) {
+      const productCoupon = productDiscount.coupon.find(
+        (coupon) => coupon.productID === cartItem.productID
+      );
+      return total + parseInt(productCoupon.price);
+    }
+    return total;
   }, 0);
 
   const handleCouponChange = useCallback(
@@ -189,7 +187,6 @@ console.log(discounts)
       const isCurrentlyApplied = discounts.some(
         (coupon) => coupon.couponID == huyit._id
       );
-      console.log(isCurrentlyApplied);
       setIsCurrent(isCurrentlyApplied);
       const response = await dispatch(
         isCurrentlyApplied ? uncheckedCoupon(data) : applyCoupon(data)
