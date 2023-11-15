@@ -11,12 +11,9 @@ import { paymentService } from "../../services/payment.service";
 import Loading from "../../components/Loading";
 import { useDispatch } from "react-redux";
 import { redirectPayment } from "../../stores/order/actions";
-import { userService } from "../../services/user.service";
-import { LOAD_CURRENT_LOGIN_USER_SUCCESS } from "../../stores/authentication/types";
 import { history } from "../../helpers/history";
 
 const initialValues = (user) => ({
-  fullname: user?.fullname || "",
   username: user?.username || "",
   address: user?.address || "",
   city: user?.city || "",
@@ -30,9 +27,6 @@ export default function CheckoutPage() {
   const { carts, user } = useContext(AppContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-
-
   const [provinces, setProvinces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [districts, setDistricts] = useState([]);
@@ -149,11 +143,7 @@ export default function CheckoutPage() {
   const handleSubmitOrder = useCallback(
     async (e) => {
       e.preventDefault();
-      const updateResponse = await userService.updateMe(inputs);
-      dispatch({
-        type: LOAD_CURRENT_LOGIN_USER_SUCCESS,
-        payload: updateResponse.user,
-      });
+   
 
       const paymentResponse = await dispatch(redirectPayment(orderData));
       if (paymentResponse && paymentResponse.paymentMethod === true) {
@@ -208,179 +198,7 @@ export default function CheckoutPage() {
                     Billing Details
                   </h1>
                   <div className="form-area">
-                    <div>
-                      <div className="sm:flex sm:space-x-5 items-center mb-6">
-                        <div className="sm:w-1/2 mb-5 sm:mb-0">
-                          <div className="input-com w-full h-full">
-                            <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                              Full Name*
-                            </label>
-                            <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                              <input
-                                placeholder="Nguyen Van A"
-                                name="fullname"
-                                onChange={handleInputChange}
-                                value={inputs.fullname}
-                                className="input-field placeholder:text-sm text-sm px-6 text-dark-gray font-normal bg-white focus:ring-0 focus:outline-none w-full h-[50px]"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex-1">
-                          <div className="input-com w-full h-full">
-                            <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                              User Name*
-                            </label>
-                            <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                              <input
-                                placeholder="Username"
-                                name="username"
-                                onChange={handleInputChange}
-                                value={inputs.username}
-                                className="input-field placeholder:text-sm text-sm px-6 text-dark-gray font-normal bg-white focus:ring-0 focus:outline-none w-full h-[50px]"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex space-x-5 items-center mb-6">
-                        <div className="w-1/2">
-                          <div className="input-com w-full h-full">
-                            <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                              Email Address*
-                            </label>
-                            <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                              <input
-                                placeholder="demoemial@gmail.com"
-                                type="email"
-                                name="email"
-                                onChange={handleInputChange}
-                                value={user?.email}
-                                disabled
-                                className="input-field placeholder:text-sm text-sm px-6 text-dark-gray font-normal bg-white focus:ring-0 focus:outline-none w-full h-[50px]"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex-1">
-                          <div className="input-com w-full h-full">
-                            <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                              Phone Number*
-                            </label>
-                            <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                              <input
-                                placeholder="012 3 *******"
-                                type="number"
-                                name="phone"
-                                onChange={handleInputChange}
-                                value={inputs.phone}
-                                className="input-field placeholder:text-sm text-sm px-6 text-dark-gray font-normal bg-white focus:ring-0 focus:outline-none w-full h-[50px]"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="input-item mb-8">
-                        <div className="w-full">
-                          <div className="input-com w-full h-full">
-                            <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                              Address*
-                            </label>
-                            <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                              <input
-                                placeholder="Address"
-                                className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                type="text"
-                                name="address"
-                                onChange={handleInputChange}
-                                value={inputs.address}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="input-item mb-8">
-                        <div className="w-full">
-                          <div className="input-com w-full h-full">
-                            <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                              Tỉnh / TP*
-                            </label>
-                            <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                              <select
-                                className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                name="city"
-                                onChange={handleSelectProvince}
-                                value={selectedProvince}
-                                placeholder={`Vui lòng chọn Tỉnh / TP`}
-                              >
-                                <option value="">
-                                  Vui lòng chọn Tỉnh / TP
-                                </option>
-                                {provinces?.map((province) => (
-                                  <option key={province.id} value={province.id}>
-                                    {province.name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="input-item flex space-x-2.5 mb-8">
-                        <div className="w-1/2 h-full">
-                          <div className="input-com w-full h-full">
-                            <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                              Quận / Huyện*
-                            </label>
-                            <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                              <select
-                                className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                name="district"
-                                value={selectedDistrict}
-                                onChange={handleSelectDistrict}
-                                disabled={!selectedProvince}
-                                placeholder={`Vui Lòng Chọn Quận / Huyện ${selectedDistrict}`}
-                              >
-                                <option value="">
-                                  Vui lòng chọn Quận / Huyện
-                                </option>
-                                {filteredDistricts?.map((district) => (
-                                  <option key={district.id} value={district.id}>
-                                    {district.name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="w-1/2 h-full">
-                          <div className="input-com w-full h-full">
-                            <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                              Phường / Xã*
-                            </label>
-                            <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                              <select
-                                className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                                name="commune"
-                                value={selectedCommune}
-                                onChange={handleSelectCommune}
-                                disabled={!selectedDistrict}
-                                placeholder="Vui Lòng Chọn Phường / Xã"
-                              >
-                                <option value="">
-                                  Vui lòng chọn Phường / Xã
-                                </option>
-                                {filteredWards?.map((ward) => (
-                                  <option key={ward.id} value={ward.id}>
-                                    {ward.name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                  {/* Code Doạn Đó vào đây là đc */}
                   </div>
                 </div>
                 <div className="flex-1">
