@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../stores/cart/actions";
 import Aos from "aos";
-import "aos/dist/aos.css"
+import "aos/dist/aos.css";
 
 export const AppContext = createContext({});
 
@@ -11,12 +11,15 @@ export function AppContextProvider({ children }) {
   const { carts } = useSelector((state) => state.cart);
   const { accessToken, user } = useSelector((state) => state.auth);
   const { orders } = useSelector((state) => state.order);
+  const { coupons, discounts, totalDiscout, isToggle } = useSelector(
+    (state) => state.coupon
+  );
   useEffect(() => {
     if (accessToken) {
       dispatch(getCart());
     }
   }, [accessToken]);
-  useEffect(() =>{
+  useEffect(() => {
     Aos.init();
   }, []);
   return (
@@ -26,6 +29,10 @@ export function AppContextProvider({ children }) {
         carts,
         user,
         order: orders,
+        coupons,
+        totalDiscout,
+        discounts,
+        isToggle
       }}
     >
       {children}

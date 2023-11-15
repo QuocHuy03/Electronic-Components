@@ -23,16 +23,20 @@ import { couponService } from "../../services/coupon.service";
 import { useQuery } from "@tanstack/react-query";
 import { Empty } from "antd";
 import formatDate from "../../utils/fomatDate";
-import { applyCoupon, getCoupon, uncheckedCoupon } from "../../stores/coupon/actions";
+import {
+  applyCoupon,
+  getDiscount,
+  getFilterCoupon,
+  uncheckedCoupon,
+} from "../../stores/coupon/actions";
+import { TOTAL_DISCOUNT_TO_PRODUCT } from "../../stores/coupon/types";
 
 export default function CartPage() {
   const dispatch = useDispatch();
-  const { carts, user } = useContext(AppContext);
+  const { carts, coupons, discounts, totalDiscout } = useContext(AppContext);
   const [isDiscountPageOpen, setIsDiscountPageOpen] = useState(false);
   const modalDiscountRef = useRef();
-  const [filterProductCoupon, setFilterProductCoupon] = useState(null);
-  const [isToggeDiscount, setIsToggeDiscount] = useState(false);
-  const [isDiscount, setIsDiscount] = useState(null);
+  const [isCurrent, setIsCurrent] = useState();
   const totalAmountAll = carts?.reduce(
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
     0
@@ -137,60 +141,44 @@ export default function CartPage() {
   };
 
   const { data: isCoupons, isloading: loadingCoupon } = useQuery(
-    ["coupons"],
+    ["listCoupon"],
     () => couponService.fetchAllCoupons(),
     {
       retry: 3,
       retryDelay: 1000,
     }
   );
+  useEffect(() => {
+    dispatch(getDiscount());
+  }, []);
 
   useEffect(() => {
-   dispatch(getCoupon())
-  }, [isToggeDiscount]);
-
-  useEffect(() => {
-    const savedCoupons = JSON.parse(localStorage.getItem("listCoupons")) || {};
-    const productCouponMap = {};
-    // Lặp qua từng sản phẩm trong giỏ hàng
-    for (const cartItem of carts) {
-      // Kiểm tra xem sản phẩm đã có coupon được lưu trong localStorage chưa
-      const savedCoupon = savedCoupons[cartItem.productID];
-      if (savedCoupon) {
-        // Nếu đã có coupon cho sản phẩm này, sử dụng nó
-        productCouponMap[cartItem.productID] = savedCoupon;
-      } else {
-        // Nếu chưa có coupon, tìm coupon từ danh sách isCoupons
-        const coupon = isCoupons?.find(
-          (c) => c.product._id === cartItem.productID
-        );
-        if (coupon) {
-          productCouponMap[cartItem.productID] = coupon;
-          savedCoupons[cartItem.productID] = coupon;
-          localStorage.setItem("listCoupons", JSON.stringify(savedCoupons));
-        }
+    const fetchData = async () => {
+      try {
+        await dispatch(getFilterCoupon(carts, isCoupons));
+      } catch (error) {
+        console.log(error);
       }
-    }
-    // Chuyển đối tượng productCouponMap thành mảng để setFilterProductCoupon
-    const filteredCoupons = Object.values(productCouponMap);
-    setFilterProductCoupon(filteredCoupons);
+    };
+    fetchData();
   }, [carts, isCoupons]);
-
+console.log(discounts)
   // Tính tổng giảm giá từ các coupon cho từng sản phẩm trong giỏ hàng
   const totalDiscount = carts?.reduce((total, cartItem) => {
-    const productDiscount = isDiscount?.find((man) => {
-      return man.coupon.some(
-        (coupon) => coupon.productID === cartItem.productID
-      );
-    });
-    // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
-    if (productDiscount) {
-      const productCoupon = productDiscount.coupon.find(
-        (coupon) => coupon.productID === cartItem.productID
-      );
-      return total + parseInt(productCoupon.price);
-    }
-    return total;
+    // const productDiscount = discounts?.find((man) => {
+    //   return man.coupon.some(
+    //     (coupon) => coupon.productID === cartItem.productID
+    //   );
+    // });
+    // // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
+    // if (productDiscount) {
+    //   const productCoupon = productDiscount.coupon.find(
+    //     (coupon) => coupon.productID === cartItem.productID
+    //   );
+    //   return total + parseInt(productCoupon.price);
+    // }
+    // // dispatch({ type: TOTAL_DISCOUNT_TO_PRODUCT, payload: total });
+    // return total;
   }, 0);
 
   const handleCouponChange = useCallback(
@@ -198,21 +186,22 @@ export default function CartPage() {
       const data = {
         couponID: huyit._id,
       };
+      const isCurrentlyApplied = discounts.some(
+        (coupon) => coupon.couponID == huyit._id
+      );
+      console.log(isCurrentlyApplied);
+      setIsCurrent(isCurrentlyApplied);
       const response = await dispatch(
-        !isDiscount || isDiscount.length === 0
-          ? applyCoupon(data)
-          : uncheckedCoupon(data)
+        isCurrentlyApplied ? uncheckedCoupon(data) : applyCoupon(data)
       );
 
       if (response.status === true) {
         createNotification("success", "topRight", response.message);
-        setIsToggeDiscount(!isDiscount || isDiscount.length === 0);
       } else {
         createNotification("error", "topRight", response.message);
-        setIsToggeDiscount(true);
       }
     },
-    [isDiscount]
+    [discounts]
   );
 
   return (
@@ -445,21 +434,21 @@ export default function CartPage() {
                                 width="100%"
                                 className="border border-solid rounded-[0.5rem] w-full mr-[1rem] my-[0.75rem] p-[0.75rem]"
                                 style={
-                                  isToggeDiscount
+                                  isCurrent
                                     ? {
-                                        borderColor: "rgb(20, 53, 195)",
-                                        background: "rgb(243, 245, 252)",
-                                      }
-                                    : {
                                         borderColor: "rgb(228, 229, 240)",
                                         background: "rgb(255, 255, 255)",
+                                      }
+                                    : {
+                                        borderColor: "rgb(20, 53, 195)",
+                                        background: "rgb(243, 245, 252)",
                                       }
                                 }
                               >
                                 {loadingCoupon ? (
                                   <Loading />
-                                ) : filterProductCoupon?.length > 0 ? (
-                                  filterProductCoupon?.map((huyit, index) => (
+                                ) : coupons?.length > 0 ? (
+                                  coupons?.map((huyit, index) => (
                                     <div
                                       key={index}
                                       className="flex justify-between flex-nowrap opacity-1 "
@@ -535,9 +524,12 @@ export default function CartPage() {
                                             className="inline opacity-1 cursor-pointer"
                                           >
                                             <div className="leading-[20px] opacity-1 font-[400] text-[13px] overflow-hidden">
-                                              {isToggeDiscount
-                                                ? "Bỏ chọn"
-                                                : "Áp dụng"}
+                                              {discounts?.some(
+                                                (coupon) =>
+                                                  coupon.couponID == huyit._id
+                                              )
+                                                ? "Bỏ Chọn"
+                                                : "Áp Dụng"}
                                             </div>
                                           </a>
                                         </div>
