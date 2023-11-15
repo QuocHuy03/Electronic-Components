@@ -1,6 +1,10 @@
-
-
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Layout from "../../components/Layout";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../contexts/AppContextProvider";
@@ -24,7 +28,7 @@ const initialValues = (user) => ({
 
 export default function CheckoutPage() {
   const { code } = useParams();
-  const { carts, user } = useContext(AppContext);
+  const { carts, user, discounts } = useContext(AppContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [provinces, setProvinces] = useState([]);
@@ -45,8 +49,6 @@ export default function CheckoutPage() {
       retryDelay: 1000,
     }
   );
-
-
 
   const handleClickPayment = (itemId) => {
     setActiveItem(itemId);
@@ -143,7 +145,6 @@ export default function CheckoutPage() {
   const handleSubmitOrder = useCallback(
     async (e) => {
       e.preventDefault();
-   
 
       const paymentResponse = await dispatch(redirectPayment(orderData));
       if (paymentResponse && paymentResponse.paymentMethod === true) {
@@ -154,6 +155,22 @@ export default function CheckoutPage() {
     },
     [inputs, orderData, navigate, history]
   );
+
+  const totalDiscount = carts?.reduce((total, cartItem) => {
+    const productDiscount = discounts?.find((man) => {
+      return man.coupon.some(
+        (coupon) => coupon.productID === cartItem.productID
+      );
+    });
+    // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
+    if (productDiscount) {
+      const productCoupon = productDiscount.coupon.find(
+        (coupon) => coupon.productID === cartItem.productID
+      );
+      return total + parseInt(productCoupon.price);
+    }
+    return total;
+  }, 0);
 
   return (
     <Layout>
@@ -198,7 +215,7 @@ export default function CheckoutPage() {
                     Billing Details
                   </h1>
                   <div className="form-area">
-                  {/* Code Doạn Đó vào đây là đc */}
+                    {/* Code Doạn Đó vào đây là đc */}
                   </div>
                 </div>
                 <div className="flex-1">
@@ -269,7 +286,20 @@ export default function CheckoutPage() {
                             </p>
                           </div>
                           <p className="text-[15px] font-medium text-black">
-                            +15,000
+                            {formatPrice(15000)}
+                          </p>
+                        </div>
+                        <div className=" flex justify-between mb-5">
+                          <div>
+                            <span className="text-xs text-qgraytwo mb-3 block">
+                              VOUCHER
+                            </span>
+                            <p className="text-base font-medium text-black">
+                              VOUCHER SHOP
+                            </p>
+                          </div>
+                          <p className="text-[15px] font-medium text-black">
+                            {formatPrice(totalDiscount)}
                           </p>
                         </div>
                         <div className="w-full h-[1px] bg-[#EDEDED]" />
@@ -279,8 +309,7 @@ export default function CheckoutPage() {
                       <div className=" flex justify-between mb-5">
                         <p className="text-2xl font-medium text-black">Total</p>
                         <p className="text-2xl font-medium text-qred">
-                          {" "}
-                          {formatPrice(totalAmountAll - 15000)}
+                          {formatPrice(totalAmountAll - 15000 - totalDiscount)}
                         </p>
                       </div>
                     </div>

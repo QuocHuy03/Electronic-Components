@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { orderService } from "../../services/order.service";
 import { useParams } from "react-router";
 import Loading from "../../components/Loading";
 import { formatPrice } from "../../utils/fomatPrice";
+import formatDate from "../../utils/fomatDate"
+import { AppContext } from "../../contexts/AppContextProvider";
 
 export default function OrderDetailPage() {
   const { slug } = useParams();
@@ -21,6 +23,9 @@ export default function OrderDetailPage() {
     staleTime: 500,
     enabled: !!isSlug,
   });
+
+
+
   return (
     <Layout>
       {loadingOrder ? (
@@ -71,7 +76,7 @@ export default function OrderDetailPage() {
                   </div>
                   <div class="flex flex-col mr-2">
                     <p class="font-bold">Đơn hàng đã đặt</p>
-                    <p class="text-gray-500">13:08 08-02-2023</p>
+                    <p class="text-gray-500">{formatDate(isOrder?.createdAt)}</p>
                   </div>
                 </div>
                 <div>
@@ -86,7 +91,7 @@ export default function OrderDetailPage() {
                   </div>
                   <div class="flex flex-col">
                     <p class="font-bold">Đã xác nhận đơn </p>
-                    <p class="text-gray-500">13:08 08-02-2023</p>
+                    <p class="text-gray-500">{formatDate(isOrder?.updatedAt)}</p>
                   </div>
                 </div>
                 <div>
@@ -101,7 +106,7 @@ export default function OrderDetailPage() {
                   </div>
                   <div class="flex flex-col">
                     <p class="font-bold">Đã giao cho ĐVVC</p>
-                    <p class="text-gray-500">13:08 08-02-2023</p>
+                    <p class="text-gray-500">{formatDate(isOrder?.updatedAt)}</p>
                   </div>
                 </div>
                 <div>
@@ -113,7 +118,7 @@ export default function OrderDetailPage() {
                   </div>
                   <div class="flex flex-col">
                     <p class="font-bold">Đã nhận được hàng</p>
-                    <p class="text-gray-500">13:08 08-02-2023</p>
+                    <p class="text-gray-500">{formatDate(isOrder?.updatedAt)}</p>
                   </div>
                 </div>
               </div>
@@ -283,7 +288,7 @@ export default function OrderDetailPage() {
                       <p className="text-[15px] font-medium text-qblack">
                         Phí vận chuyển
                       </p>
-                      <p className="text-[15px] font-medium text-qred">0</p>
+                      <p className="text-[15px] font-medium text-qred">{formatPrice(15000)}</p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />
                   </div>
@@ -302,7 +307,7 @@ export default function OrderDetailPage() {
                         Thành tiền
                       </p>
                       <p className="text-[15px] font-medium text-qred">
-                        {formatPrice(isOrder?.totalPrice)}
+                        {formatPrice(isOrder?.totalPrice - 15000)}
                       </p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />
@@ -313,7 +318,7 @@ export default function OrderDetailPage() {
                         Phương thức thanh toán
                       </p>
                       <p className="text-[15px] font-medium text-qred">
-                        {isOrder?.payment.namePayment}
+                        {isOrder?.payment[0].namePayment}
                       </p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />
