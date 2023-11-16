@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { orderService } from "../../services/order.service";
 import { useParams } from "react-router";
 import Loading from "../../components/Loading";
 import { formatPrice } from "../../utils/fomatPrice";
-import formatDate from "../../utils/fomatDate"
-import { AppContext } from "../../contexts/AppContextProvider";
+import formatDate from "../../utils/fomatDate";
+import OrderStatus from "../../types/order.type";
 
 export default function OrderDetailPage() {
   const { slug } = useParams();
@@ -23,8 +23,96 @@ export default function OrderDetailPage() {
     staleTime: 500,
     enabled: !!isSlug,
   });
+  function getOrderStatusIndex(status) {
+    const statusList = [
+      OrderStatus.PROCESSING,
+      OrderStatus.SHIPPED,
+      OrderStatus.DELIVERED,
+      OrderStatus.CANCELLED,
+    ];
+    return statusList.indexOf(status);
+  }
 
+  function getOrderStatus(status, label) {
+    const currentStatusIndex = getOrderStatusIndex(isOrder?.orderStatus);
+    const statusIndex = getOrderStatusIndex(status);
+    const isActive = currentStatusIndex >= statusIndex;
+    return (
+      <div>
+        <div className="relative">
+          <div
+            className={`w-16 h-16 border-4 ${
+              isActive ? "border-green-500" : "border-gray-300"
+            } rounded-full p-3 flex-shrink-0 order-first ml-5`}
+          >
+            <img src={getImageUrl(status)} alt="" />
+          </div>
+          <div
+            className={`absolute top-1/2 left-[${getLeftPosition(
+              status
+            )}%] w-[${getWidth(status)}px] h-1 ${
+              isActive ? "bg-green-500" : "bg-gray-300"
+            } transform -translate-y-1/2`}
+          ></div>
+        </div>
+        <div className="flex flex-col mr-2 items-center">
+          <p
+            className={`font-bold ${
+              isActive ? "text-green-500" : "text-gray-500"
+            }`}
+          >
+            {label}
+          </p>
+          <p className="text-gray-500">{formatDate(isOrder?.createdAt)}</p>
+        </div>
+      </div>
+    );
+  }
 
+  function getImageUrl(status) {
+    switch (status) {
+      case OrderStatus.PROCESSING:
+        return "https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/orders-icon.png";
+      case OrderStatus.SHIPPED:
+        return "https://icon-library.com/images/money-order-icon/money-order-icon-14.jpg";
+      case OrderStatus.DELIVERED:
+        return "https://cdn.iconscout.com/icon/premium/png-256-thumb/successful-delivery-1786644-1522008.png";
+      case OrderStatus.CANCELLED:
+        return "https://cdn.iconscout.com/icon/premium/png-256-thumb/order-received-3112928-2602187.png?f=webp";
+      default:
+        return "";
+    }
+  }
+
+  function getLeftPosition(status) {
+    switch (status) {
+      case "PROCESSING":
+        return 63;
+      case "SHIPPED":
+        return 71;
+      case "DELIVERED":
+        return 67;
+      case "CANCELLED":
+        return 0;
+      default:
+        return 0;
+    }
+  }
+
+  function getWidth(status) {
+    switch (status) {
+      case "PROCESSING":
+        return 190;
+      case "SHIPPED":
+        return 175;
+      case "DELIVERED":
+        return 180;
+      case "CANCELLED":
+        return 0;
+      default:
+        return 0;
+    }
+  }
 
   return (
     <Layout>
@@ -64,7 +152,7 @@ export default function OrderDetailPage() {
           <div class="max-w-6xl mx-auto">
             <div class="w-full screen-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md flex items-center space-x-4">
               <div class="flex items-center space-x-28 ml-28">
-                <div>
+                {/* <div>
                   <div className="relative">
                     <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-5">
                       <img
@@ -75,7 +163,7 @@ export default function OrderDetailPage() {
                     <div class="absolute top-1/2 left-[63%] w-[190px] h-1 bg-green-500 transform -translate-y-1/2"></div>
                   </div>
                   <div class="flex flex-col mr-2">
-                    <p class="font-bold">Đơn hàng đã đặt</p>
+                    <p class="font-bold">{isOrder?.orderStatus === OrderStatus.PROCESSING && "Đã Đặt Hàng"}</p>
                     <p class="text-gray-500">{formatDate(isOrder?.createdAt)}</p>
                   </div>
                 </div>
@@ -120,7 +208,11 @@ export default function OrderDetailPage() {
                     <p class="font-bold">Đã nhận được hàng</p>
                     <p class="text-gray-500">{formatDate(isOrder?.updatedAt)}</p>
                   </div>
-                </div>
+                </div> */}
+                {getOrderStatus(OrderStatus.PROCESSING, "Đã đặt hàng")}
+                {getOrderStatus(OrderStatus.SHIPPED, "Đã xác nhận đơn")}
+                {getOrderStatus(OrderStatus.DELIVERED, "Đã giao cho ĐVVC")}
+                {getOrderStatus(OrderStatus.CANCELLED, "Đã nhận được hàng")}
               </div>
             </div>
           </div>
@@ -288,7 +380,9 @@ export default function OrderDetailPage() {
                       <p className="text-[15px] font-medium text-qblack">
                         Phí vận chuyển
                       </p>
-                      <p className="text-[15px] font-medium text-qred">{formatPrice(15000)}</p>
+                      <p className="text-[15px] font-medium text-qred">
+                        {formatPrice(15000)}
+                      </p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />
                   </div>
