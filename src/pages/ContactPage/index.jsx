@@ -151,18 +151,22 @@ export default function ContactPage() {
                           Address
                         </h1>
                         <p className="text-[15px] text-qblack leading-[30px]">
-                        137 Nguyễn Thị Thập, Thanh Khê Tây, Liên Chiểu, Đà Nẵng, Việt Nam
+                          137 Nguyễn Thị Thập, Thanh Khê Tây, Liên Chiểu, Đà
+                          Nẵng, Việt Nam
                         </p>
                       </div>
                     </div>
-                    <div className="w-full h-[206px] mt-5">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3833.802589282688!2d108.16738507576034!3d16.07573073926259!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219b509a30cfb%3A0xb93a05e26b3b28ff!2zVHLGsOG7nW5nIENhbyDEkeG6s25nIEZQVCBQb2x5dGVjaG5pYw!5e0!3m2!1svi!2s!4v1698650822426!5m2!1svi!2s" 
-                    width={570} 
-                    height={250} 
-                    style={{border: 0}} 
-                    allowFullScreen loading="lazy" 
-                    referrerPolicy="no-referrer-when-downgrade" />
-
+                    <div className="relative w-full h-[206px] mt-5 overflow-hidden">
+                      <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3833.802589282688!2d108.16738507576034!3d16.07573073926259!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219b509a30cfb%3A0xb93a05e26b3b28ff!2zVHLGsOG7nW5nIENhbyDEkeG6s25nIEZQVCBQb2x5dGVjaG5pYw!5e0!3m2!1svi!2s!4v1698650822426!5m2!1svi!2s"
+                        width={570}
+                        height={250}
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        className="absolute top-0 left-0 w-full h-full"
+                      />
                     </div>
                   </div>
                 </div>
@@ -236,7 +240,6 @@ export default function ContactPage() {
                             placeholder="Your Subject here"
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                             id="subject"
-
                           />
                         </div>
                       </div>
@@ -248,7 +251,6 @@ export default function ContactPage() {
                       <textarea
                         placeholder="Type your message here"
                         className="w-full h-[105px] focus:ring-0 focus:outline-none p-3 border border-qgray-border placeholder:text-sm"
-
                       />
                     </div>
                     <div>

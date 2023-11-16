@@ -4,7 +4,7 @@ import Layout from "../../components/Layout";
 export default function NotFoundPage() {
   return (
     <Layout>
-      <div className="w-full  pt-[30px] pb-[60px]">
+      <div className="w-full  pt-[31px] pb-[60px]">
         <div className="cart-page-wrapper w-full">
           <div className="max-w-6xl mx-auto">
             <div className="empty-card-wrapper w-full">
