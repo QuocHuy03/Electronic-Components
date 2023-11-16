@@ -87,6 +87,17 @@ body {
     min-width: unset;
     transition: color 0.3s ease 0s;
 }
+.tab-checkout{
+    content: " ";
+    height: 2px;
+    background-color: rgb(20, 53, 195);
+    display: inline-block;
+    position: absolute;
+    transition: all 0.2s ease-out 0s;
+    bottom: 0px;
+    left: 0px;
+    width: 127px;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
