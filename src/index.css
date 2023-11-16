@@ -97,6 +97,18 @@ body {
     border-left: 15px solid transparent;
     border-bottom: 15px solid #F3F3F7;
 }
+.tab-checkout {
+    content: " ";
+    height: 2px;
+    background-color: rgb(20, 53, 195);
+    display: inline-block;
+    position: absolute;
+    transition: all 0.2s ease-out 0s;
+    bottom: 0px;
+    left: 0px;
+    width: 127px;
+
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
