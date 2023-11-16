@@ -403,6 +403,7 @@ export default function CartPage() {
                       </button>
                     </div>
                     <Modal
+                      title="Khuyến mãi và giảm giá"
                       onClickStopModal={(e) => e.stopPropagation()}
                       isOpen={isDiscountPageOpen}
                       onClose={() => setIsDiscountPageOpen(false)}

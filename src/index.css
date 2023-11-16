@@ -109,6 +109,65 @@ body {
   border-left: 15px solid transparent;
   border-bottom: 15px solid #f3f3f7;
 }
+.form-item-required::before {
+  display: inline-block;
+  margin-right: 4px;
+  color: rgb(255, 77, 79);
+  font-size: 12px;
+  line-height: 1;
+  content: "*";
+}
+.form-input {
+  border-style: solid;
+    border-radius: 0.25rem;
+    border-width: 1px;
+    opacity: 1;
+    height: 40px;
+    padding: 0rem 0.75rem;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    border-color: rgb(224, 224, 224);
+}
+.form-input input {
+  flex: 1 1 0%;
+  width: 100%;
+  border: none;
+  font-size: 13px;
+  color: rgb(67, 70, 87);
+}
+
+.hr-checkout {
+  border-style: none;
+  border-width: 1px;
+  border-color: unset;
+  opacity: 1;
+  display: flex;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.css-yae08c {
+  display: flex;
+  width: 100%;
+  border-top: 1px solid #E4E5F0;
+}
+.title-checkout {
+  margin: 0px;
+  padding: 0px;
+  border-style: none;
+  border-width: 1px;
+  border-color: unset;
+  opacity: 1;
+  color: inherit;
+  font-weight: 700;
+  text-decoration: unset;
+  font-size: 20px;
+  line-height: 28px;
+  overflow: hidden;
+  max-width: unset;
+  min-width: unset;
+  transition: color 0.3s ease 0s;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
