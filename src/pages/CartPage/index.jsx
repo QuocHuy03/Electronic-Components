@@ -20,18 +20,22 @@ import createNotification from "../../utils/notification";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import Modal from "../../components/Modal";
 import { couponService } from "../../services/coupon.service";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Empty } from "antd";
+import formatDate from "../../utils/fomatDate";
+import {
+  applyCoupon,
+  getDiscount,
+  getFilterCoupon,
+  uncheckedCoupon,
+} from "../../stores/coupon/actions";
 
 export default function CartPage() {
   const dispatch = useDispatch();
-  const { carts, user } = useContext(AppContext);
+  const { carts, coupons, discounts } = useContext(AppContext);
   const [isDiscountPageOpen, setIsDiscountPageOpen] = useState(false);
   const modalDiscountRef = useRef();
-  const [filterProductCoupon, setFilterProductCoupon] = useState(null);
-  const [isToggeDiscount, setIsToggeDiscount] = useState(false);
-  const [isDiscount, setIsDiscount] = useState(null);
-
+  const [isCurrent, setIsCurrent] = useState();
   const totalAmountAll = carts?.reduce(
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
     0
@@ -136,85 +140,65 @@ export default function CartPage() {
   };
 
   const { data: isCoupons, isloading: loadingCoupon } = useQuery(
-    ["coupons"],
+    ["listCoupon"],
     () => couponService.fetchAllCoupons(),
     {
       retry: 3,
       retryDelay: 1000,
     }
   );
+  useEffect(() => {
+    dispatch(getDiscount());
+  }, []);
 
   useEffect(() => {
-    const fetchDiscounts = async () => {
-      const data = await couponService.fetchCouponByUserID();
-      setIsDiscount(data);
-    };
-    fetchDiscounts();
-  }, [isToggeDiscount]);
-  useEffect(() => {
-    const savedCoupons = JSON.parse(localStorage.getItem("listCoupons")) || {};
-    const productCouponMap = {};
-    // Lặp qua từng sản phẩm trong giỏ hàng
-    for (const cartItem of carts) {
-      // Kiểm tra xem sản phẩm đã có coupon được lưu trong localStorage chưa
-      const savedCoupon = savedCoupons[cartItem.productID];
-      if (savedCoupon) {
-        // Nếu đã có coupon cho sản phẩm này, sử dụng nó
-        productCouponMap[cartItem.productID] = savedCoupon;
-      } else {
-        // Nếu chưa có coupon, tìm coupon từ danh sách isCoupons
-        const coupon = isCoupons?.find(
-          (c) => c.product._id === cartItem.productID
-        );
-        if (coupon) {
-          productCouponMap[cartItem.productID] = coupon;
-          savedCoupons[cartItem.productID] = coupon;
-          localStorage.setItem("listCoupons", JSON.stringify(savedCoupons));
-        }
+    const fetchData = async () => {
+      try {
+        await dispatch(getFilterCoupon(carts, isCoupons));
+      } catch (error) {
+        console.log(error);
       }
-    }
-    // Chuyển đối tượng productCouponMap thành mảng để setFilterProductCoupon
-    const filteredCoupons = Object.values(productCouponMap);
-    setFilterProductCoupon(filteredCoupons);
+    };
+    fetchData();
   }, [carts, isCoupons]);
-
   // Tính tổng giảm giá từ các coupon cho từng sản phẩm trong giỏ hàng
-  const totalDiscount = carts.reduce((total, cartItem) => {
-    const productDiscount = isDiscount?.find((man) => {
+  const totalDiscount = carts?.reduce((total, cartItem) => {
+    const productDiscount = discounts?.find((man) => {
       return man.coupon.some(
         (coupon) => coupon.productID === cartItem.productID
       );
     });
-
     // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
     if (productDiscount) {
       const productCoupon = productDiscount.coupon.find(
         (coupon) => coupon.productID === cartItem.productID
       );
-      return total + productCoupon.price;
+      return total + parseInt(productCoupon.price);
     }
-
     return total;
   }, 0);
 
-  const handleCouponChange = useCallback(async (huyit) => {
-    const data = {
-      couponID: huyit._id,
-    };
+  const handleCouponChange = useCallback(
+    async (huyit) => {
+      const data = {
+        couponID: huyit._id,
+      };
+      const isCurrentlyApplied = discounts.some(
+        (coupon) => coupon.couponID == huyit._id
+      );
+      setIsCurrent(isCurrentlyApplied);
+      const response = await dispatch(
+        isCurrentlyApplied ? uncheckedCoupon(data) : applyCoupon(data)
+      );
 
-    const response = await dispatch(
-      !isDiscount || isDiscount.length === 0
-        ? applyCoupon(data)
-        : uncheckedCoupon(data)
-    );
-
-    if (response.status === true) {
-      createNotification("success", "topright", response.message);
-      setIsToggeDiscount(!isDiscount || isDiscount.length === 0);
-    } else {
-      createNotification("error", "topright", response.message);
-    }
-  }, []);
+      if (response.status === true) {
+        createNotification("success", "topRight", response.message);
+      } else {
+        createNotification("error", "topRight", response.message);
+      }
+    },
+    [discounts]
+  );
 
   return (
     <Layout>
@@ -440,21 +424,31 @@ export default function CartPage() {
                                   color: "rgb(130, 134, 158)",
                                 }}
                               >
-                                CHỌN 1 TRONG NHỮNG KHUYẾN MÃI SAU
+                                CHỌN 1 TRONG NHỮNG GIẢM GIÁ SAU
                               </div>
                               <div
                                 width="100%"
                                 className="border border-solid rounded-[0.5rem] w-full mr-[1rem] my-[0.75rem] p-[0.75rem]"
-                                style={{
-                                  borderColor: "rgb(20, 53, 195)",
-                                  background: "rgb(243, 245, 252)",
-                                }}
+                                style={
+                                  isCurrent
+                                    ? {
+                                        borderColor: "rgb(228, 229, 240)",
+                                        background: "rgb(255, 255, 255)",
+                                      }
+                                    : {
+                                        borderColor: "rgb(20, 53, 195)",
+                                        background: "rgb(243, 245, 252)",
+                                      }
+                                }
                               >
                                 {loadingCoupon ? (
                                   <Loading />
-                                ) : filterProductCoupon?.length > 0 ? (
-                                  filterProductCoupon?.map((huyit) => (
-                                    <div className="flex justify-between flex-nowrap opacity-1 ">
+                                ) : coupons?.length > 0 ? (
+                                  coupons?.map((huyit, index) => (
+                                    <div
+                                      key={index}
+                                      className="flex justify-between flex-nowrap opacity-1 "
+                                    >
                                       <div className="relative max-w-full min-h-[1px] mr-[0.75rem] opacity-1">
                                         <div
                                           className="rounded-[0.25rem] opacity-1 w-[90%] min-w-[76px] h-[76px] flex items-center justify-center"
@@ -492,12 +486,8 @@ export default function CartPage() {
                                             className="discount-title"
                                             style={{ whiteSpace: "pre-line" }}
                                           >
-                                            Giảm 15.500.000₫ (áp dụng vào giá
-                                            sản phẩm) 1x Sạc nhanh Samsung 15W
-                                            Type C, Trắng (EP-T1510NWEGWW) (Quà
-                                            tặng) 1x Tai nghe Samsung Galaxy
-                                            Buds 2 (Đen) (SM-R177NZKAXXV) (Quà
-                                            tặng)
+                                            {huyit?.code} - (
+                                            {formatPrice(huyit?.price)}đ)
                                           </div>
                                           <div
                                             style={{
@@ -505,8 +495,7 @@ export default function CartPage() {
                                             }}
                                             className="font-[400] text-[12px] leading-[16px] overflow-hidden"
                                           >
-                                            Khuyến mãi áp dụng khi mua đủ 1 sản
-                                            phẩm, mua tối thiểu 1 sản phẩm
+                                            {huyit?.discount}
                                           </div>
                                         </div>
                                         <div className="flex flex-wrap items-end justify-between mt-[0.5rem] opacity-1">
@@ -517,17 +506,26 @@ export default function CartPage() {
                                                 color: "rgb(130, 134, 158)",
                                               }}
                                             >
-                                              HSD: 16/11/2023
+                                              HSD:{" "}
+                                              {formatDate(huyit?.createdAt)}
                                             </div>
                                           </div>
                                           <a
+                                            onClick={() =>
+                                              handleCouponChange(huyit)
+                                            }
                                             style={{
                                               color: "rgb(25, 144, 255)",
                                             }}
                                             className="inline opacity-1 cursor-pointer"
                                           >
                                             <div className="leading-[20px] opacity-1 font-[400] text-[13px] overflow-hidden">
-                                              Bỏ chọn
+                                              {discounts?.some(
+                                                (coupon) =>
+                                                  coupon.couponID == huyit._id
+                                              )
+                                                ? "Bỏ Chọn"
+                                                : "Áp Dụng"}
                                             </div>
                                           </a>
                                         </div>
@@ -559,7 +557,7 @@ export default function CartPage() {
                             Total
                           </p>
                           <p className="text-[18px] font-medium text-red-500">
-                            {formatPrice(totalAmountAll)}
+                            {formatPrice(totalAmountAll - totalDiscount)}
                           </p>
                         </div>
                       </div>
