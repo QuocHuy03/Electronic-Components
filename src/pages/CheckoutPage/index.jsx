@@ -369,21 +369,21 @@ export default function CheckoutPage() {
                             </div>
                             <div
                               type="subtitle"
-                              className="text-base font-medium leading-6 p-0.75 border-none border-t border-r border-b border-l border-solid border-gray-300 opacity-100 overflow-hidden transition-colors duration-300"
+                              className="text-base font-medium leading-6 p-0.75 border-none border-t border-r border-b border-l  border-gray-300 opacity-100 overflow-hidden transition-colors duration-300"
                             >
                               Phương thức giao hàng
                             </div>
-                            <div className="border-none border-t border-r border-b border-l border-gray-300 opacity-100 ml-8">
+                            <div className="  border-gray-300 opacity-100 ml-2">
                               <div className="block mb-2 mr-0">
-                                <div className="flex items-center cursor-pointer">
-                                  <div className="inline-block relative w-16 min-w-16 h-16 mr-2">
+                                <div className="flex items-center cursor-pointer mt-2">
+                                  <div className="inline-block relative w-4 min-w-6 h-6  ">
                                     <input
                                       type="radio"
-                                      className="teko-radio-input absolute inset-0 z-1 w-full h-full cursor-pointer opacity-0"
+                                      className="teko-radio-input absolute z-1 w-full h-full cursor-pointer"
                                       defaultChecked
                                     />
-                                    <div className="radio-outer absolute inset-0 flex items-center justify-center border-1 border-solid border-blue-500 rounded-full bg-white">
-                                      <div className="radio-inner w-6 h-6 rounded-full bg-blue-500"></div>
+                                    <div className="radio-outer absolute flex items-center justify-center rounded-full bg-white">
+                                      
                                     </div>
                                   </div>
 
@@ -404,10 +404,8 @@ export default function CheckoutPage() {
                                       className="teko-col teko-col-3 flex-grow"
                                       style={{ textAlign: "right" }}
                                     >
-                                      <div
-                                        type="body"
-                                        color="success500"
-                                        className="border-t border-r border-b border-l border-solid border-transparent border-1 opacity-100 text-green-500 font-medium text-base leading-5 overflow-hidden line-clamp-none max-w-none min-w-none transition-colors duration-300"
+                                      <div type="body" color="success500"
+                                        className=" border-solid border-transparent border-1 opacity-100 text-green-500 font-medium text-base leading-5 overflow-hidden line-clamp-none max-w-none min-w-none transition-colors duration-300"
                                       >
                                         Miễn phí
                                       </div>
