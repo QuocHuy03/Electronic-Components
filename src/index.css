@@ -87,6 +87,7 @@ body {
     min-width: unset;
     transition: color 0.3s ease 0s;
 }
+
 .tab-checkout{
     content: " ";
     height: 2px;
@@ -97,6 +98,17 @@ body {
     bottom: 0px;
     left: 0px;
     width: 127px;
+}
+
+.notify_menu::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 8px;
+    border-right: 15px solid transparent;
+    border-left: 15px solid transparent;
+    border-bottom: 15px solid #F3F3F7;
+
 }
 @tailwind base;
 @tailwind components;
