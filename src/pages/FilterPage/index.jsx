@@ -532,8 +532,8 @@ export default function FilterPage() {
                       </div>
                     </div>
                     <p className="text-xs text-black font-[400]">
-                      {/* Price: {priceRange[0].toLocaleString()} -{" "}
-                      {priceRange[1].toLocaleString()} */}
+                      Price: {priceRange[0].toLocaleString()} -{" "}
+                      {priceRange[1].toLocaleString()}
                     </p>
                   </div>
 
@@ -551,24 +551,18 @@ export default function FilterPage() {
                           isBrands?.slice(0, visibleItems).map((item) => (
                             <li key={item._id} className="mb-2">
                               <div className="flex space-x-[10px] items-center">
-                                <div>
-                                  <div>
-                                    <input
-                                      onChange={() =>
-                                        handleFilterChange(
-                                          "brands",
-                                          item.slugBrand
-                                        )
-                                      }
-                                      checked={filters.brands.includes(
-                                        item.slugBrand
-                                      )}
-                                      type="checkbox"
-                                      name={item.nameBrand}
-                                      id={item.nameBrand}
-                                    />
-                                  </div>
-                                </div>
+                                <input
+                                  onChange={() =>
+                                    handleFilterChange("brands", item.slugBrand)
+                                  }
+                                  checked={filters.brands.includes(
+                                    item.slugBrand
+                                  )}
+                                  type="checkbox"
+                                  name={item.nameBrand}
+                                  id={item.nameBrand}
+                                />
+
                                 <div>
                                   <label
                                     htmlFor={item.nameBrand}
@@ -599,22 +593,34 @@ export default function FilterPage() {
                       </h1>
                     </div>
                     <div className="filter-items">
-                      <div className="flex space-x-[5px] flex-wrap">
+                      <ul>
                         {colors?.map((item, index) => (
-                          <span
-                            onClick={() =>
-                              handleFilterChange("colors", item.name)
-                            }
-                            key={index}
-                            className="capitalize font-400 border border-qgray-border text-xs px-[14px] py-[6px] cursor-pointer mb-[5px]  text-qgray "
-                          >
-                            {item.name}
-                          </span>
+                          <li key={index} className="mb-2">
+                            <div className="flex space-x-[10px] items-center">
+                              <input
+                                onChange={() =>
+                                  handleFilterChange("colors", item.name)
+                                }
+                                checked={filters.colors.includes(item.name)}
+                                type="checkbox"
+                                name={item.name}
+                                id={item.name}
+                              />
+
+                              <div>
+                                <label
+                                  htmlFor={item.name}
+                                  className="text-xs font-400 capitalize"
+                                >
+                                  {item.name}
+                                </label>
+                              </div>
+                            </div>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
                   </div>
-
                   <button
                     type="button"
                     className="w-10 h-10 fixed top-5 right-5 z-50 rounded lg:hidden flex justify-center items-center border border-qred text-qred"
@@ -718,17 +724,6 @@ export default function FilterPage() {
                   loadingProduct={loadingProduct}
                   filteredData={filteredData}
                 />
-                {/* <div className="flex flex-wrap gap-1 place-content-start  bg-gray-50 pt-2 pb-2 pl-2">
-                  {loadingProduct ? (
-                    <Loading />
-                  ) : (
-                    filteredData?.map((item) => (
-                   
-                    ))
-                  )}
-                 
-                      
-                </div> */}
               </div>
             </div>
           </div>
