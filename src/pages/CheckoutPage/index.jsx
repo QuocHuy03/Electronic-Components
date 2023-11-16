@@ -207,7 +207,9 @@ export default function CheckoutPage() {
                             type="line"
                             width={137}
                             height={40}
-                            className=" relative flex items-stretch overflow-x-scroll overflow-y-hidden w-full "
+
+                            className=" relative flex items-stretch overflow-y-hidden w-full border-b-2 border-solid border-gray-300"
+
                           >
                             <div
                               color="textSecondary"
