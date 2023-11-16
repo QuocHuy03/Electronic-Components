@@ -14,6 +14,7 @@ import { formatPrice } from "../../utils/fomatPrice";
 import { persistor } from "../../stores/app.store";
 import { Link } from "react-router-dom";
 import Pagination from "../../components/Pagination";
+import { Empty } from "antd";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -526,11 +527,17 @@ export default function ProfilePage() {
               <td className="py-4 whitespace-nowrap text-center">Action</td>
             </tr>
           </tbody>
-          <Pagination
-            data={isOrders}
-            itemsPerPage={4}
-            renderItem={renderOrderItem}
-          />
+          {isOrders.length > 0 ? (
+            <Pagination
+              data={isOrders}
+              itemsPerPage={4}
+              renderItem={renderOrderItem}
+            />
+          ) : (
+            <td colSpan={5}>
+              <Empty />
+            </td>
+          )}
         </table>
       </div>
     );
@@ -786,7 +793,10 @@ export default function ProfilePage() {
                                 {
                                   isOrders?.filter(
                                     (item) =>
-                                      item.orderStatus === OrderStatus.SHIPPED
+                                      item.orderStatus ===
+                                        OrderStatus.SHIPPED ||
+                                      item.orderStatus ===
+                                        OrderStatus.SHIPPED_CONFIRMED
                                   ).length
                                 }
                               </span>

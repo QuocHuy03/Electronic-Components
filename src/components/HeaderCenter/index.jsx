@@ -20,9 +20,14 @@ export default function HeaderCenter() {
     // console.log(response);
   };
   const [isSearchBoard, setIsSearchBoard] = useState(false);
+  const [isNotification, setNotification] = useState(false);
   const searchBoardRef = useRef();
+  const notificationRef = useRef();
   const handleSearch = () => {
     setIsSearchBoard(true);
+  };
+  const handleNotification = () => {
+    setNotification(!isNotification);
   };
 
   useEffect(() => {
@@ -32,6 +37,12 @@ export default function HeaderCenter() {
         !searchBoardRef.current.contains(event.target)
       ) {
         setIsSearchBoard(false);
+      }
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setNotification(false);
       }
     };
     document.addEventListener("click", handleClickOutside);
@@ -169,7 +180,11 @@ export default function HeaderCenter() {
 
               <div className="flex space-x-2 items-center">
                 <div className="relative flex">
-                  <div className="box-icon rounded-[8px]">
+                  <div
+                    className="box-icon rounded-[8px]"
+                    ref={notificationRef}
+                    onClick={handleNotification}
+                  >
                     <img
                       src="https://shopjk.net/assets/frontend/theme_5/image/nam/ring.svg"
                       alt
@@ -179,11 +194,19 @@ export default function HeaderCenter() {
                     </p>
                   </div>
                   <div
-                    className="bg-white w-[336px] top-[60px] right-0 notify_active position-absolute brs-12"
-                    style={{
-                      display: "none",
-                      boxShadow: "0px 1px 4px 0px #00000033",
-                    }}
+                  onClick={(event) => event.stopPropagation()}
+                    className="bg-white w-[336px] top-[60px] right-0 z-[100] absolute notify_menu rounded-[12px]"
+                    style={
+                      isNotification
+                        ? {
+                            display: "block",
+                            boxShadow: "0px 1px 4px 0px #00000033",
+                          }
+                        : {
+                            display: "none",
+                            boxShadow: "0px 1px 4px 0px #00000033",
+                          }
+                    }
                   >
                     <div
                       className="bg-[#f3f3f7] flex justify-between p-[16px]"
@@ -195,37 +218,39 @@ export default function HeaderCenter() {
                         Thông báo
                       </div>
                       <img
-                        src="/assets/frontend/theme_5/image/nam/profile_close.svg"
+                        onClick={() => setNotification(false)}
+                        src="https://shopjk.net/assets/frontend/theme_5/image/nam/profile_close.svg"
                         alt
                         className="cursor-pointer mr-[12px]"
                       />
                     </div>
-                    <div className="max-w-full overflow-x-scroll pb-[4px] mt-[8px] mx-[14px]">
+                    <div className="max-w-full pb-[4px] mt-[8px] mx-[14px]">
                       <a
-                        className="bg-white rounded-[24px] cursor-pointer text-[13px] leading-[20px]  border border-solid border-[#0e3eda] text-[#0e3eda] font-[500] bg-none ml-[4px]"
+                        className="bg-white inline-flex rounded-[24px] cursor-pointer text-[13px] leading-[20px] border border-solid border-[#0e3eda] text-[#0e3eda] font-[500] bg-none ml-[4px]"
                         style={{
                           padding: "5px 20px 5px 20px",
                         }}
                       >
-                        Hệ thống/Event
+                        Hệ thống
                         <div className=" num-notification-inner num-notification-inner_1 ml-[4px]"></div>
                       </a>
                     </div>
-                    <div className="max-h-[380px] overflow-y-scroll overflow-x-hidden pl-[16px] pr-[4px] mb-[12px] mt-[8px] mr-[4px]">
+                    <div className="max-h-[380px] pl-[16px] pr-[4px] mb-[12px] mt-[8px] mr-[4px]">
                       <div className="my-[16px] text-center">
                         {" "}
                         <img
-                          src="/assets/frontend/theme_5/image/nam/notification_mailbox.png"
+                        className="inline"
+                          src="https://shopjk.net/assets/frontend/theme_5/image/nam/notification_mailbox.png"
                           alt
                         />
-                        <p className="font-[500] mt-[12px]">
+                        <p className="font-[500] mt-[12px] text-[13px] leading-[20px] text-[#434657]">
                           Bạn chưa có thông báo nào
                         </p>
                       </div>
                     </div>
                     <div
                       className="px-[12px] pb-[12px] pt-[4px] text-center cursor-pointer"
-                      style={{ display: "block" }}
+                      style={{ display: "none" }}
                     >
                       <span className="text-color font-[500]">Xem thêm</span>
                       <img
@@ -237,20 +262,19 @@ export default function HeaderCenter() {
                   <div className="hidden bg-white">
                     <div className="hidden">
                       <a
-                        href="javascript:void(0);"
                         className="link-back close-step"
                       />
                       <p className="text-black font-[500px] text-[12px] leading-[24px]">
                         Thông báo
                       </p>
                     </div>
-                    <div className="max-w-full overflow-x-scroll pb-[4px] ml-[14px] mr-[14px]">
+                    <div className="max-w-full pb-[4px] ml-[14px] mr-[14px]">
                       <a
                         className="bg-white inline-flex rounded-[24px] cursor-pointer text-[13px] leading-[20px]  border border-solid border-[#0e3eda] text-[#0e3eda] font-[500] bg-none ml-[4px]"
                         data-id={1}
                         href="javascript:void(0)"
                       >
-                        Hệ thống/Event
+                        Hệ thống
                         <div className=" num-notification-inner num-notification-inner_1 c-ml-4"></div>
                       </a>
                     </div>
@@ -266,7 +290,7 @@ export default function HeaderCenter() {
                     >
                       <span className="text-black font-[500]">Xem thêm</span>
                       <img
-                        src="/assets/frontend/theme_5/image/nam/notification_down.png"
+                        src="https://shopjk.net/assets/frontend/theme_5/image/nam/notification_down.png"
                         alt
                       />
                     </div>
@@ -277,9 +301,9 @@ export default function HeaderCenter() {
                   <div className="cursor-pointer box-icon rounded-[8px]">
                     <Link rel="noopener noreferrer" to={URL_CONSTANTS.CART}>
                       <svg
-                      style={{
-                        color: "#808080"
-                      }}
+                        style={{
+                          color: "#808080",
+                        }}
                         width={20}
                         height={22}
                         viewBox="0 0 18 20"
@@ -408,7 +432,10 @@ export default function HeaderCenter() {
                 </div>
 
                 <div className="relative flex">
-                  <Link to={URL_CONSTANTS.PROFILE} className="box-icon rounded-[8px]">
+                  <Link
+                    to={URL_CONSTANTS.PROFILE}
+                    className="box-icon rounded-[8px]"
+                  >
                     <img
                       src="https://shopjk.net/assets/frontend/theme_5/image/nam/profile.svg"
                       alt
