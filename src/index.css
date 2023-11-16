@@ -119,15 +119,15 @@ body {
 }
 .form-input {
   border-style: solid;
-    border-radius: 0.25rem;
-    border-width: 1px;
-    opacity: 1;
-    height: 40px;
-    padding: 0rem 0.75rem;
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    border-color: rgb(224, 224, 224);
+  border-radius: 0.25rem;
+  border-width: 1px;
+  opacity: 1;
+  height: 40px;
+  padding: 0rem 0.75rem;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  border-color: rgb(224, 224, 224);
 }
 .form-input input {
   flex: 1 1 0%;
@@ -149,7 +149,7 @@ body {
 .css-yae08c {
   display: flex;
   width: 100%;
-  border-top: 1px solid #E4E5F0;
+  border-top: 1px solid #e4e5f0;
 }
 .title-checkout {
   margin: 0px;
@@ -167,6 +167,28 @@ body {
   max-width: unset;
   min-width: unset;
   transition: color 0.3s ease 0s;
+}
+.form-input-error {
+  margin: 0.25rem 0px 0px;
+  padding: 0px;
+  border-style: none;
+  border-width: 1px;
+  border-color: unset;
+  opacity: 1;
+  height: auto;
+  color: rgb(218, 67, 67);
+  font-weight: 400;
+  text-decoration: unset;
+  font-size: 12px;
+  line-height: 16px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: unset;
+  max-width: unset;
+  min-width: unset;
+  transition: color 0.3s ease 0s;
+  min-height: 16px;
 }
 @tailwind base;
 @tailwind components;

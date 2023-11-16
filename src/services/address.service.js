@@ -20,9 +20,9 @@ const fetchPostAddress = async (data) => {
   }
 };
 
-const fetchUpdateAddress = async (data) => {
+const fetchUpdateAddress = async (data, id) => {
   try {
-    const response = await http.post(`/address/updateAddress`, data);
+    const response = await http.patch(`/address/updateAddress/${id}`, data);
     return response;
   } catch (error) {
     console.error(error);
@@ -38,7 +38,7 @@ const fetchDeleteAddress = async (id) => {
     console.error(error);
   }
 };
-export const AddressService = {
+export const addressService = {
   fetchUpdateAddress,
   fetchPostAddress,
   fetchAddressByUserID,

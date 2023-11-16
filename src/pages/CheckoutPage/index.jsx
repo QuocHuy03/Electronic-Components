@@ -18,9 +18,10 @@ import { useDispatch } from "react-redux";
 import { redirectPayment } from "../../stores/order/actions";
 import { history } from "../../helpers/history";
 import Modal from "../../components/Modal";
+import { addAddress } from "../../stores/address/actions";
 
 const initialValues = (user) => ({
-  username: user?.username || "",
+  name: user?.name || "",
   address: user?.address || "",
   city: user?.city || "",
   district: user?.district || "",
@@ -30,7 +31,7 @@ const initialValues = (user) => ({
 
 export default function CheckoutPage() {
   const { code } = useParams();
-  const { carts, user } = useContext(AppContext);
+  const { carts } = useContext(AppContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isAddressPageOpen, setIsAddressPageOpen] = useState(false);
@@ -42,8 +43,9 @@ export default function CheckoutPage() {
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedCommune, setSelectedCommune] = useState("");
   const [activeItem, setActiveItem] = useState("64f98dfe26535a0cff5054ea");
+  const [validationErrors, setValidationErrors] = useState([]);
 
-  const [inputs, setInputs] = useState(initialValues(user));
+  const [inputs, setInputs] = useState(initialValues());
 
   const handleDocumentClick = (event) => {
     if (
@@ -73,6 +75,7 @@ export default function CheckoutPage() {
   const handleClickPayment = (itemId) => {
     setActiveItem(itemId);
   };
+
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setInputs((prevInputs) => ({
@@ -112,12 +115,7 @@ export default function CheckoutPage() {
     setProvinces(huydev.provinces);
     setDistricts(huydev.districts);
     setWards(huydev.wards);
-    if (user) {
-      setSelectedProvince(user.city);
-      setSelectedDistrict(user.district);
-      setSelectedCommune(user.commune);
-    }
-  }, [user]);
+  }, []);
 
   const totalAmountAll = useMemo(
     () =>
@@ -173,8 +171,24 @@ export default function CheckoutPage() {
         navigate(paymentResponse.result);
       }
     },
-    [inputs, orderData, navigate, history]
+    [orderData, navigate, history]
   );
+
+  const handleSubmitAddress = useCallback(async (e) => {
+    e.preventDefault();
+
+    const response = await dispatch(addAddress(inputs));
+    if (response.status === true) {
+      setValidationErrors([]);
+      createNotification("success", "topRight", response.message);
+    } else {
+      if (response.status === false) {
+        setValidationErrors([]);
+        createNotification("error", "topRight", response.message);
+      }
+      setValidationErrors(response.errors);
+    }
+  }, []);
 
   return (
     <Layout>
@@ -210,10 +224,7 @@ export default function CheckoutPage() {
           </div>
           <div className="checkout-main-content w-full">
             <div className="max-w-6xl mx-auto">
-              <form
-                onSubmit={handleSubmitOrder}
-                className="w-full lg:flex lg:space-x-[30px] pt-4"
-              >
+              <div className="w-full lg:flex lg:space-x-[30px] pt-4">
                 <div className="lg:w-1/2 w-full">
                   <h1 className="sm:text-2xl text-xl text-black font-medium mb-5">
                     Billing Details
@@ -381,512 +392,440 @@ export default function CheckoutPage() {
                               isOpen={isAddressPageOpen}
                               onClose={() => setIsAddressPageOpen(false)}
                             >
-                              <form className="px-4">
-                                <div className="flex-col flex flex-wrap justify-center mb-[16px]">
-                                  <div className="text-left relative max-w-full min-h-[1px] opacity-1">
-                                    <label
-                                      htmlFor="name"
-                                      className="mr-[8px] inline-flex items-center form-item-required"
-                                      style={{ height: 40 }}
+                              <form onSubmit={handleSubmitAddress}>
+                                <div className="px-4">
+                                  <div className="justify-between flex flex-wrap opacity-1">
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
                                     >
-                                      <div
-                                        type="body"
-                                        color="textTitle"
-                                        className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
-                                        style={{
-                                          color: "rgb(27, 29, 41)",
-                                        }}
-                                      >
-                                        Họ tên
-                                      </div>
-                                    </label>
-                                  </div>
-                                  <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
-                                    <div className="flex items-center">
-                                      <div
-                                        className="max-w-full"
-                                        style={{ flex: "1 1 auto" }}
-                                      >
-                                        <div className="opacity-1">
-                                          <div
-                                            className="form-input"
-                                            height={40}
-                                          >
-                                            <input
-                                              id="name"
-                                              type="text"
-                                              placeholder="Vui lòng nhập tên người nhận"
-                                              maxLength={255}
-                                              className="outline-none"
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="justify-between flex flex-wrap opacity-1">
-                                  <div
-                                    className="relative max-w-full min-h-[1px] opacity-1"
-                                    style={{ flex: "0 0 49%" }}
-                                  >
-                                    <div className="flex-col justify-center flex flex-wrap mb-[16px]">
                                       <div className="text-left relative max-w-full min-h-[1px] opacity-1">
                                         <label
-                                          htmlFor="telephone"
-                                          className="form-item-required mr-[8px] inline-flex items-center"
+                                          htmlFor="name"
+                                          className="mr-[8px] inline-flex items-center form-item-required"
                                           style={{ height: 40 }}
                                         >
-                                          <div
-                                            className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
-                                            style={{
-                                              color: "rgb(27, 29, 41)",
-                                            }}
-                                          >
-                                            Số điện thoại
-                                          </div>
-                                        </label>
-                                      </div>
-                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
-                                        <div className="flex items-center">
-                                          <div
-                                            className="max-w-full"
-                                            style={{ flex: "1 1 auto" }}
-                                          >
-                                            <div className="opacity-1">
-                                              <div
-                                                className="form-input"
-                                                height={40}
-                                              >
-                                                <input
-                                                  id="telephone"
-                                                  type="text"
-                                                  placeholder="Nhập số điện thoại"
-                                                  maxLength={255}
-                                                  className="outline-none"
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div
-                                    className="relative max-w-full min-h-[1px]"
-                                    style={{ flex: "0 0 49%" }}
-                                  >
-                                    <div className="flex-col justify-center flex flex-wrap mb-[16px]">
-                                      <div className="text-left relative max-w-full min-h-[1px] opacity-1">
-                                        <label
-                                          htmlFor="email"
-                                          className="form-item-required mr-[8px] inline-flex items-center"
-                                          style={{ height: 40 }}
-                                        >
-                                          <div
-                                            className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
-                                            style={{
-                                              color: "rgb(27, 29, 41)",
-                                            }}
-                                          >
-                                            Email
-                                          </div>
-                                        </label>
-                                      </div>
-                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
-                                        <div className="flex items-center">
-                                          <div
-                                            className="max-w-full"
-                                            style={{ flex: "1 1 auto" }}
-                                          >
-                                            <div className="opacity-1">
-                                              <div
-                                                className="form-input"
-                                                height={40}
-                                              >
-                                                <input
-                                                  id="email"
-                                                  type="text"
-                                                  placeholder="Nhập email của bạn"
-                                                  maxLength={255}
-                                                  className="outline-none"
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="hr-checkout">
-                                  <div
-                                    width="100%"
-                                    color="divider"
-                                    className="css-yae08c"
-                                  />
-                                </div>
-                                <div type="title" className="title-checkout">
-                                  Địa chỉ nhận hàng
-                                </div>
-                                <div className="justify-between flex flex-wrap opacity-1">
-                                  <div
-                                    className="relative max-w-full min-h-[1px] opacity-1"
-                                    style={{ flex: "0 0 49%" }}
-                                  >
-                                    <div className="flex-col justify-center flex flex-wrap mb-[16px]">
-                                      <div className="text-left relative max-w-full min-h-[1px] opacity-1">
-                                        <label
-                                          htmlFor="provinceCode"
-                                          className="form-item-required mr-[8px] inline-flex items-center"
-                                          style={{ height: 40 }}
-                                        >
-                                          <div
-                                            className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
-                                            style={{
-                                              color: "rgb(27, 29, 41)",
-                                            }}
-                                          >
-                                            Tỉnh/Thành phố
-                                          </div>
-                                        </label>
-                                      </div>
-
-                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
-                                        <div className="flex items-center">
-                                          <div
-                                            className="max-w-full"
-                                            style={{ flex: "1 1 auto" }}
-                                          >
-                                            <div
-                                              id="provinceCode"
-                                              tabIndex={-1}
-                                              className="opacity-1"
-                                            >
-                                              <div className="relative">
-                                                <div
-                                                  className="bg-white h-[2.5rem] overflow-hidden cursor-pointer select-none rounded-[0.25rem] flex items-center"
-                                                  style={{
-                                                    border:
-                                                      "1px solid rgb(228, 229, 240)",
-                                                  }}
-                                                >
-                                                  <div className="w-full opacity-1">
-                                                    <div
-                                                      className="form-input"
-                                                      height={40}
-                                                    >
-                                                      <input
-                                                        type="text"
-                                                        placeholder="Chọn"
-                                                        maxLength={255}
-                                                        className="outline-none"
-                                                      />
-                                                      <div
-                                                        height={40}
-                                                        className="opacity-1 h-[40px] ml-[0.25rem] flex items-center"
-                                                      >
-                                                        <svg
-                                                          fill="none"
-                                                          viewBox="0 0 24 24"
-                                                          size={20}
-                                                          className="css-11md2ba"
-                                                          color="textSecondary"
-                                                          height={20}
-                                                          width={20}
-                                                          xmlns="http://www.w3.org/2000/svg"
-                                                        >
-                                                          <path
-                                                            d="M16.4767 10H7.52331C7.07668 10 6.83609 10.5267 7.12731 10.867L11.208 15.6348C11.6248 16.1217 12.3752 16.1217 12.792 15.6348L16.8727 10.867C17.1639 10.5267 16.9233 10 16.4767 10Z"
-                                                            fill="#82869E"
-                                                          />
-                                                        </svg>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div className="select" />
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div
-                                    className="relative max-w-full min-h-[1px] opacity-1"
-                                    style={{ flex: "0 0 49%" }}
-                                  >
-                                    <div className="flex-col justify-center flex flex-wrap mb-[16px]">
-                                      <div className="text-left relative max-w-full min-h-[1px] opacity-1">
-                                        <label
-                                          htmlFor="districtCode"
-                                          className="form-item-required mr-[8px] inline-flex items-center"
-                                          style={{ height: 40 }}
-                                        >
-                                          <div
-                                            style={{
-                                              color: "rgb(27, 29, 41)",
-                                            }}
-                                            className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
-                                          >
-                                            Quận/Huyện
-                                          </div>
-                                        </label>
-                                      </div>
-                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
-                                        <div className="flex items-center">
-                                          <div
-                                            className="max-w-full"
-                                            style={{ flex: "1 1 auto" }}
-                                          >
-                                            <div
-                                              id="districtCode"
-                                              tabIndex={-1}
-                                              className="opacity-1"
-                                            >
-                                              <div className="relative">
-                                                <div
-                                                  className="bg-white h-[2.5rem] overflow-hidden cursor-pointer select-none rounded-[0.25rem] flex items-center"
-                                                  style={{
-                                                    border:
-                                                      "1px solid rgb(228, 229, 240)",
-                                                  }}
-                                                >
-                                                  <div className="w-full opacity-1">
-                                                    <div
-                                                      className="form-input"
-                                                      height={40}
-                                                      disabled
-                                                    >
-                                                      <input
-                                                        type="text"
-                                                        placeholder="Chọn"
-                                                        maxLength={255}
-                                                        disabled
-                                                        className="outline-none"
-                                                      />
-                                                      <div
-                                                        height={40}
-                                                        className="opacity-1 h-[40px] ml-[0.25rem] flex items-center"
-                                                      >
-                                                        <svg
-                                                          fill="none"
-                                                          viewBox="0 0 24 24"
-                                                          size={20}
-                                                          className="css-11md2ba"
-                                                          color="textSecondary"
-                                                          height={20}
-                                                          width={20}
-                                                          xmlns="http://www.w3.org/2000/svg"
-                                                        >
-                                                          <path
-                                                            d="M16.4767 10H7.52331C7.07668 10 6.83609 10.5267 7.12731 10.867L11.208 15.6348C11.6248 16.1217 12.3752 16.1217 12.792 15.6348L16.8727 10.867C17.1639 10.5267 16.9233 10 16.4767 10Z"
-                                                            fill="#82869E"
-                                                          />
-                                                        </svg>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div className="select" />
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="justify-between flex flex-wrap opacity-1">
-                                  <div
-                                    className="relative max-w-full min-h-[1px] opacity-1"
-                                    style={{ flex: "0 0 49%" }}
-                                  >
-                                    <div className="flex-col justify-center flex flex-wrap mb-[16px]">
-                                      <div className="text-left relative max-w-full min-h-[1px] opacity-1">
-                                        <label
-                                          htmlFor="wardCode"
-                                          className="form-item-required mr-[8px] inline-flex items-center"
-                                          style={{ height: 40 }}
-                                        >
-                                          <div
-                                            style={{
-                                              color: "rgb(27, 29, 41)",
-                                            }}
-                                            className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
-                                          >
-                                            Phường/Xã
-                                          </div>
-                                        </label>
-                                      </div>
-                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
-                                        <div className="flex items-center">
-                                          <div
-                                            className="max-w-full"
-                                            style={{ flex: "1 1 auto" }}
-                                          >
-                                            <div
-                                              id="wardCode"
-                                              tabIndex={-1}
-                                              className="opacity-1"
-                                            >
-                                              <div className="relative">
-                                                <div
-                                                  className="bg-white h-[2.5rem] overflow-hidden cursor-pointer select-none rounded-[0.25rem] flex items-center"
-                                                  style={{
-                                                    border:
-                                                      "1px solid rgb(228, 229, 240)",
-                                                  }}
-                                                >
-                                                  <div className="w-full opacity-1">
-                                                    <div
-                                                      className="form-input"
-                                                      height={40}
-                                                    >
-                                                      <input
-                                                        type="text"
-                                                        placeholder="Chọn"
-                                                        maxLength={255}
-                                                        className="outline-none"
-                                                      />
-                                                      <div
-                                                        height={40}
-                                                        className="opacity-1 h-[40px] ml-[0.25rem] flex items-center"
-                                                      >
-                                                        <svg
-                                                          fill="none"
-                                                          viewBox="0 0 24 24"
-                                                          size={20}
-                                                          className="css-11md2ba"
-                                                          color="textSecondary"
-                                                          height={20}
-                                                          width={20}
-                                                          xmlns="http://www.w3.org/2000/svg"
-                                                        >
-                                                          <path
-                                                            d="M16.4767 10H7.52331C7.07668 10 6.83609 10.5267 7.12731 10.867L11.208 15.6348C11.6248 16.1217 12.3752 16.1217 12.792 15.6348L16.8727 10.867C17.1639 10.5267 16.9233 10 16.4767 10Z"
-                                                            fill="#82869E"
-                                                          />
-                                                        </svg>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div className="select" />
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div
-                                    className="relative max-w-full min-h-[1px] opacity-1"
-                                    style={{ flex: "0 0 49%" }}
-                                  >
-                                    <div className="flex-col justify-center flex flex-wrap mb-[16px]">
-                                      <div className="text-left relative max-w-full min-h-[1px] opacity-1">
-                                        <label
-                                          htmlFor="address"
-                                          className="form-item-required mr-[8px] inline-flex items-center"
-                                          style={{ height: 40 }}
-                                        >
-                                          <div
-                                            style={{
-                                              color: "rgb(27, 29, 41)",
-                                            }}
-                                            className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
-                                          >
-                                            Địa chỉ cụ thể
-                                          </div>
-                                        </label>
-                                      </div>
-                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
-                                        <div className="flex items-center">
-                                          <div
-                                            className="max-w-full"
-                                            style={{ flex: "1 1 auto" }}
-                                          >
-                                            <div className="opacity-1">
-                                              <div
-                                                className="form-input"
-                                                height={40}
-                                              >
-                                                <input
-                                                  id="address"
-                                                  type="text"
-                                                  placeholder="Số nhà, ngõ, tên đường..."
-                                                  maxLength={255}
-                                                  className="outline-none"
-                                                />
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="flex flex-wrap justify-end opacity-1">
-                                  <div className="flex flex-wrap flex-col opacity-1 mb-[16px]">
-                                    <div className="flex flex-col justify-center relative max-w-full min-h-[1px] opacity-1">
-                                      <div
-                                        className="max-w-full"
-                                        style={{
-                                          flex: "1 1 auto",
-                                        }}
-                                      >
-                                        <label className="inline-flex items-center cursor-pointer m-0 p-0 opacity-1">
-                                          <div className="inline-block relative w-[16px] h-[16px]">
-                                            <input
-                                              type="checkbox"
-                                              className="absolute z-1 w-[16px] h-[16px] cursor-pointer opacity-0 m-auto"
-                                            />
-                                            <div
-                                              className="absolute w-[16px] h-[16px] m-auto bg-white rounded-[2px]"
-                                              style={{
-                                                border:
-                                                  "1px solid rgb(228, 229, 240)",
-                                              }}
-                                            >
-                                              <svg
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                size={12}
-                                                className="absolute"
-                                                style={{
-                                                  top: "50%",
-                                                  left: "50%",
-                                                  transform:
-                                                    "translate(-50%, -50%)",
-                                                }}
-                                                color="transparent"
-                                                height={12}
-                                                width={12}
-                                                xmlns="http://www.w3.org/2000/svg"
-                                              >
-                                                <path
-                                                  d="M5 12.4545L9.375 17L19 7"
-                                                  stroke="#82869E"
-                                                  strokeWidth="1.5"
-                                                  strokeLinecap="round"
-                                                  strokeLinejoin="round"
-                                                />
-                                              </svg>
-                                            </div>
-                                          </div>
                                           <div
                                             type="body"
-                                            className="checkbox-label css-6r3s23"
-                                            style={{ flex: "1 1 0%" }}
+                                            color="textTitle"
+                                            className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            style={{
+                                              color: "rgb(27, 29, 41)",
+                                            }}
                                           >
-                                            Đặt làm mặc định
+                                            Họ tên
                                           </div>
                                         </label>
                                       </div>
+                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                        <div className="flex items-center">
+                                          <div
+                                            className="max-w-full"
+                                            style={{ flex: "1 1 auto" }}
+                                          >
+                                            <div className="opacity-1">
+                                              <div
+                                                className="form-input"
+                                                height={40}
+                                              >
+                                                <input
+                                                  id="name"
+                                                  type="text"
+                                                  placeholder="Vui lòng nhập tên người nhận"
+                                                  maxLength={255}
+                                                  className="outline-none"
+                                                  onChange={handleInputChange}
+                                                  value={inputs.name}
+                                                />
+                                              </div>
+                                              {validationErrors &&
+                                                validationErrors.name && (
+                                                  <div className="form-input-error">
+                                                    {validationErrors.name.msg}
+                                                  </div>
+                                                )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="telephone"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                            >
+                                              Số điện thoại
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div
+                                                  className="form-input"
+                                                  height={40}
+                                                >
+                                                  <input
+                                                    id="telephone"
+                                                    type="text"
+                                                    placeholder="Nhập số điện thoại"
+                                                    maxLength={255}
+                                                    className="outline-none"
+                                                    onChange={handleInputChange}
+                                                    value={inputs.phone}
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
+                                  <div className="hr-checkout">
+                                    <div
+                                      width="100%"
+                                      color="divider"
+                                      className="css-yae08c"
+                                    />
+                                  </div>
+                                  <div type="title" className="title-checkout">
+                                    Địa chỉ nhận hàng
+                                  </div>
+                                  <div className="justify-between flex flex-wrap opacity-1">
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="provinceCode"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                            >
+                                              Tỉnh/Thành phố
+                                            </div>
+                                          </label>
+                                        </div>
+
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div className="relative">
+                                                  <select
+                                                    className="bg-white form-input text-[14px] w-full h-[2.5rem] pl-2 overflow-hidden cursor-pointer select-none outline-none rounded-[0.25rem] flex items-center"
+                                                    style={{
+                                                      border:
+                                                        "1px solid rgb(228, 229, 240)",
+                                                    }}
+                                                    name="city"
+                                                    onChange={
+                                                      handleSelectProvince
+                                                    }
+                                                    value={selectedProvince}
+                                                  >
+                                                    <option value="">
+                                                      Vui lòng chọn Tỉnh / TP
+                                                    </option>
+                                                    {provinces?.map(
+                                                      (province) => (
+                                                        <option
+                                                          key={province.id}
+                                                          value={province.id}
+                                                        >
+                                                          {province.name}
+                                                        </option>
+                                                      )
+                                                    )}
+                                                  </select>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="districtCode"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            >
+                                              Quận/Huyện
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div className="relative">
+                                                  <select
+                                                    className="bg-white form-input text-[14px] w-full h-[2.5rem] pl-2 overflow-hidden cursor-pointer select-none outline-none rounded-[0.25rem] flex items-center"
+                                                    style={{
+                                                      border:
+                                                        "1px solid rgb(228, 229, 240)",
+                                                    }}
+                                                    name="district"
+                                                    value={selectedDistrict}
+                                                    onChange={
+                                                      handleSelectDistrict
+                                                    }
+                                                    disabled={!selectedProvince}
+                                                    placeholder={`Vui Lòng Chọn Quận / Huyện ${selectedDistrict}`}
+                                                  >
+                                                    <option value="">
+                                                      Vui lòng chọn Quận / Huyện
+                                                    </option>
+                                                    {filteredDistricts?.map(
+                                                      (district) => (
+                                                        <option
+                                                          key={district.id}
+                                                          value={district.id}
+                                                        >
+                                                          {district.name}
+                                                        </option>
+                                                      )
+                                                    )}
+                                                  </select>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="justify-between flex flex-wrap opacity-1">
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="wardCode"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            >
+                                              Phường/Xã
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div className="relative">
+                                                  <select
+                                                    className="bg-white form-input w-full text-[14px] h-[2.5rem] pl-2 overflow-hidden cursor-pointer select-none outline-none rounded-[0.25rem] flex items-center"
+                                                    style={{
+                                                      border:
+                                                        "1px solid rgb(228, 229, 240)",
+                                                    }}
+                                                    name="commune"
+                                                    value={selectedCommune}
+                                                    onChange={
+                                                      handleSelectCommune
+                                                    }
+                                                    disabled={!selectedDistrict}
+                                                    placeholder="Vui Lòng Chọn Phường / Xã"
+                                                  >
+                                                    <option value="">
+                                                      Vui lòng chọn Phường / Xã
+                                                    </option>
+                                                    {filteredWards?.map(
+                                                      (ward) => (
+                                                        <option
+                                                          key={ward.id}
+                                                          value={ward.id}
+                                                        >
+                                                          {ward.name}
+                                                        </option>
+                                                      )
+                                                    )}
+                                                  </select>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="address"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            >
+                                              Địa chỉ cụ thể
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div
+                                                  className="form-input"
+                                                  height={40}
+                                                >
+                                                  <input
+                                                    name="address"
+                                                    onChange={handleInputChange}
+                                                    value={inputs.address}
+                                                    type="text"
+                                                    placeholder="Số nhà, ngõ, tên đường..."
+                                                    maxLength={255}
+                                                    className="outline-none"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-wrap justify-end opacity-1">
+                                    <div className="flex flex-wrap flex-col opacity-1 mb-[16px]">
+                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px] opacity-1">
+                                        <div
+                                          className="max-w-full"
+                                          style={{
+                                            flex: "1 1 auto",
+                                          }}
+                                        >
+                                          <label className="inline-flex items-center cursor-pointer m-0 p-0 opacity-1">
+                                            <div className="inline-block relative w-[16px] h-[16px]">
+                                              <input
+                                                type="checkbox"
+                                                className="absolute z-1 w-[16px] h-[16px] cursor-pointer opacity-0 m-auto"
+                                              />
+                                              <div
+                                                className="absolute w-[16px] h-[16px] m-auto bg-white rounded-[2px]"
+                                                style={{
+                                                  border:
+                                                    "1px solid rgb(228, 229, 240)",
+                                                }}
+                                              >
+                                                <svg
+                                                  fill="none"
+                                                  viewBox="0 0 24 24"
+                                                  size={12}
+                                                  className="absolute"
+                                                  style={{
+                                                    top: "50%",
+                                                    left: "50%",
+                                                    transform:
+                                                      "translate(-50%, -50%)",
+                                                  }}
+                                                  color="transparent"
+                                                  height={12}
+                                                  width={12}
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                  <path
+                                                    d="M5 12.4545L9.375 17L19 7"
+                                                    stroke="#82869E"
+                                                    strokeWidth="1.5"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                  />
+                                                </svg>
+                                              </div>
+                                            </div>
+                                            <div
+                                              type="body"
+                                              className="checkbox-label css-6r3s23"
+                                              style={{ flex: "1 1 0%" }}
+                                            >
+                                              Đặt làm mặc định
+                                            </div>
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex items-center px-4 py-2 justify-end space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                  <button
+                                    type="submit"
+                                    className=" text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                  >
+                                    Add
+                                  </button>
+                                  <button
+                                    onClick={() => setIsAddressPageOpen(false)}
+                                    type="button"
+                                    className=" text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                  >
+                                    Close
+                                  </button>
                                 </div>
                               </form>
                             </Modal>
@@ -1122,7 +1061,7 @@ export default function CheckoutPage() {
                     </button>
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
