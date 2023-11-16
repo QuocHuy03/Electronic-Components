@@ -142,7 +142,7 @@ export default function RegisterPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="lname"
                         >
-                          Tên đăng nhập *
+                          Tên tài khoản *
                         </label>
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                           <input

@@ -204,7 +204,7 @@ export default function ProfilePage() {
               <div className="w-1/2 h-full">
                 <div className="input-com w-full h-full">
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Full Name*
+                    Họ và tên *
                   </label>
                   <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md">
                     <input
@@ -221,7 +221,7 @@ export default function ProfilePage() {
               <div className="w-1/2 h-full">
                 <div className="input-com w-full h-full">
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    User Name*
+                    Tên tài khoản *
                   </label>
                   <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <input
@@ -240,7 +240,7 @@ export default function ProfilePage() {
               <div className="w-1/2 h-full">
                 <div className="input-com w-full h-full">
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Email*
+                    Email *
                   </label>
                   <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <input
@@ -257,7 +257,7 @@ export default function ProfilePage() {
               <div className="w-1/2 h-full">
                 <div className="input-com w-full h-full">
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Phone Number*
+                    Số điện thoại *
                   </label>
                   <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <input
@@ -277,7 +277,7 @@ export default function ProfilePage() {
               <div className="w-full">
                 <div className="input-com w-full h-full">
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Address*
+                    Địa chỉ *
                   </label>
                   <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <input
@@ -296,7 +296,7 @@ export default function ProfilePage() {
               <div className="w-full">
                 <div className="input-com w-full h-full">
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Tỉnh / TP*
+                    Tỉnh / TP *
                   </label>
                   <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <select
@@ -321,7 +321,7 @@ export default function ProfilePage() {
               <div className="w-1/2 h-full">
                 <div className="input-com w-full h-full">
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Quận / Huyện*
+                    Quận / Huyện *
                   </label>
                   <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <select
@@ -345,7 +345,7 @@ export default function ProfilePage() {
               <div className="w-1/2 h-full">
                 <div className="input-com w-full h-full">
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Phường / Xã*
+                    Phường / Xã *
                   </label>
                   <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md">
                     <select
@@ -370,25 +370,6 @@ export default function ProfilePage() {
           </div>
           <div className="flex-1">
             <div className="update-logo w-full mb-9">
-              <h1 className="text-xl tracking-wide font-bold text-black flex items-center mb-2 ml-4 ">
-                Update Profile
-                <span className="ml-4">
-                  <svg
-                    width={20}
-                    height={20}
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10 0C4.47457 0 0 4.47791 0 10C0 15.5221 4.47791 20 10 20C15.5221 20 20 15.5221 20 10C19.9967 4.48126 15.5221 0.00669344 10 0ZM10 16.67C9.53815 16.67 9.16667 16.2985 9.16667 15.8367C9.16667 15.3748 9.53815 15.0033 10 15.0033C10.4618 15.0033 10.8333 15.3748 10.8333 15.8367C10.8333 16.2952 10.4618 16.67 10 16.67ZM11.6098 10.425C11.1078 10.7396 10.8132 11.2952 10.8333 11.8842V12.5033C10.8333 12.9652 10.4618 13.3367 10 13.3367C9.53815 13.3367 9.16667 12.9652 9.16667 12.5033V11.8842C9.14324 10.6861 9.76907 9.56827 10.8032 8.96586C11.4357 8.61781 11.7704 7.90161 11.6366 7.19545C11.5027 6.52276 10.9772 5.99732 10.3046 5.8668C9.40094 5.69946 8.5308 6.29853 8.36346 7.20214C8.34673 7.30254 8.33668 7.40295 8.33668 7.50335C8.33668 7.96519 7.9652 8.33668 7.50335 8.33668C7.0415 8.33668 6.67002 7.96519 6.67002 7.50335C6.67002 5.66265 8.16265 4.17001 10.0067 4.17001C11.8474 4.17001 13.34 5.66265 13.34 7.50669C13.3333 8.71821 12.674 9.83601 11.6098 10.425Z"
-                      fill="#374557"
-                      fillOpacity="0.6"
-                    />
-                  </svg>
-                </span>
-              </h1>
-              
               <div className="flex xl:justify-center justify-start">
                 <div className="relative">
                   <div className="sm:w-[188px] sm:h-[188px] w-[189px] h-[189px] rounded-full overflow-hidden relative" >
@@ -412,7 +393,7 @@ export default function ProfilePage() {
               color: "white"
             }}
           >
-            Update Profile
+            Cập nhật thông tin
           </button>
         </div>
       </form>
@@ -514,12 +495,12 @@ export default function ProfilePage() {
           <tbody>
             <tr className="text-base text-gray-400 whitespace-nowrap px-2 border-b default-border-bottom ">
               <td className="py-4 block whitespace-nowrap text-center">
-                Order
+                Đơn hàng
               </td>
-              <td className="py-4 whitespace-nowrap text-center">Date</td>
-              <td className="py-4 whitespace-nowrap text-center">Status</td>
-              <td className="py-4 whitespace-nowrap text-center">Amount</td>
-              <td className="py-4 whitespace-nowrap text-center">Action</td>
+              <td className="py-4 whitespace-nowrap text-center">Ngày đặt</td>
+              <td className="py-4 whitespace-nowrap text-center">Trạng thái</td>
+              <td className="py-4 whitespace-nowrap text-center">Tổng tiền</td>
+              <td className="py-4 whitespace-nowrap text-center">Hoạt động</td>
             </tr>
           </tbody>
           {isOrders.length > 0 ? (
@@ -562,7 +543,7 @@ export default function ProfilePage() {
               <div className="w-full bg-white px-10 py-9 border">
                 <div className="title-area w-full flex justify-between items-center">
                   <h1 className="text-[22px] font-bold text-black">
-                    Your Dashboard
+                    Tổng quan của bạn
                   </h1>
                 </div>
                 <div className="profile-wrapper w-full mt-8 flex space-x-10">
@@ -599,7 +580,7 @@ export default function ProfilePage() {
                           <span
                             className={`font-normal text-base whitespace-nowrap`}
                           >
-                            Dashboard
+                            Bảng điều khiển
                           </span>
                         </div>
                       </div>
@@ -626,7 +607,7 @@ export default function ProfilePage() {
                             </svg>
                           </span>
                           <span className=" font-normal text-base">
-                            Parsonal Info
+                            Thông tin tài khoản
                           </span>
                         </div>
                       </div>
@@ -653,7 +634,7 @@ export default function ProfilePage() {
                               <path d="M8.8449 6.1337C7.15883 6.12476 5.787 4.74744 5.78906 3.06549C5.79113 1.37254 7.18564 -0.00685072 8.88753 2.55979e-05C10.5702 0.00690192 11.9413 1.38835 11.9392 3.07374C11.9372 4.77563 10.555 6.14264 8.8449 6.1337ZM9.94924 1.61802C9.38194 2.22039 8.85178 2.78287 8.31199 3.35636C8.11326 3.12806 7.94342 2.93278 7.76394 2.72786C7.48201 2.96853 7.22553 3.1872 6.95735 3.41618C7.28191 3.80125 7.57484 4.16708 7.8884 4.51502C8.10157 4.75225 8.43232 4.77082 8.65236 4.54458C9.33656 3.83907 10.0042 3.11775 10.6382 2.44593C10.4031 2.16332 10.1858 1.9027 9.94924 1.61802Z" />
                             </svg>
                           </span>
-                          <span className=" font-normal text-base">Order</span>
+                          <span className=" font-normal text-base">Quản lí đơn hàng</span>
                         </div>
                       </div>
 
@@ -679,7 +660,7 @@ export default function ProfilePage() {
                             </svg>
                           </span>
                           <span className=" font-normal text-base">
-                            Change Password
+                            Đổi mật khẩu
                           </span>
                         </div>
                       </div>
@@ -706,7 +687,7 @@ export default function ProfilePage() {
                               <path d="M13.4942 6.75005C13.4942 6.02423 13.5009 5.33425 13.492 4.64651C13.4875 4.27463 13.5927 3.96997 13.9532 3.81539C14.3136 3.66082 14.6046 3.79523 14.8688 4.06181C15.8002 5.0027 16.7405 5.93462 17.674 6.87326C18.1061 7.30786 18.1129 7.69094 17.6897 8.11882C16.7494 9.06642 15.8024 10.0073 14.8599 10.9549C14.6091 11.2058 14.327 11.3402 13.9755 11.1946C13.6129 11.0445 13.492 10.7533 13.4964 10.3769C13.5032 9.68695 13.4987 8.99473 13.4987 8.24875C13.3576 8.24875 13.2345 8.24875 13.1114 8.24875C12.2808 8.24875 11.4479 8.25099 10.6173 8.24651C10.0711 8.24427 9.75315 7.962 9.75987 7.4938C9.76435 7.03456 10.0912 6.75453 10.6352 6.75229C11.5666 6.75005 12.5024 6.75005 13.4942 6.75005Z" />
                             </svg>
                           </span>
-                          <span className=" font-normal text-base">Logout</span>
+                          <span className=" font-normal text-base">Đăng xuất</span>
                         </div>
                       </div>
                     </div>
@@ -718,10 +699,10 @@ export default function ProfilePage() {
                           <div className="welcome-msg w-full">
                             <div>
                               <p className="text-qblack text-lg">
-                                Hello, {user?.fullname}
+                                Xin chào, {user?.fullname}
                               </p>
                               <h1 className="font-bold text-[24px] text-qblack">
-                                Welcome to your Profile
+                                Chào mừng đến với hồ sơ của bạn
                               </h1>
                             </div>
                           </div>
@@ -754,7 +735,7 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                Orders Processing
+                                Đơn hàng chờ xác nhận
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
                                 {
@@ -786,7 +767,7 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                Orders Shipped
+                                Đơn hàng đang giao
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
                                 {
@@ -828,7 +809,7 @@ export default function ProfilePage() {
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                Orders Delivered
+                                Đơn hàng đã giao 
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
                                 {
@@ -857,10 +838,10 @@ export default function ProfilePage() {
                               <div className="w-[397px] mb-10">
                                 <div className="input-field mb-6">
                                   <label
-                                    className="input-label text-gray-500 text-sm block mb-2.5"
+                                    className="input-label text-gray-800 text-sm block mb-2.5"
                                     htmlfor="old_password"
                                   >
-                                    Old Password*
+                                    Mật khẩu cũ *
                                   </label>
                                   <div className="input-wrapper border border-[#E8E8E8] w-full h-[43px] overflow-hidden relative rounded-lg ">
                                     <input
@@ -947,7 +928,7 @@ export default function ProfilePage() {
                                       >
                                         <div className="w-full text-sm font-semibold"
                                         >
-                                          Update Password
+                                          Đổi mật khẩu
                                         </div>
                                       </button>
                                     </div>
@@ -956,7 +937,7 @@ export default function ProfilePage() {
                                       type="button"
                                     >
                                       <div className="w-full text-sm font-semibold text-black mb-5 sm:mb-0">
-                                        Cancel
+                                        Quay lại
                                       </div>
                                     </button>
                                   </div>

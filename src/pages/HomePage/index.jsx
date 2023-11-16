@@ -339,7 +339,7 @@ export default function HomePage() {
             </div>
             <img
               alt="LAPTOP"
-              src="https://lh3.googleusercontent.com/gVKL-i0fwAwNW07q1BlrXWrszrk3f-ktPdrMadJm2W8HX-fciH_nxiLcwz5EC9YmJLDLENX_H_BQIgFoabdpO4goEyMZVKJy=w1232"
+              src="https://i.imgur.com/Osaxw8n.png"
               width="100%"
               height="100%"
               className="absolute top-0 rounded"

@@ -29,6 +29,7 @@ import {
   getFilterCoupon,
   uncheckedCoupon,
 } from "../../stores/coupon/actions";
+import { COLOR } from "../../constants/style.constants";
 
 export default function CartPage() {
   const dispatch = useDispatch();
@@ -43,46 +44,6 @@ export default function CartPage() {
 
   const handleUpdateCart = useCallback(
     async (item, operation) => {
-      //   const dataToSend = {
-      //     current: 0,
-      //     previous: 0,
-      //     initialQuantity: 0,
-      //   };
-
-      //     isOrder.products.map((orderProduct) => {
-      //       if (orderProduct.productID === productID) { // nếu trùng thì nó mới update quantity ban đầu còn thêm mới sản phẩm thì nó luôn luôn = 0
-      //         const orderProductQuantity = parseInt(orderProduct.quantity) || 0;
-      //         dataToSend.initialQuantity += orderProductQuantity;
-      //       }
-      //     });
-
-      //   if (selectedProduct) {
-      //     const price = parseFloat(selectedProduct.price_has_dropped) || 0;
-      //     const quantity = parseInt(product.quantity) || 0;
-      //     if (dataToSend.initialQuantity !== quantity) {
-      //       // Kiểm tra xem `initialQuantity` và `quantity` có khác nhau không
-      //       // Nếu có sự khác biệt, tức là `quantity` không bằng `initialQuantity`
-
-      //       if (quantity > dataToSend.initialQuantity) {
-      //         // Nếu `quantity` lớn hơn `initialQuantity`
-      //         // (Nghĩa là số lượng đặt hàng lớn hơn số lượng ban đầu)
-
-      //         dataToSend.current += quantity - dataToSend.initialQuantity;
-      //         // Ta cập nhật `current` bằng cách thêm vào nó sự khác biệt giữa `quantity` và `initialQuantity`.
-      //         // Điều này thể hiện sự tăng lên so với số lượng ban đầu.
-      //       } else {
-      //         // Nếu `quantity` nhỏ hơn `initialQuantity`
-      //         // (Nghĩa là số lượng đặt hàng nhỏ hơn số lượng ban đầu)
-
-      //         dataToSend.previous += dataToSend.initialQuantity - quantity;
-      //         // Ta cập nhật `previous` bằng cách thêm vào nó sự khác biệt giữa `initialQuantity` và `quantity`.
-      //         // Điều này thể hiện sự giảm xuống so với số lượng ban đầu.
-      //       }
-      //     }
-      //     product.quantity = dataToSend.initialQuantity;
-      //     product.updateQuantity = dataToSend;
-      //   }
-      // });
       const updatedItem = { ...item };
       const quantityCart = parseInt(updatedItem.quantity, 10);
       if (operation === "increment") {
@@ -205,20 +166,20 @@ export default function CartPage() {
       <div className="w-full pt-0 pb-0">
         <div className="cart-page-wrapper w-full bg-white pb-[60px]">
           <div className="w-full">
-            <div className="page-title-wrapper bg-[#FFFAEF] w-full h-[173px] py-10">
+            <div className="page-title-wrapper bg-[#D3EFFF] w-full h-[173px] py-10">
               <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>
                     <div className="breadcrumb-wrapper font-400 text-[13px] text-qblack mb-[23px]">
                       <span>
                         <a href="/">
-                          <span className="mx-1 capitalize">home</span>
+                          <span className="mx-1 capitalize">Trang chủ</span>
                         </a>
                         <span className="sperator">/</span>
                       </span>
                       <span>
                         <a href="/cart">
-                          <span className="mx-1 capitalize">cart</span>
+                          <span className="mx-1 capitalize">Giỏ hàng</span>
                         </a>
                       </span>
                     </div>
@@ -226,7 +187,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-center">
                   <h1 className="text-3xl font-semibold text-qblack">
-                    Your Cart
+                    Giỏ hàng
                   </h1>
                 </div>
               </div>
@@ -265,20 +226,20 @@ export default function CartPage() {
                           <tbody>
                             <tr className="text-[13px] font-medium text-black bg-[#F6F6F6] whitespace-nowrap px-2 border-b default-border-bottom uppercase">
                               <td className="py-4 pl-10 block whitespace-nowrap min-w-[300px]">
-                                product
+                                sản phẩm
                               </td>
                               <td className="py-4 whitespace-nowrap text-center">
-                                color
+                                màu sắc
                               </td>
 
                               <td className="py-4 whitespace-nowrap text-center">
-                                price
+                                đơn giá
                               </td>
                               <td className="py-4 whitespace-nowrap text-center">
-                                quantity
+                                số lượng
                               </td>
                               <td className="py-4 whitespace-nowrap text-center">
-                                total
+                                thành tiền
                               </td>
                               <td className="py-4 whitespace-nowrap text-right w-[114px]" />
                             </tr>
@@ -391,15 +352,16 @@ export default function CartPage() {
                   </div>
                   <div className="w-full sm:flex justify-between">
                     <div
-                      className="discount-code sm:w-[270px] w-full mb-5 sm:mb-0 h-[50px] flex"
+                      className="discount-code sm:w-[145px] w-full mb-5 sm:mb-0 h-[50px] flex"
                       ref={modalDiscountRef}
                       onClick={openDiscountPageModal}
                     >
                       <button
                         type="button"
-                        className="w-[90px] h-[50px] bg-black text-white"
+                        className="w-[140px] h-[50px]  text-white rounded-md"
+                        style={{background: COLOR.BLUE}}
                       >
-                        <span className="text-sm font-semibold">Apply</span>
+                        <span className="text-sm font-semibold">Áp dụng khuyến mãi</span>
                       </button>
                     </div>
                     <Modal
@@ -542,19 +504,19 @@ export default function CartPage() {
                       </form>
                     </Modal>
                     <Link to={URL_CONSTANTS.HOME} className="space-x-2.5">
-                      <div className="w-[150px] h-[50px] bg-[#F6F6F6] flex justify-center items-center">
+                      <div className="w-[150px] h-[50px] bg-[#F6F6F6] flex justify-center items-center rounded-md">
                         <span className="text-sm font-semibold">
-                          Continue Shopping
+                          Tiếp tục mua sắm
                         </span>
                       </div>
                     </Link>
                   </div>
                   <div className="w-full mt-[30px] flex sm:justify-end">
-                    <div className="sm:w-[370px] w-full border border-[#EDEDED] px-[30px] py-[26px]">
+                    <div className="sm:w-[370px] w-full border border-[#EDEDED] px-[30px] py-[26px] rounded-md">
                       <div className="total mb-6">
                         <div className=" flex justify-between">
                           <p className="text-[18px] font-medium text-black">
-                            Total
+                            Thành tiền
                           </p>
                           <p className="text-[18px] font-medium text-red-500">
                             {formatPrice(totalAmountAll - totalDiscount)}
@@ -563,10 +525,11 @@ export default function CartPage() {
                       </div>
                       <Link
                         to={`/checkout/${uuidv4()}`}
-                        className="w-full h-[50px] bg-black text-white flex justify-center items-center"
+                        className="w-full h-[50px] bg-black text-white flex justify-center items-center rounded-md"
+                        style={{background: COLOR.BLUE}}
                       >
                         <span className="text-sm font-semibold">
-                          Proceed to Checkout
+                          Tiếp tục thanh toán
                         </span>
                       </Link>
                     </div>
