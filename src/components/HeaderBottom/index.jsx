@@ -1,13 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-// import Loading from "../Loading";
+import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
-import { useSelector } from "react-redux";
 import { categoryService } from "../../services/category.service";
-import HomePage from "./../../pages/HomePage/index";
+import {COLOR} from "../../constants/style.constants"
+
 export default function HeaderBottom() {
-  // const location = useLocation();
   const dropdownRef = useRef();
   const [dropdownStates, setDropdownStates] = useState({
     categories: false,
@@ -41,57 +39,10 @@ export default function HeaderBottom() {
     }
   );
 
-  // const [activeCategoryID, setActiveCategoryID] = useState(null);
-  // const { carts } = useContext(AppContext);
-  // useEffect(() => {
-  //   if (location.pathname === "/") {
-  //     setIsDropdown(true);
-  //   } else {
-  //     setIsDropdown(false);
-  //   }
-  // }, [location.pathname]);
-
-  // const { data: isCategories, isLoading: loadingCategories } = useQuery(
-  //   ["categories"],
-  //   () => categoryService.fetchAllCategories(),
-  //   {
-  //     retry: 3,
-  //     retryDelay: 1000,
-  //   }
-  // );
-  // const { data: isBrands, isLoading: loadingBrands } = useQuery(
-  //   ["brands"],
-  //   () => brandService.fetchAllBrands(),
-  //   {
-  //     retry: 3,
-  //     retryDelay: 1000,
-  //   }
-  // );
-
-  // const handleCategoryHover = (categoryID) => {
-  //   setActiveCategoryID(categoryID);
-  // };
-  // const getBrandsForCategoryID = (categoryID) => {
-  //   if (!isCategories || !isBrands) {
-  //     return []; //
-  //   }
-
-  //   const selectedCategory = isCategories.find(
-  //     (category) => category._id === categoryID
-  //   );
-
-  //   if (!selectedCategory) {
-  //     return []; // Trả về một mảng rỗng nếu không tìm thấy danh mục
-  //   }
-  //   // Lấy tất cả các thương hiệu có categoryID trùng khớp với danh mục được chọn
-  //   const categoryBrands = isBrands.filter(
-  //     (brand) => brand.categoryID._id === selectedCategory._id
-  //   );
-  //   return categoryBrands;
-  // };
-
   return (
-    <div className="nav-widget-wrapper w-full  h-[60px] relative z-30 bg-yellow-400 quomodo-shop-nav-bar lg:block hidden">
+    <div className={`nav-widget-wrapper w-full  h-[60px] relative z-30 quomodo-shop-nav-bar lg:block hidden`} style={{
+      background: COLOR.BLUE
+    }}>
       <div className="max-w-6xl mx-auto h-full">
         <div className="w-full h-full relative">
           <div className="w-full h-full flex justify-between items-center">
@@ -192,19 +143,19 @@ export default function HeaderBottom() {
                 <ul className="nav-wrapper flex xl:space-x-10 space-x-5">
                   <li className="relative ">
                     <Link to={URL_CONSTANTS.HOME}>
-                      <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
+                      <span className="flex items-center text-sm font-600 cursor-pointer text-white">
                         <span>Home</span>
                       </span>
                     </Link>
                   </li>
                   <li>
-                    <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
+                    <span className="flex items-center text-sm font-600 cursor-pointer text-white">
                       <span>About</span>
                     </span>
                   </li>
                   <li>
                     <Link to={URL_CONSTANTS.BLOG}>
-                      <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
+                      <span className="flex items-center text-sm font-600 cursor-pointer text-white">
                         <span>Blog</span>
                       </span>
 
@@ -212,7 +163,7 @@ export default function HeaderBottom() {
                   </li>
                   <li>
                     <Link to={URL_CONSTANTS.CONTACT}>
-                      <span className="flex items-center text-sm font-600 cursor-pointer text-qblacktext">
+                      <span className="flex items-center text-sm font-600 cursor-pointer text-white">
                         <span>Contact</span>
                       </span>
                     </Link>

@@ -1,3 +1,3 @@
 export const COLOR = {
-  BLUE: "#0d6efd",
+  BLUE: "#3c90ff",
 };
