@@ -206,10 +206,10 @@ export default function ProfilePage() {
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
                     Full Name*
                   </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md">
                     <input
                       placeholder="Nguyen Van A"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px] "
                       type="text"
                       name="fullname"
                       onChange={handleChangeInput}
@@ -223,10 +223,10 @@ export default function ProfilePage() {
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
                     User Name*
                   </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <input
                       placeholder="Username"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                       type="text"
                       name="username"
                       onChange={handleChangeInput}
@@ -242,9 +242,9 @@ export default function ProfilePage() {
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
                     Email*
                   </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <input
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                       type="email"
                       name="email"
                       disabled
@@ -259,10 +259,10 @@ export default function ProfilePage() {
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
                     Phone Number*
                   </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <input
                       placeholder="012 3 *******"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                       type="number"
                       min={9}
                       name="phone"
@@ -279,10 +279,10 @@ export default function ProfilePage() {
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
                     Address*
                   </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <input
                       placeholder="Address"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                       type="text"
                       name="address"
                       onChange={handleChangeInput}
@@ -298,9 +298,9 @@ export default function ProfilePage() {
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
                     Tỉnh / TP*
                   </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <select
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                       name="city"
                       onChange={handleSelectProvince}
                       value={selectedProvince}
@@ -323,9 +323,9 @@ export default function ProfilePage() {
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
                     Quận / Huyện*
                   </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                     <select
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                       name="district"
                       value={selectedDistrict}
                       onChange={handleSelectDistrict}
@@ -347,9 +347,9 @@ export default function ProfilePage() {
                   <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
                     Phường / Xã*
                   </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md">
                     <select
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                       name="commune"
                       value={selectedCommune}
                       onChange={handleSelectCommune}
@@ -370,9 +370,9 @@ export default function ProfilePage() {
           </div>
           <div className="flex-1">
             <div className="update-logo w-full mb-9">
-              <h1 className="text-xl tracking-wide font-bold text-black flex items-center mb-2">
+              <h1 className="text-xl tracking-wide font-bold text-black flex items-center mb-2 ml-4 ">
                 Update Profile
-                <span className="ml-1">
+                <span className="ml-4">
                   <svg
                     width={20}
                     height={20}
@@ -388,20 +388,10 @@ export default function ProfilePage() {
                   </svg>
                 </span>
               </h1>
-              {/* <p className="text-sm text-qgraytwo mb-5 ">
-                                  Profile of at least Size
-                                  <span className="ml-1 text-qblack">
-                                    300x300
-                                  </span>
-                                  . Gifs work too.
-                                  <span className="ml-1 text-qblack">
-                                    Max 5mb
-                                  </span>
-                                  .
-                                </p> */}
+              
               <div className="flex xl:justify-center justify-start">
                 <div className="relative">
-                  <div className="sm:w-[198px] sm:h-[198px] w-[199px] h-[199px] rounded-full overflow-hidden relative">
+                  <div className="sm:w-[188px] sm:h-[188px] w-[189px] h-[189px] rounded-full overflow-hidden relative" >
                     <img
                       src={`https://ui-avatars.com/api/name=${user?.fullname}`}
                       alt
@@ -416,7 +406,11 @@ export default function ProfilePage() {
         <div className="action-area flex space-x-4 items-center">
           <button
             type="submit"
-            className="w-[164px] h-[50px] bg-black text-white text-sm"
+            className="w-[164px] h-[50px] bg-black text-white text-sm rounded-lg"
+            style={{
+              background: COLOR.BLUE,
+              color: "white"
+            }}
           >
             Update Profile
           </button>
@@ -732,7 +726,9 @@ export default function ProfilePage() {
                             </div>
                           </div>
                           <div className="quick-view-grid w-full flex justify-between items-center mt-3 ">
-                            <div className="qv-item w-[252px] h-[208px] bg-black group hover:bg-yellow-400 transition-all duration-300 ease-in-out p-6">
+                            <div className={`qv-item w-[252px] h-[208px] group  transition-all duration-300 ease-in-out p-6 rounded-lg`} style={{
+                              background: COLOR.BLUE
+                            }}>
                               <div className="w-[62px] h-[62px] rounded bg-white flex justify-center items-center">
                                 <span>
                                   <svg
@@ -744,15 +740,15 @@ export default function ProfilePage() {
                                   >
                                     <path
                                       d="M32.4473 8.03086C32.482 8.37876 32.5 8.73144 32.5 9.08829C32.5 14.919 27.7564 19.6625 21.9258 19.6625C16.0951 19.6625 11.3516 14.919 11.3516 9.08829C11.3516 8.73144 11.3695 8.37876 11.4042 8.03086H8.98055L8.05537 0.628906H0.777344V2.74375H6.18839L8.56759 21.7774H34.1868L35.8039 8.03086H32.4473Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       d="M9.09669 26.0074H6.06485C4.31566 26.0074 2.89258 27.4305 2.89258 29.1797C2.89258 30.9289 4.31566 32.352 6.06485 32.352H6.24672C6.12935 32.6829 6.06485 33.0386 6.06485 33.4094C6.06485 35.1586 7.48793 36.5816 9.23711 36.5816C11.4247 36.5816 12.9571 34.4091 12.2274 32.352H22.1081C21.377 34.413 22.9157 36.5816 25.0985 36.5816C26.8476 36.5816 28.2707 35.1586 28.2707 33.4094C28.2707 33.0386 28.2061 32.6829 28.0888 32.352H30.3856V30.2371H6.06485C5.48178 30.2371 5.00742 29.7628 5.00742 29.1797C5.00742 28.5966 5.48178 28.1223 6.06485 28.1223H33.4407L33.9384 23.8926H8.83233L9.09669 26.0074Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       d="M21.9262 17.5477C26.5907 17.5477 30.3856 13.7528 30.3856 9.08829C30.3856 4.42378 26.5907 0.628906 21.9262 0.628906C17.2616 0.628906 13.4668 4.42378 13.4668 9.08829C13.4668 13.7528 17.2617 17.5477 21.9262 17.5477ZM20.8688 5.91602H22.9836V8.6503L24.7886 10.4554L23.2932 11.9508L20.8687 9.5262V5.91602H20.8688Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                   </svg>
                                 </span>
@@ -770,7 +766,9 @@ export default function ProfilePage() {
                                 }
                               </span>
                             </div>
-                            <div className="qv-item w-[252px] h-[208px] bg-black group hover:bg-yellow-400 transition-all duration-300 ease-in-out p-6">
+                            <div className={`qv-item w-[252px] h-[208px] transition-all duration-300 ease-in-out p-6 rounded-lg`} style={{
+                              background: COLOR.BLUE
+                            }}>
                               <div className="w-[62px] h-[62px] rounded bg-white flex justify-center items-center">
                                 <span>
                                   <svg
@@ -782,7 +780,7 @@ export default function ProfilePage() {
                                   >
                                     <path
                                       d="M30.2253 12.8816H29.4827L28.6701 9.36514C28.376 8.10431 27.2552 7.22168 25.9662 7.22168H21.8474V3.84528C21.8474 2.03804 20.3764 0.581055 18.5831 0.581055H3.17237C1.46313 0.581055 0.0761719 1.96801 0.0761719 3.67717V20.0967C0.0761719 21.8058 1.46313 23.1928 3.17237 23.1928H4.29313C4.89555 25.1962 6.74485 26.6533 8.93037 26.6533C11.1159 26.6533 12.9792 25.1962 13.5816 23.1928C13.8455 23.1928 20.3459 23.1928 20.1942 23.1928C20.7966 25.1962 22.6459 26.6533 24.8315 26.6533C27.031 26.6533 28.8803 25.1962 29.4827 23.1928H30.2253C31.7663 23.1928 32.9992 21.9599 32.9992 20.4189V15.6555C32.9992 14.1145 31.7663 12.8816 30.2253 12.8816ZM8.93037 23.8513C7.78968 23.8513 6.88491 22.8969 6.88491 21.7918C6.88491 20.657 7.79558 19.7324 8.93037 19.7324C10.0652 19.7324 10.9898 20.657 10.9898 21.7918C10.9898 22.9151 10.0692 23.8513 8.93037 23.8513ZM13.9739 8.06224L9.79897 11.3125C9.20227 11.7767 8.30347 11.6903 7.82363 11.0604L6.21247 8.94486C5.7361 8.32843 5.86222 7.4458 6.47866 6.98346C7.08107 6.50717 7.96369 6.63321 8.44006 7.24965L9.19656 8.23035L12.2507 5.84867C12.8531 5.3864 13.7357 5.48448 14.2121 6.10092C14.6884 6.71727 14.5763 7.58595 13.9739 8.06224ZM24.8315 23.8513C23.6906 23.8513 22.7861 22.8969 22.7861 21.7918C22.7861 20.657 23.7107 19.7324 24.8315 19.7324C25.9662 19.7324 26.8909 20.657 26.8909 21.7918C26.8909 22.9166 25.9683 23.8513 24.8315 23.8513ZM22.618 10.0236H25.2798C25.6021 10.0236 25.8962 10.2337 26.0083 10.542L26.8629 13.0497C27.031 13.5541 26.6667 14.0724 26.1344 14.0724H22.618C22.1976 14.0724 21.8474 13.7222 21.8474 13.3019V10.7942C21.8474 10.3739 22.1976 10.0236 22.618 10.0236Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                   </svg>
                                 </span>
@@ -802,7 +800,9 @@ export default function ProfilePage() {
                                 }
                               </span>
                             </div>
-                            <div className="qv-item w-[252px] h-[208px] bg-black group hover:bg-yellow-400 transition-all duration-300 ease-in-out p-6">
+                            <div className={`qv-item w-[252px] h-[208px] transition-all duration-300 ease-in-out p-6 rounded-lg`} style={{
+                              background: COLOR.BLUE
+                            }}>
                               <div className="w-[62px] h-[62px] rounded bg-white flex justify-center items-center">
                                 <span>
                                   <svg
@@ -814,15 +814,15 @@ export default function ProfilePage() {
                                   >
                                     <path
                                       d="M9.79749 18.4331C6.71621 20.0289 5.95627 20.8019 4.64859 23.6816C3.76653 22.8387 2.90107 22.0123 2.00953 21.1599C2.5288 20.3146 3.03267 19.4942 3.53535 18.6726C3.88035 18.1071 3.46066 17.0579 2.82282 16.899C1.88623 16.6666 0.94845 16.4426 0 16.2114C0 14.4034 0 12.6274 0 10.7827C0.921182 10.561 1.85422 10.3405 2.78489 10.1117C3.46777 9.94331 3.8922 8.90476 3.52705 8.30605C3.03385 7.49868 2.5371 6.6925 2.06051 5.91596C3.35514 4.62014 4.62251 3.35396 5.92426 2.05339C6.70673 2.53355 7.52832 3.03978 8.35347 3.54246C8.88698 3.8673 9.94331 3.44524 10.0927 2.84416C10.3262 1.90638 10.5491 0.965048 10.7839 0C12.5883 0 14.3785 0 16.2197 0C16.4366 0.906955 16.6548 1.8234 16.8777 2.73865C17.0555 3.46777 18.0763 3.89694 18.7082 3.50926C19.5144 3.01489 20.3182 2.52051 21.0829 2.05102C22.3763 3.34447 23.6318 4.59998 24.943 5.9124C24.4783 6.67235 23.9756 7.49038 23.4753 8.31079C23.1114 8.90713 23.5405 9.93976 24.2258 10.1081C25.1434 10.3334 26.0646 10.5503 27 10.7756C27 12.5954 27 14.3892 27 16.2197C26.1298 16.426 25.2667 16.6287 24.4048 16.8338C23.4658 17.0579 23.0651 18.0122 23.5654 18.8267C24.029 19.5819 24.4914 20.3383 24.9727 21.122C24.1487 22.004 23.3473 22.8612 22.4901 23.7776C21.5393 21.1741 19.8297 19.4243 17.3163 18.4592C20.5565 15.5332 19.8558 11.4668 17.659 9.41099C15.2973 7.19992 11.5995 7.26157 9.31378 9.56393C7.15368 11.7406 6.71858 15.6885 9.79749 18.4331Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       d="M21.0695 30.3147C16.0415 30.3147 11.0847 30.3147 6.03891 30.3147C6.03891 29.9768 6.03416 29.6496 6.04009 29.3224C6.06262 28.0396 5.97963 26.7426 6.13612 25.4752C6.53566 22.2576 9.12611 19.9244 12.3722 19.8213C13.5886 19.7821 14.8417 19.7762 16.0249 20.0169C18.8643 20.5954 20.8916 23.0258 21.0552 25.9364C21.1359 27.3709 21.0695 28.8138 21.0695 30.3147Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       d="M13.5375 17.9235C11.2244 17.9093 9.35005 16.0112 9.38325 13.7195C9.41763 11.4124 11.3169 9.55701 13.6157 9.58428C15.8849 9.61036 17.7486 11.5013 17.7403 13.7693C17.7332 16.0752 15.8481 17.9378 13.5375 17.9235Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                   </svg>
                                 </span>
@@ -862,7 +862,7 @@ export default function ProfilePage() {
                                   >
                                     Old Password*
                                   </label>
-                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[58px] overflow-hidden relative ">
+                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[43px] overflow-hidden relative rounded-lg ">
                                     <input
                                       placeholder="● ● ● ● ● ●"
                                       className="input-field placeholder:text-base text-bese px-4 text-dark-gray w-full h-full bg-[#FAFAFA] focus:ring-0 focus:outline-none"
@@ -886,9 +886,9 @@ export default function ProfilePage() {
                                     className="input-label text-qgray text-sm block mb-2.5"
                                     htmlfor="old_password"
                                   >
-                                    Password*
+                                    Mật khẩu mới *
                                   </label>
-                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[58px] overflow-hidden relative ">
+                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[43px] overflow-hidden relative rounded-lg ">
                                     <input
                                       placeholder="● ● ● ● ● ●"
                                       className="input-field placeholder:text-base text-bese px-4 text-dark-gray w-full h-full bg-[#FAFAFA] focus:ring-0 focus:outline-none"
@@ -910,9 +910,9 @@ export default function ProfilePage() {
                                     className="input-label text-qgray text-sm block mb-2.5"
                                     htmlfor="old_password"
                                   >
-                                    Re-enter Password*
+                                    Nhập lại mật khẩu mới *
                                   </label>
-                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[58px] overflow-hidden relative ">
+                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[43px] overflow-hidden relative rounded-lg ">
                                     <input
                                       placeholder="● ● ● ● ● ●"
                                       className="input-field placeholder:text-base text-bese px-4 text-dark-gray w-full h-full bg-[#FAFAFA] focus:ring-0 focus:outline-none"
@@ -936,16 +936,17 @@ export default function ProfilePage() {
                                 </div>
                                 <div className="w-full mt-[30px] flex justify-start">
                                   <div className="sm:flex sm:space-x-[30px] items-center">
-                                    <div className="w-[180px] h-[50px]">
+                                    <div className="w-[170px] h-[43px]">
                                       <button
                                         type="submit"
-                                        className="flex w-full h-full items-center justify-center leading-0 opacity-1"
+                                        className="flex w-full h-full items-center justify-center leading-0 opacity-1 rounded-lg"
                                         style={{
                                           background: COLOR.BLUE,
                                           color: "white"
                                         }}
                                       >
-                                        <div className="w-full text-sm font-semibold">
+                                        <div className="w-full text-sm font-semibold"
+                                        >
                                           Update Password
                                         </div>
                                       </button>
@@ -997,17 +998,17 @@ export default function ProfilePage() {
                                     <path
                                       opacity="0.65"
                                       d="M205.407 171.483H70.3673C69.9547 171.483 69.6206 171.149 69.6206 170.737V151.224C69.6206 150.812 69.9547 150.478 70.3673 150.478H205.407C205.82 150.478 206.154 150.812 206.154 151.224V170.737C206.154 171.148 205.82 171.483 205.407 171.483Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       opacity="0.65"
                                       d="M204.671 205.757H69.6309C69.2183 205.757 68.8843 205.423 68.8843 205.01V185.498C68.8843 185.085 69.2183 184.751 69.6309 184.751H204.671C205.084 184.751 205.418 185.085 205.418 185.498V205.01C205.418 205.421 205.084 205.757 204.671 205.757Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       opacity="0.65"
                                       d="M178.306 246.63H91.9473C91.4385 246.63 91.0259 246.218 91.0259 245.709V220.772C91.0259 220.263 91.4385 219.851 91.9473 219.851H178.306C178.815 219.851 179.227 220.263 179.227 220.772V245.709C179.227 246.218 178.815 246.63 178.306 246.63Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                   </g>
                                   <path
@@ -1126,7 +1127,7 @@ export default function ProfilePage() {
                                   />
                                   <path
                                     d="M71.6147 264.57C71.7164 264.335 71.6644 264.057 71.4852 263.879L66.3749 258.799C67.0087 255.419 67.1348 251.907 66.6934 248.388L72.0969 243.691C72.2861 243.526 72.3558 243.253 72.2684 243.01L69.2918 234.72C69.2044 234.478 68.9809 234.319 68.7354 234.326L61.7158 234.521C59.8342 231.571 57.5301 229.014 54.9263 226.909L55.5756 219.561C55.5988 219.304 55.4628 219.059 55.2382 218.952L47.5572 215.286C47.3326 215.179 47.0683 215.233 46.899 215.421L42.0751 220.776C38.8552 220.102 35.5102 219.962 32.1619 220.416L27.6754 214.73C27.5183 214.531 27.2584 214.458 27.0272 214.548L19.1404 217.654C18.9103 217.745 18.7599 217.98 18.7676 218.238L18.97 225.612C16.1649 227.581 13.738 229.994 11.7403 232.724L4.74284 232.025C4.49728 232.001 4.26499 232.143 4.16322 232.378L0.691044 240.438C0.589279 240.673 0.641268 240.951 0.820463 241.129L5.93084 246.208C5.29702 249.589 5.17092 253.101 5.61227 256.619L0.208766 261.318C0.019616 261.483 -0.0500705 261.756 0.0373147 261.998L3.01394 270.289C3.10133 270.531 3.32477 270.689 3.57033 270.683L10.5899 270.488C12.4715 273.438 14.7755 275.994 17.3783 278.099L16.729 285.448C16.7058 285.705 16.8418 285.95 17.0664 286.057L24.7474 289.723C24.972 289.83 25.2363 289.776 25.4056 289.588L30.2295 284.233C33.4494 284.907 36.7944 285.047 40.1427 284.593L44.6292 290.279C44.7863 290.478 45.0473 290.551 45.2774 290.461L53.1642 287.355C53.3943 287.264 53.5447 287.029 53.5381 286.77L53.3357 279.397C56.1397 277.428 58.5677 275.014 60.5654 272.284L67.5629 272.984C67.8084 273.008 68.0407 272.866 68.1425 272.631L71.6147 264.57Z"
-                                    fill="#FFBB38"
+                                    fill={COLOR.BLUE}
                                   />
                                   <path
                                     opacity="0.7"
@@ -1140,7 +1141,7 @@ export default function ProfilePage() {
                                   />
                                   <path
                                     d="M112.331 302.649C112.398 302.492 112.364 302.306 112.244 302.187L108.825 298.788C109.25 296.526 109.333 294.175 109.039 291.821L112.655 288.677C112.782 288.567 112.827 288.384 112.77 288.223L110.778 282.676C110.719 282.513 110.57 282.408 110.405 282.412L105.707 282.543C104.448 280.568 102.906 278.858 101.164 277.45L101.599 272.533C101.614 272.361 101.524 272.197 101.373 272.125L96.233 269.672C96.0826 269.6 95.9056 269.636 95.7928 269.761L92.565 273.345C90.4103 272.894 88.1726 272.801 85.9315 273.104L82.9294 269.299C82.8244 269.165 82.6496 269.116 82.4958 269.177L77.2184 271.256C77.0647 271.317 76.964 271.474 76.9684 271.646L77.1034 276.581C75.2263 277.898 73.6025 279.513 72.2651 281.339L67.5828 280.871C67.4191 280.855 67.2632 280.95 67.1957 281.107L64.8728 286.499C64.8053 286.657 64.8396 286.842 64.9591 286.962L68.3793 290.361C67.9545 292.623 67.8715 294.974 68.1658 297.327L64.5498 300.471C64.4226 300.582 64.3772 300.764 64.4348 300.926L66.4269 306.473C66.4855 306.636 66.6349 306.741 66.7997 306.736L71.4975 306.606C72.7563 308.58 74.2982 310.29 76.0404 311.698L75.6057 316.615C75.5902 316.788 75.6809 316.952 75.8313 317.023L80.9716 319.477C81.122 319.549 81.299 319.512 81.4118 319.387L84.6395 315.803C86.7943 316.255 89.032 316.348 91.2731 316.045L94.2751 319.85C94.3802 319.983 94.555 320.032 94.7088 319.971L99.9861 317.893C100.14 317.832 100.241 317.675 100.236 317.502L100.101 312.568C101.978 311.25 103.602 309.636 104.939 307.809L109.622 308.277C109.785 308.294 109.941 308.199 110.01 308.042L112.331 302.649Z"
-                                    fill="#FFBB38"
+                                    fill={COLOR.BLUE}
                                   />
                                   <path
                                     opacity="0.7"

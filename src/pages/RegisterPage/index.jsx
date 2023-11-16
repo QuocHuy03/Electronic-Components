@@ -7,6 +7,7 @@ import { history } from "../../helpers/history";
 import { register } from "../../stores/authentication/actions";
 import createNotification from "../../utils/notification";
 import Loading from "../../components/Loading";
+import { COLOR } from "../../constants/style.constants";
 
 const initialValues = {
   fullname: "",
@@ -93,7 +94,7 @@ export default function RegisterPage() {
                 <div className="w-full">
                   <div className="title-area flex flex-col justify-center items-center relative text-center mb-7">
                     <h1 className="text-[34px] font-bold leading-[74px] text-qblack">
-                      Create Account
+                      Đăng kí
                     </h1>
                     <div className="shape -mt-6">
                       <svg
@@ -119,12 +120,12 @@ export default function RegisterPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="fname"
                         >
-                          FullName*
+                          Họ và tên *
                         </label>
-                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                           <input
                             placeholder="Nguyen Van A"
-                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full  font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full  font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                             type="text"
                             onChange={handleChange}
                             name="fullname"
@@ -141,11 +142,11 @@ export default function RegisterPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="lname"
                         >
-                          UserName*
+                          Tên đăng nhập *
                         </label>
-                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                           <input
-                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                             type="text"
                             onChange={handleChange}
                             placeholder="Username"
@@ -165,14 +166,14 @@ export default function RegisterPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="email"
                         >
-                          Email Address*
+                          Địa chỉ Email *
                         </label>
-                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                           <input
                             onChange={handleChange}
                             placeholder="Email"
                             name="email"
-                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full  font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full  font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                             type="email"
                           />
                         </div>
@@ -189,12 +190,12 @@ export default function RegisterPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="password"
                         >
-                          Password*
+                          Mật khẩu *
                         </label>
-                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                           <input
                             placeholder="● ● ● ● ● ●"
-                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                             type={passwordVisible ? "text" : "password"}
                             onChange={handlePasswordChange}
                             value={isPassword}
@@ -203,7 +204,7 @@ export default function RegisterPage() {
 
                           <div
                             onClick={togglePasswordVisibility}
-                            className="absolute right-6 bottom-[17px] z-10 cursor-pointer"
+                            className="absolute right-6 bottom-[9px] z-10 cursor-pointer"
                           >
                             {passwordVisible ? (
                               <svg
@@ -271,12 +272,12 @@ export default function RegisterPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="password"
                         >
-                          Confirm Password*
+                          Xác nhận mật khẩu *
                         </label>
-                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                           <input
                             placeholder="● ● ● ● ● ●"
-                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                             type={passwordConfirmVisible ? "text" : "password"}
                             onChange={handlePasswordconfirmChange}
                             value={isPasswordConfirm}
@@ -285,7 +286,7 @@ export default function RegisterPage() {
 
                           <div
                             onClick={togglePasswordConfirmVisibility}
-                            className="absolute right-6 bottom-[17px] z-10 cursor-pointer"
+                            className="absolute right-6 bottom-[9px] z-10 cursor-pointer"
                           >
                             {passwordConfirmVisible ? (
                               <svg
@@ -350,15 +351,16 @@ export default function RegisterPage() {
 
                     <div className="signin-area mb-3">
                       <div className="flex justify-center">
-                        <button className="bg-black text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center">
-                          <span>{loading ? <Loading /> : "Create Account"}</span>
+                        <button className="text-sm text-white w-full h-[45px] font-semibold flex justify-center bg-purple items-center rounded-md"
+                        style={{background: COLOR.BLUE}}>
+                          <span>{loading ? <Loading /> : "Đăng kí"}</span>
                         </button>
                       </div>
                     </div>
                     <div className="signup-area flex justify-center">
                       <p className="text-base text-gray-400 font-normal">
-                        Already have an Account ?
-                        <Link to={URL_CONSTANTS.LOGIN}> Log In</Link>
+                        Bạn đã có tài khoản ?
+                        <Link to={URL_CONSTANTS.LOGIN}><a className="ml-2 text-blue-500">Đăng nhập</a></Link>
                       </p>
                     </div>
                   </form>
