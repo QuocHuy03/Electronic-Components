@@ -18,7 +18,7 @@ import { useDispatch } from "react-redux";
 import { redirectPayment } from "../../stores/order/actions";
 import { history } from "../../helpers/history";
 import Modal from "../../components/Modal";
-import { addAddress } from "../../stores/address/actions";
+import { addAddress, getAddress } from "../../stores/address/actions";
 
 const initialValues = (user) => ({
   name: user?.name || "",
@@ -31,7 +31,7 @@ const initialValues = (user) => ({
 
 export default function CheckoutPage() {
   const { code } = useParams();
-  const { carts } = useContext(AppContext);
+  const { carts, billings } = useContext(AppContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isAddressPageOpen, setIsAddressPageOpen] = useState(false);
@@ -44,8 +44,7 @@ export default function CheckoutPage() {
   const [selectedCommune, setSelectedCommune] = useState("");
   const [activeItem, setActiveItem] = useState("64f98dfe26535a0cff5054ea");
   const [validationErrors, setValidationErrors] = useState([]);
-
-  const [inputs, setInputs] = useState(initialValues());
+  const [inputs, setInputs] = useState({});
 
   const handleDocumentClick = (event) => {
     if (
@@ -75,6 +74,10 @@ export default function CheckoutPage() {
   const handleClickPayment = (itemId) => {
     setActiveItem(itemId);
   };
+
+  useEffect(() => {
+    dispatch(getAddress());
+  }, []);
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -431,6 +434,7 @@ export default function CheckoutPage() {
                                                 <input
                                                   id="name"
                                                   type="text"
+                                                   name="name"
                                                   placeholder="Vui lòng nhập tên người nhận"
                                                   maxLength={255}
                                                   className="outline-none"
@@ -491,6 +495,15 @@ export default function CheckoutPage() {
                                                     value={inputs.phone}
                                                   />
                                                 </div>
+                                                {validationErrors &&
+                                                  validationErrors.phone && (
+                                                    <div className="form-input-error">
+                                                      {
+                                                        validationErrors.phone
+                                                          .msg
+                                                      }
+                                                    </div>
+                                                  )}
                                               </div>
                                             </div>
                                           </div>
@@ -552,7 +565,7 @@ export default function CheckoutPage() {
                                                     value={selectedProvince}
                                                   >
                                                     <option value="">
-                                                      Vui lòng chọn Tỉnh / TP
+                                                      Chọn Tỉnh / TP
                                                     </option>
                                                     {provinces?.map(
                                                       (province) => (
@@ -565,6 +578,15 @@ export default function CheckoutPage() {
                                                       )
                                                     )}
                                                   </select>
+                                                  {validationErrors &&
+                                                    validationErrors.city && (
+                                                      <div className="form-input-error">
+                                                        {
+                                                          validationErrors.city
+                                                            .msg
+                                                        }
+                                                      </div>
+                                                    )}
                                                 </div>
                                               </div>
                                             </div>
@@ -613,10 +635,10 @@ export default function CheckoutPage() {
                                                       handleSelectDistrict
                                                     }
                                                     disabled={!selectedProvince}
-                                                    placeholder={`Vui Lòng Chọn Quận / Huyện ${selectedDistrict}`}
+                                                    placeholder={`Chọn Quận / Huyện ${selectedDistrict}`}
                                                   >
                                                     <option value="">
-                                                      Vui lòng chọn Quận / Huyện
+                                                      Chọn Quận / Huyện
                                                     </option>
                                                     {filteredDistricts?.map(
                                                       (district) => (
@@ -629,6 +651,15 @@ export default function CheckoutPage() {
                                                       )
                                                     )}
                                                   </select>
+                                                  {validationErrors &&
+                                                    validationErrors.district && (
+                                                      <div className="form-input-error">
+                                                        {
+                                                          validationErrors
+                                                            .district.msg
+                                                        }
+                                                      </div>
+                                                    )}
                                                 </div>
                                               </div>
                                             </div>
@@ -679,10 +710,10 @@ export default function CheckoutPage() {
                                                       handleSelectCommune
                                                     }
                                                     disabled={!selectedDistrict}
-                                                    placeholder="Vui Lòng Chọn Phường / Xã"
+                                                    placeholder="Chọn Phường / Xã"
                                                   >
                                                     <option value="">
-                                                      Vui lòng chọn Phường / Xã
+                                                      Chọn Phường / Xã
                                                     </option>
                                                     {filteredWards?.map(
                                                       (ward) => (
@@ -695,6 +726,15 @@ export default function CheckoutPage() {
                                                       )
                                                     )}
                                                   </select>
+                                                  {validationErrors &&
+                                                    validationErrors.commune && (
+                                                      <div className="form-input-error">
+                                                        {
+                                                          validationErrors
+                                                            .commune.msg
+                                                        }
+                                                      </div>
+                                                    )}
                                                 </div>
                                               </div>
                                             </div>
@@ -744,6 +784,15 @@ export default function CheckoutPage() {
                                                     className="outline-none"
                                                   />
                                                 </div>
+                                                {validationErrors &&
+                                                  validationErrors.address && (
+                                                    <div className="form-input-error">
+                                                      {
+                                                        validationErrors.address
+                                                          .msg
+                                                      }
+                                                    </div>
+                                                  )}
                                               </div>
                                             </div>
                                           </div>

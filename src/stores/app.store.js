@@ -7,6 +7,7 @@ import redirectReducer from "./redirect/reducers";
 import couponReducer from "./coupon/reducers"
 import cartReducer from "./cart/reducers";
 import orderReducer from "./order/reducers";
+import addressReducer from "./address/reducers";
 
 const persistConfig = {
   key: "root",
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   coupon: couponReducer,
   order: orderReducer,
+  address: addressReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

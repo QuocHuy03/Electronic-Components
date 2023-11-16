@@ -168,8 +168,13 @@ body {
   min-width: unset;
   transition: color 0.3s ease 0s;
 }
+select:disabled,
+input:disabled {
+  background-color: #f3f3f7;
+}
+
 .form-input-error {
-  margin: 0.25rem 0px 0px;
+  margin: 0.25rem 0px 0px 4px;
   padding: 0px;
   border-style: none;
   border-width: 1px;
