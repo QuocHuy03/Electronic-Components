@@ -29,11 +29,10 @@ import {
   getFilterCoupon,
   uncheckedCoupon,
 } from "../../stores/coupon/actions";
-import { TOTAL_DISCOUNT_TO_PRODUCT } from "../../stores/coupon/types";
 
 export default function CartPage() {
   const dispatch = useDispatch();
-  const { carts, coupons, discounts, totalDiscout } = useContext(AppContext);
+  const { carts, coupons, discounts } = useContext(AppContext);
   const [isDiscountPageOpen, setIsDiscountPageOpen] = useState(false);
   const modalDiscountRef = useRef();
   const [isCurrent, setIsCurrent] = useState();

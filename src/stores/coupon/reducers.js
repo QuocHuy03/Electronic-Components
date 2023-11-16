@@ -17,8 +17,6 @@ import {
 const initialState = {
   discounts: [],
   coupons: [],
-  totalDiscout: 0,
-  isToggle: false,
   loading: false,
   error: null,
 };
@@ -39,26 +37,31 @@ const couponReducer = (state = initialState, action) => {
     case GET_DISCOUNT_REQUEST:
       return { ...state, loading: true };
 
-    case GET_FILTER_COUPON_PRODUCT_SUCCESS:
-      const { carts, coupon } = action.payload;
-      const { coupons } = state;
-      // Lặp qua từng sản phẩm trong giỏ hàng
-      for (const cartItem of carts) {
-        // Kiểm tra xem sản phẩm có coupon từ danh sách không
-        const foundCoupon = coupon?.find(
-          (huydev) => huydev.product._id === cartItem.productID
-        );
-        if (foundCoupon) {
-          // Nếu có coupon, thêm vào mảng coupons nếu chưa tồn tại
-          if (!coupons.includes(foundCoupon)) {
-            coupons.push(foundCoupon);
+      case GET_FILTER_COUPON_PRODUCT_SUCCESS:
+        const { carts, coupon } = action.payload;
+        const { coupons } = state;
+      
+        // Lặp qua từng sản phẩm trong giỏ hàng
+        for (const cartItem of carts) {
+          // Kiểm tra xem sản phẩm có coupon từ danh sách không
+          const foundCoupon = coupon?.find(
+            (huydev) => huydev.product._id === cartItem.productID
+          );
+
+      
+          if (foundCoupon) {
+            // Nếu có coupon và chưa tồn tại trong mảng coupons, thêm vào
+            if (!coupons.some(existingCoupon => existingCoupon.code === foundCoupon.code)) {
+              coupons.push(foundCoupon);
+            }
           }
         }
-      }
-      return {
-        ...state,
-        coupons,
-      };
+      
+        return {
+          ...state,
+          coupons,
+        };
+      
     case GET_DISCOUNT_SUCCESS:
       return {
         ...state,
