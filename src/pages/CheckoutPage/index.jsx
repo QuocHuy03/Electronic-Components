@@ -191,7 +191,7 @@ export default function CheckoutPage() {
       }
       setValidationErrors(response.errors);
     }
-  }, []);
+  }, [inputs]);
 
   return (
     <Layout>
@@ -488,6 +488,7 @@ export default function CheckoutPage() {
                                                   <input
                                                     id="telephone"
                                                     type="text"
+                                                    name="phone"
                                                     placeholder="Nhập số điện thoại"
                                                     maxLength={255}
                                                     className="outline-none"
