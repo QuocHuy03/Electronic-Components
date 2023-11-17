@@ -19,6 +19,7 @@ import { redirectPayment } from "../../stores/order/actions";
 import { history } from "../../helpers/history";
 import Modal from "../../components/Modal";
 import { addAddress, getAddress } from "../../stores/address/actions";
+import createNotification from "../../utils/notification";
 
 const initialValues = (user) => ({
   name: user?.name || "",
@@ -27,6 +28,7 @@ const initialValues = (user) => ({
   district: user?.district || "",
   commune: user?.commune || "",
   phone: user?.phone || "",
+  default: user?.default || false,
 });
 
 export default function CheckoutPage() {
@@ -44,8 +46,20 @@ export default function CheckoutPage() {
   const [selectedCommune, setSelectedCommune] = useState("");
   const [activeItem, setActiveItem] = useState("64f98dfe26535a0cff5054ea");
   const [validationErrors, setValidationErrors] = useState([]);
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState(initialValues());
 
+  const filterAddressDefault = useMemo(() => {
+    return billings?.filter((item) => item.default === true);
+  }, [billings]);
+  
+  const [clickedItemId, setClickedItemId] = useState(
+    filterAddressDefault.length > 0 ? filterAddressDefault[0]?._id : null
+  );
+
+  const handleActionAddress = useCallback((id) => {
+    setClickedItemId(id);
+  }, []);
+  
   const handleDocumentClick = (event) => {
     if (
       modalAddressRef.current &&
@@ -80,10 +94,10 @@ export default function CheckoutPage() {
   }, []);
 
   const handleInputChange = useCallback((e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setInputs((prevInputs) => ({
       ...prevInputs,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   }, []);
 
@@ -177,21 +191,24 @@ export default function CheckoutPage() {
     [orderData, navigate, history]
   );
 
-  const handleSubmitAddress = useCallback(async (e) => {
-    e.preventDefault();
-
-    const response = await dispatch(addAddress(inputs));
-    if (response.status === true) {
-      setValidationErrors([]);
-      createNotification("success", "topRight", response.message);
-    } else {
-      if (response.status === false) {
+  const handleSubmitAddress = useCallback(
+    async (e) => {
+      e.preventDefault();
+      const response = await dispatch(addAddress(inputs));
+      if (response.status === true) {
         setValidationErrors([]);
-        createNotification("error", "topRight", response.message);
+        setIsAddressPageOpen(false);
+        createNotification("success", "topRight", response.message);
+      } else {
+        if (response.status === false) {
+          setValidationErrors([]);
+          createNotification("error", "topRight", response.message);
+        }
+        setValidationErrors(response.errors);
       }
-      setValidationErrors(response.errors);
-    }
-  }, [inputs]);
+    },
+    [inputs]
+  );
 
   return (
     <Layout>
@@ -260,99 +277,126 @@ export default function CheckoutPage() {
                             >
                               Thông tin nhận hàng
                             </div>
-                            <div
-                              className="flex flex-wrap mb-4  -mx-4"
-                              style={{
-                                marginLeft: "-8px",
-                                marginRight: "-8px",
-                                rowGap: 16,
-                              }}
-                            >
-                              <div
-                                className="w-full md:w-1/2 px-4 mb-4 gap-5 "
-                                style={{ paddingLeft: 0, paddingRight: 8 }}
-                              >
+                            <div className="flex flex-wrap mb-4">
+                              {billings?.map((item) => (
                                 <div
-                                  className="inline-block border border-blue-500 bg-white p-2.5 rounded-md relative overflow-hidden cursor-pointer w-full"
-                                  style={{ height: "100%" }}
+                                  className="w-full md:w-1/2 mb-4 gap-5 "
+                                  style={{ paddingLeft: 0, paddingRight: 8 }}
                                 >
-                                  <div>
-                                    <span
+                                  <div
+                                    onClick={() =>
+                                      handleActionAddress(item._id)
+                                    }
+                                    className={`inline-block border ${
+                                      clickedItemId === item._id
+                                        ? "border-blue-500"
+                                        : "border-[rgb(224, 224, 224)]"
+                                    } bg-white p-2.5 rounded-md relative overflow-hidden cursor-pointer w-full`}
+                                    style={{ height: "100%" }}
+                                  >
+                                    <div>
+                                      <span
+                                        style={{
+                                          fontWeight: "bold",
+                                          marginRight: 2,
+                                        }}
+                                      >
+                                        {item.name}
+                                      </span>
+                                      <div className="inline-block">
+                                        <svg
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          size={20}
+                                          className="fill-current text-gray-500"
+                                          color="#848788"
+                                          height={20}
+                                          width={20}
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
+                                            d="M14.4798 5.35373C14.968 4.86557 15.7594 4.86557 16.2476 5.35373L16.6919 5.79803C17.1801 6.28618 17.1801 7.07764 16.6919 7.56579L16.1819 8.07582L13.9698 5.86375L14.4798 5.35373ZM12.9092 6.92441L6.23644 13.5971L5.68342 16.3622L8.44851 15.8092L15.1212 9.13648L12.9092 6.92441ZM16.707 9.67199L9.3486 17.0304C9.24389 17.1351 9.11055 17.2065 8.96535 17.2355L4.87444 18.0537C4.62855 18.1029 4.37434 18.0259 4.19703 17.8486C4.01971 17.6713 3.94274 17.4171 3.99192 17.1712L4.8101 13.0803C4.83914 12.9351 4.91051 12.8017 5.01521 12.697L13.4192 4.29307C14.4931 3.21912 16.2343 3.21912 17.3083 4.29307L17.7526 4.73737C18.8265 5.81131 18.8265 7.55251 17.7526 8.62645L16.7174 9.66162C16.7157 9.66336 16.714 9.6651 16.7122 9.66683C16.7105 9.66856 16.7088 9.67028 16.707 9.67199ZM3.15918 20.5908C3.15918 20.1766 3.49497 19.8408 3.90918 19.8408H20.2728C20.687 19.8408 21.0228 20.1766 21.0228 20.5908C21.0228 21.005 20.687 21.3408 20.2728 21.3408H3.90918C3.49497 21.3408 3.15918 21.005 3.15918 20.5908Z"
+                                            fill="#82869E"
+                                          />
+                                        </svg>
+                                      </div>
+                                    </div>
+                                    <div>{item.phone}</div>
+                                    <div
+                                      className="text-[13px]"
                                       style={{
-                                        fontWeight: "bold",
-                                        marginRight: 2,
+                                        WebkitLineClamp: 2,
+                                        overflow: "hidden",
+                                        display: "-webkit-box",
                                       }}
                                     >
-                                      trình
-                                    </span>
-                                    <div className="inline-block">
-                                      <svg
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        size={20}
-                                        className="fill-current text-gray-500"
-                                        color="#848788"
-                                        height={20}
-                                        width={20}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          fillRule="evenodd"
-                                          clipRule="evenodd"
-                                          d="M14.4798 5.35373C14.968 4.86557 15.7594 4.86557 16.2476 5.35373L16.6919 5.79803C17.1801 6.28618 17.1801 7.07764 16.6919 7.56579L16.1819 8.07582L13.9698 5.86375L14.4798 5.35373ZM12.9092 6.92441L6.23644 13.5971L5.68342 16.3622L8.44851 15.8092L15.1212 9.13648L12.9092 6.92441ZM16.707 9.67199L9.3486 17.0304C9.24389 17.1351 9.11055 17.2065 8.96535 17.2355L4.87444 18.0537C4.62855 18.1029 4.37434 18.0259 4.19703 17.8486C4.01971 17.6713 3.94274 17.4171 3.99192 17.1712L4.8101 13.0803C4.83914 12.9351 4.91051 12.8017 5.01521 12.697L13.4192 4.29307C14.4931 3.21912 16.2343 3.21912 17.3083 4.29307L17.7526 4.73737C18.8265 5.81131 18.8265 7.55251 17.7526 8.62645L16.7174 9.66162C16.7157 9.66336 16.714 9.6651 16.7122 9.66683C16.7105 9.66856 16.7088 9.67028 16.707 9.67199ZM3.15918 20.5908C3.15918 20.1766 3.49497 19.8408 3.90918 19.8408H20.2728C20.687 19.8408 21.0228 20.1766 21.0228 20.5908C21.0228 21.005 20.687 21.3408 20.2728 21.3408H3.90918C3.49497 21.3408 3.15918 21.005 3.15918 20.5908Z"
-                                          fill="#82869E"
-                                        />
-                                      </svg>
+                                      {item.address},{" "}
+                                      {
+                                        wards.find(
+                                          (commune) =>
+                                            commune.id === Number(item.commune)
+                                        )?.name
+                                      }
+                                      ,{" "}
+                                      {
+                                        districts.find(
+                                          (district) =>
+                                            district.id ===
+                                            Number(item.district)
+                                        )?.name
+                                      }
+                                      ,{" "}
+                                      {
+                                        provinces.find(
+                                          (city) =>
+                                            city.id === Number(item.city)
+                                        )?.name
+                                      }
                                     </div>
-                                  </div>
-                                  <div>0987654321</div>
-                                  <div
-                                    className="text-[13px]"
-                                    style={{
-                                      WebkitLineClamp: 2,
-                                      overflow: "hidden",
-                                      display: "-webkit-box",
-                                    }}
-                                  >
-                                    da nang, Phường 17, Quận Gò Vấp, Thành phố
-                                    Hồ Chí Minh
-                                  </div>
-                                  <div
-                                    className="absolute top-0 right-0 w-0 h-0 border border-solid transform rotate-180"
-                                    style={{
-                                      borderColor:
-                                        "transparent transparent rgb(20, 53, 195) transparent",
-                                      borderWidth: "0 36px 36px 0",
-                                    }}
-                                  ></div>
+                                    {clickedItemId === item._id && (
+                                      <React.Fragment>
+                                        <div
+                                          className="absolute top-0 right-0 w-0 h-0 border border-solid transform rotate-180"
+                                          style={{
+                                            borderColor:
+                                              "transparent transparent rgb(20, 53, 195) transparent",
+                                            borderWidth: "0 36px 36px 0",
+                                          }}
+                                        ></div>
 
-                                  <span className="flex absolute top-0 right-0 z-0">
-                                    <svg
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      size={20}
-                                      className="stroke-white"
-                                      color="#ffffff"
-                                      height={20}
-                                      width={20}
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M5 12.4545L9.375 17L19 7"
-                                        stroke="#82869E"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  </span>
+                                        <span className="flex absolute top-0 right-0 z-0">
+                                          <svg
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            size={20}
+                                            className="stroke-white"
+                                            color="#ffffff"
+                                            height={20}
+                                            width={20}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M5 12.4545L9.375 17L19 7"
+                                              stroke="#82869E"
+                                              strokeWidth="1.5"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </React.Fragment>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
+                              ))}
+
                               <div
-                                className="w-full md:w-1/2 px-4 mb-4"
+                                className="w-full md:w-1/2 mb-4"
                                 ref={modalAddressRef}
+                                style={{ paddingLeft: 0, paddingRight: 8 }}
                                 onClick={() => setIsAddressPageOpen(true)}
-                                style={{ paddingLeft: 8, paddingRight: 8 }}
                               >
                                 <button
                                   height="2.5rem"
@@ -434,7 +478,7 @@ export default function CheckoutPage() {
                                                 <input
                                                   id="name"
                                                   type="text"
-                                                   name="name"
+                                                  name="name"
                                                   placeholder="Vui lòng nhập tên người nhận"
                                                   maxLength={255}
                                                   className="outline-none"
@@ -803,59 +847,26 @@ export default function CheckoutPage() {
                                   </div>
                                   <div className="flex flex-wrap justify-end opacity-1">
                                     <div className="flex flex-wrap flex-col opacity-1 mb-[16px]">
-                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px] opacity-1">
+                                      <div className="flex items-center flex-col justify-center relative max-w-full min-h-[1px] opacity-1">
                                         <div
                                           className="max-w-full"
                                           style={{
                                             flex: "1 1 auto",
                                           }}
                                         >
-                                          <label className="inline-flex items-center cursor-pointer m-0 p-0 opacity-1">
-                                            <div className="inline-block relative w-[16px] h-[16px]">
-                                              <input
-                                                type="checkbox"
-                                                className="absolute z-1 w-[16px] h-[16px] cursor-pointer opacity-0 m-auto"
-                                              />
-                                              <div
-                                                className="absolute w-[16px] h-[16px] m-auto bg-white rounded-[2px]"
-                                                style={{
-                                                  border:
-                                                    "1px solid rgb(228, 229, 240)",
-                                                }}
-                                              >
-                                                <svg
-                                                  fill="none"
-                                                  viewBox="0 0 24 24"
-                                                  size={12}
-                                                  className="absolute"
-                                                  style={{
-                                                    top: "50%",
-                                                    left: "50%",
-                                                    transform:
-                                                      "translate(-50%, -50%)",
-                                                  }}
-                                                  color="transparent"
-                                                  height={12}
-                                                  width={12}
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                  <path
-                                                    d="M5 12.4545L9.375 17L19 7"
-                                                    stroke="#82869E"
-                                                    strokeWidth="1.5"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                  />
-                                                </svg>
-                                              </div>
-                                            </div>
-                                            <div
-                                              type="body"
-                                              className="checkbox-label css-6r3s23"
-                                              style={{ flex: "1 1 0%" }}
-                                            >
-                                              Đặt làm mặc định
-                                            </div>
+                                          <input
+                                            id="default-checkbox"
+                                            type="checkbox"
+                                            name="default"
+                                            onChange={handleInputChange}
+                                            checked={inputs.default}
+                                            className="w-3 h-3 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600  "
+                                          />
+                                          <label
+                                            htmlFor="default-checkbox"
+                                            className="ms-1 text-[13px] font-medium text-gray-900 dark:text-gray-300"
+                                          >
+                                            Đặt mặc định
                                           </label>
                                         </div>
                                       </div>

@@ -37,16 +37,15 @@ const addressReducer = (state = initialState, action) => {
 
     case GET_ADDRESS_SUCCESS:
       const { address } = state;
-      const findAddress = address?.find(
-        (huydev) => huydev._id === action.payload
-      );
-
-      if (findAddress) {
-        // Nếu có address và chưa tồn tại trong mảng address, thêm vào
-        if (!address.some((existing) => existing._id === findAddress._id)) {
-          address.push(findAddress);
+      const newAddresses = action.payload;
+      newAddresses.forEach((newAddress) => {
+        const addressExists = address.some(
+          (existing) => existing._id === newAddress._id
+        );
+        if (!addressExists) {
+          address.push(newAddress);
         }
-      }
+      });
 
       return {
         ...state,
