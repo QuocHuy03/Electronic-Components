@@ -49,12 +49,22 @@ export default function CheckoutPage() {
   const [validationErrors, setValidationErrors] = useState([]);
   const [inputs, setInputs] = useState(initialValues());
 
-  const handleEditModalAddress = () => {
+  const handleEditModalAddress = (item) => {
+    setInputs(initialValues(item));
+    setSelectedProvince(item.city);
+    setSelectedDistrict(item.district);
+    setSelectedCommune(item.commune);
+    setValidationErrors([])
     dispatch({ type: SET_EDIT_MODE, payload: true });
     setIsAddressPageOpen(true);
   };
 
   const handleCloseModalAddress = () => {
+    setInputs(initialValues());
+    setSelectedProvince("");
+    setSelectedDistrict("");
+    setSelectedCommune("");
+    setValidationErrors([])
     dispatch({ type: SET_EDIT_MODE, payload: false });
     setIsAddressPageOpen(false);
   };
@@ -76,8 +86,13 @@ export default function CheckoutPage() {
       modalAddressRef.current &&
       !modalAddressRef.current.contains(event.target)
     ) {
-      setIsAddressPageOpen(false);
+      setInputs(initialValues());
+      setSelectedProvince("");
+      setSelectedDistrict("");
+      setSelectedCommune("");
+      setValidationErrors([])
       dispatch({ type: SET_EDIT_MODE, payload: false });
+      setIsAddressPageOpen(false);
     }
   };
 
@@ -320,7 +335,7 @@ export default function CheckoutPage() {
                                         className="inline-block"
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          handleEditModalAddress();
+                                          handleEditModalAddress(item);
                                         }}
                                       >
                                         <svg
