@@ -20,6 +20,7 @@ import { history } from "../../helpers/history";
 import Modal from "../../components/Modal";
 import { addAddress, getAddress } from "../../stores/address/actions";
 import createNotification from "../../utils/notification";
+import { SET_EDIT_MODE } from "../../stores/address/types";
 
 const initialValues = (user) => ({
   name: user?.name || "",
@@ -33,7 +34,7 @@ const initialValues = (user) => ({
 
 export default function CheckoutPage() {
   const { code } = useParams();
-  const { carts, billings } = useContext(AppContext);
+  const { carts, billings, isEditAddress } = useContext(AppContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isAddressPageOpen, setIsAddressPageOpen] = useState(false);
@@ -48,10 +49,20 @@ export default function CheckoutPage() {
   const [validationErrors, setValidationErrors] = useState([]);
   const [inputs, setInputs] = useState(initialValues());
 
+  const handleEditModalAddress = () => {
+    dispatch({ type: SET_EDIT_MODE, payload: true });
+    setIsAddressPageOpen(true);
+  };
+
+  const handleCloseModalAddress = () => {
+    dispatch({ type: SET_EDIT_MODE, payload: false });
+    setIsAddressPageOpen(false);
+  };
+
   const filterAddressDefault = useMemo(() => {
     return billings?.filter((item) => item.default === true);
   }, [billings]);
-  
+
   const [clickedItemId, setClickedItemId] = useState(
     filterAddressDefault.length > 0 ? filterAddressDefault[0]?._id : null
   );
@@ -59,13 +70,14 @@ export default function CheckoutPage() {
   const handleActionAddress = useCallback((id) => {
     setClickedItemId(id);
   }, []);
-  
+
   const handleDocumentClick = (event) => {
     if (
       modalAddressRef.current &&
       !modalAddressRef.current.contains(event.target)
     ) {
       setIsAddressPageOpen(false);
+      dispatch({ type: SET_EDIT_MODE, payload: false });
     }
   };
 
@@ -278,9 +290,10 @@ export default function CheckoutPage() {
                               Thông tin nhận hàng
                             </div>
                             <div className="flex flex-wrap mb-4">
-                              {billings?.map((item) => (
+                              {billings?.map((item, index) => (
                                 <div
-                                  className="w-full md:w-1/2 mb-4 gap-5 "
+                                  key={index}
+                                  className="w-full md:w-1/2 mb-4 gap-5"
                                   style={{ paddingLeft: 0, paddingRight: 8 }}
                                 >
                                   <div
@@ -303,7 +316,13 @@ export default function CheckoutPage() {
                                       >
                                         {item.name}
                                       </span>
-                                      <div className="inline-block">
+                                      <div
+                                        className="inline-block"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleEditModalAddress();
+                                        }}
+                                      >
                                         <svg
                                           fill="none"
                                           viewBox="0 0 24 24"
@@ -433,11 +452,16 @@ export default function CheckoutPage() {
                                 </button>
                               </div>
                             </div>
+
                             <Modal
-                              title="Thông tin người nhận hàng"
+                              title={`${
+                                isEditAddress
+                                  ? "Cập nhật thông tin nhận hàng"
+                                  : "Thông tin người nhận hàng"
+                              }`}
                               onClickStopModal={(e) => e.stopPropagation()}
                               isOpen={isAddressPageOpen}
-                              onClose={() => setIsAddressPageOpen(false)}
+                              onClose={handleCloseModalAddress}
                             >
                               <form onSubmit={handleSubmitAddress}>
                                 <div className="px-4">
@@ -881,7 +905,7 @@ export default function CheckoutPage() {
                                     Add
                                   </button>
                                   <button
-                                    onClick={() => setIsAddressPageOpen(false)}
+                                    onClick={handleCloseModalAddress}
                                     type="button"
                                     className=" text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                                   >

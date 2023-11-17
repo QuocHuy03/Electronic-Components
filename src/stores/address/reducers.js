@@ -8,6 +8,7 @@ import {
   GET_ADDRESS_FAILED,
   GET_ADDRESS_REQUEST,
   GET_ADDRESS_SUCCESS,
+  SET_EDIT_MODE,
   UPDATE_ADDRESS_FAILED,
   UPDATE_ADDRESS_REQUEST,
   UPDATE_ADDRESS_SUCCESS,
@@ -17,6 +18,7 @@ const initialState = {
   address: [],
   loading: false,
   error: null,
+  isEditAddress: false,
 };
 
 const handleError = (state, actionType, error) => {
@@ -35,6 +37,8 @@ const addressReducer = (state = initialState, action) => {
     case DELETE_ADDRESS_REQUEST:
       return { ...state, loading: true };
 
+    case SET_EDIT_MODE:
+      return { ...state, isEditAddress: action.payload };
     case GET_ADDRESS_SUCCESS:
       const { address } = state;
       const newAddresses = action.payload;
