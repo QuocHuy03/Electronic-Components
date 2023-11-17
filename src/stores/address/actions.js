@@ -74,18 +74,22 @@ export const addAddress = (data) => {
   };
 };
 
-export const updateAddress = (data, id) => {
+export const updateAddress = (data) => {
   return async (dispatch) => {
     dispatch({
       type: UPDATE_ADDRESS_REQUEST,
-      payload: { data, id },
+      payload: data,
     });
     try {
-      const response = await addressService.fetchUpdateAddress(data, id);
+      const { id, ...dataWithoutId } = data;
+      const response = await addressService.fetchUpdateAddress(
+        dataWithoutId,
+        data.id
+      );
       if (response.status === true) {
         dispatch({
           type: UPDATE_ADDRESS_SUCCESS,
-          payload: { data, id },
+          payload: response,
         });
         return {
           status: true,

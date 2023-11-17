@@ -65,7 +65,7 @@ const addressReducer = (state = initialState, action) => {
       };
 
     case UPDATE_ADDRESS_SUCCESS:
-      const updatedAddress = action.payload;
+      const { result: updatedAddress } = action.payload;
       const updatedAddressIndex = state.address.findIndex(
         (item) => item._id === updatedAddress._id
       );

@@ -18,11 +18,16 @@ import { useDispatch } from "react-redux";
 import { redirectPayment } from "../../stores/order/actions";
 import { history } from "../../helpers/history";
 import Modal from "../../components/Modal";
-import { addAddress, getAddress } from "../../stores/address/actions";
+import {
+  addAddress,
+  getAddress,
+  updateAddress,
+} from "../../stores/address/actions";
 import createNotification from "../../utils/notification";
 import { SET_EDIT_MODE } from "../../stores/address/types";
 
 const initialValues = (user) => ({
+  id: user?._id,
   name: user?.name || "",
   address: user?.address || "",
   city: user?.city || "",
@@ -45,16 +50,25 @@ export default function CheckoutPage() {
   const [wards, setWards] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedCommune, setSelectedCommune] = useState("");
-  const [activeItem, setActiveItem] = useState("64f98dfe26535a0cff5054ea");
+  const [activePaymentItem, setActivePaymentItem] = useState(
+    "64f98dfe26535a0cff5054ea"
+  );
   const [validationErrors, setValidationErrors] = useState([]);
   const [inputs, setInputs] = useState(initialValues());
+  const [isAddressItem, setIsAddressItem] = useState(null);
+
+  useEffect(() => {
+    if (billings && billings.length > 0) {
+      setIsAddressItem(billings.filter((item) => item.default === true)[0]._id);
+    }
+  }, [billings]);
 
   const handleEditModalAddress = (item) => {
     setInputs(initialValues(item));
     setSelectedProvince(item.city);
     setSelectedDistrict(item.district);
     setSelectedCommune(item.commune);
-    setValidationErrors([])
+    setValidationErrors([]);
     dispatch({ type: SET_EDIT_MODE, payload: true });
     setIsAddressPageOpen(true);
   };
@@ -64,21 +78,13 @@ export default function CheckoutPage() {
     setSelectedProvince("");
     setSelectedDistrict("");
     setSelectedCommune("");
-    setValidationErrors([])
+    setValidationErrors([]);
     dispatch({ type: SET_EDIT_MODE, payload: false });
     setIsAddressPageOpen(false);
   };
 
-  const filterAddressDefault = useMemo(() => {
-    return billings?.filter((item) => item.default === true);
-  }, [billings]);
-
-  const [clickedItemId, setClickedItemId] = useState(
-    filterAddressDefault.length > 0 ? filterAddressDefault[0]?._id : null
-  );
-
   const handleActionAddress = useCallback((id) => {
-    setClickedItemId(id);
+    setIsAddressItem(id);
   }, []);
 
   const handleDocumentClick = (event) => {
@@ -90,7 +96,7 @@ export default function CheckoutPage() {
       setSelectedProvince("");
       setSelectedDistrict("");
       setSelectedCommune("");
-      setValidationErrors([])
+      setValidationErrors([]);
       dispatch({ type: SET_EDIT_MODE, payload: false });
       setIsAddressPageOpen(false);
     }
@@ -113,7 +119,7 @@ export default function CheckoutPage() {
   );
 
   const handleClickPayment = (itemId) => {
-    setActiveItem(itemId);
+    setActivePaymentItem(itemId);
   };
 
   useEffect(() => {
@@ -184,6 +190,28 @@ export default function CheckoutPage() {
     [wards, selectedDistrict]
   );
 
+  const handleSubmitAddress = useCallback(
+    async (e) => {
+      e.preventDefault();
+
+      const action = isEditAddress ? updateAddress : addAddress;
+      const response = await dispatch(action(inputs));
+
+      if (response.status === true) {
+        setValidationErrors([]);
+        setIsAddressPageOpen(false);
+        createNotification("success", "topRight", response.message);
+      } else {
+        if (response.status === false) {
+          setValidationErrors([]);
+          createNotification("error", "topRight", response.message);
+        }
+        setValidationErrors(response.errors);
+      }
+    },
+    [isEditAddress, inputs]
+  );
+
   const products = useMemo(
     () =>
       carts?.map((cart) => ({
@@ -198,10 +226,11 @@ export default function CheckoutPage() {
     () => ({
       code,
       totalPrice: totalAmountAll,
-      paymentID: activeItem,
+      paymentID: activePaymentItem,
       products,
+      addressID: isAddressItem,
     }),
-    [code, totalAmountAll, activeItem, products]
+    [code, totalAmountAll, activePaymentItem, isAddressItem, products]
   );
 
   const handleSubmitOrder = useCallback(
@@ -216,25 +245,6 @@ export default function CheckoutPage() {
       }
     },
     [orderData, navigate, history]
-  );
-
-  const handleSubmitAddress = useCallback(
-    async (e) => {
-      e.preventDefault();
-      const response = await dispatch(addAddress(inputs));
-      if (response.status === true) {
-        setValidationErrors([]);
-        setIsAddressPageOpen(false);
-        createNotification("success", "topRight", response.message);
-      } else {
-        if (response.status === false) {
-          setValidationErrors([]);
-          createNotification("error", "topRight", response.message);
-        }
-        setValidationErrors(response.errors);
-      }
-    },
-    [inputs]
   );
 
   return (
@@ -316,7 +326,7 @@ export default function CheckoutPage() {
                                       handleActionAddress(item._id)
                                     }
                                     className={`inline-block border ${
-                                      clickedItemId === item._id
+                                      isAddressItem === item._id
                                         ? "border-blue-500"
                                         : "border-[rgb(224, 224, 224)]"
                                     } bg-white p-2.5 rounded-md relative overflow-hidden cursor-pointer w-full`}
@@ -389,7 +399,7 @@ export default function CheckoutPage() {
                                         )?.name
                                       }
                                     </div>
-                                    {clickedItemId === item._id && (
+                                    {isAddressItem === item._id && (
                                       <React.Fragment>
                                         <div
                                           className="absolute top-0 right-0 w-0 h-0 border border-solid transform rotate-180"
@@ -935,7 +945,7 @@ export default function CheckoutPage() {
                             >
                               Phương thức giao hàng
                             </div>
-                            <div className="  border-gray-300 opacity-100">
+                            <div className="border-gray-300 opacity-100">
                               <div className="block mb-2 mr-0">
                                 <div className="flex items-center cursor-pointer mt-2">
                                   <div className="inline-block relative w-4 min-w-6 h-6  ">
@@ -977,10 +987,7 @@ export default function CheckoutPage() {
                             >
                               Nhận Mã online, hóa đơn qua email
                             </div>
-                            <div
-                              id="delivery-email"
-                              className="border-1 border-solid border-transparent opacity-100 bg-white pt-3"
-                            >
+                            <div className="border-1 border-solid border-transparent opacity-100 bg-white pt-3">
                               <div className=" border-1 border-solid border-transparent opacity-100 pb-3 ">
                                 <div
                                   className=" border-gray-200 rounded-md opacity-100 h-10 px-3 flex items-center bg-gray-50 overflow-hidden "
@@ -1034,11 +1041,14 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex-1 ">
+                <div className="flex-1">
                   <h1 className="sm:text-2xl text-xl text-black font-medium mb-5">
                     Order Summary
                   </h1>
-                  <div className="w-full px-10 py-[30px] border border-[#EDEDED]">
+                  <form
+                    onSubmit={handleSubmitOrder}
+                    className="w-full px-10 py-[30px] border border-[#EDEDED]"
+                  >
                     <div className="sub-total mb-6">
                       <div className=" flex justify-between mb-5">
                         <p className="text-[13px] font-medium text-black uppercase">
@@ -1129,7 +1139,7 @@ export default function CheckoutPage() {
                                   <input
                                     type="radio"
                                     className="accent-pink-500"
-                                    checked={activeItem === item._id}
+                                    checked={activePaymentItem === item._id}
                                     onClick={() => handleClickPayment(item._id)}
                                     id={item._id}
                                   />
@@ -1159,7 +1169,7 @@ export default function CheckoutPage() {
                         Place Order Now
                       </span>
                     </button>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>
