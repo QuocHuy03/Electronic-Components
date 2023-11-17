@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-const Modal = ({ isOpen, children, onClickStopModal, onClose }) => {
+const Modal = ({ title, isOpen, children, onClickStopModal, onClose }) => {
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("modal-open");
@@ -30,7 +30,7 @@ const Modal = ({ isOpen, children, onClickStopModal, onClose }) => {
             {/* Modal header */}
             <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Apply Discount
+                {title}
               </h3>
               <button
                 type="button"
@@ -56,15 +56,7 @@ const Modal = ({ isOpen, children, onClickStopModal, onClose }) => {
               </button>
             </div>
             {children}
-            <div className="flex items-center p-4 justify-end space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-              <button
-                onClick={onClose}
-                type="button"
-                className=" text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-              >
-                Close
-              </button>
-            </div>
+         
           </div>
         </div>
       </div>

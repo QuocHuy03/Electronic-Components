@@ -15,6 +15,7 @@ import { persistor } from "../../stores/app.store";
 import { Link } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import { Empty } from "antd";
+import { COLOR } from "../../constants/style.constants";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -578,7 +579,7 @@ export default function ProfilePage() {
                           onClick={() => handleTabClick(0)}
                           className={`flex space-x-3 items-center cursor-pointer ${
                             activeTab === 0
-                              ? "text-yellow-400"
+                              ? "text-blue-400"
                               : "text-slate-500 hover:text-black"
                           }`}
                         >
@@ -613,7 +614,7 @@ export default function ProfilePage() {
                           onClick={() => handleTabClick(1)}
                           className={`flex space-x-3 items-center cursor-pointer ${
                             activeTab === 1
-                              ? "text-yellow-400"
+                              ? "text-blue-400"
                               : "text-slate-500 hover:text-black"
                           }`}
                         >
@@ -641,7 +642,7 @@ export default function ProfilePage() {
                           onClick={() => handleTabClick(2)}
                           className={`flex space-x-3 items-center cursor-pointer ${
                             activeTab === 2
-                              ? "text-yellow-400"
+                              ? "text-blue-400"
                               : "text-slate-500 hover:text-black"
                           }`}
                         >
@@ -667,7 +668,7 @@ export default function ProfilePage() {
                           onClick={() => handleTabClick(3)}
                           className={`flex space-x-3 items-center cursor-pointer ${
                             activeTab === 4
-                              ? "text-yellow-400"
+                              ? "text-blue-400"
                               : "text-slate-500 hover:text-black"
                           }`}
                         >
@@ -694,7 +695,7 @@ export default function ProfilePage() {
                           onClick={() => handleLogout(4)}
                           className={`flex space-x-3 items-center cursor-pointer ${
                             activeTab === 5
-                              ? "text-yellow-400"
+                              ? "text-blue-400"
                               : "text-slate-500 hover:text-black"
                           }`}
                         >
@@ -938,7 +939,11 @@ export default function ProfilePage() {
                                     <div className="w-[180px] h-[50px]">
                                       <button
                                         type="submit"
-                                        className="flex w-full h-full items-center justify-center leading-0 opacity-1 bg-yellow-400"
+                                        className="flex w-full h-full items-center justify-center leading-0 opacity-1"
+                                        style={{
+                                          background: COLOR.BLUE,
+                                          color: "white"
+                                        }}
                                       >
                                         <div className="w-full text-sm font-semibold">
                                           Update Password
