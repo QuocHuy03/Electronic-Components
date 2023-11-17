@@ -1,3 +1,5 @@
 export const COLOR = {
-  BLUE: "rgb(20, 53, 195)",
+
+  BLUE: "#3c90ff",
+
 };

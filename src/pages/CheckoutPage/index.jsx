@@ -161,7 +161,7 @@ export default function CheckoutPage() {
       <div className="w-full  pt-0 pb-0">
         <div className="checkout-page-wrapper w-full bg-white pb-[60px]">
           <div className="w-full mb-5">
-            <div className="page-title-wrapper bg-[#FFFAEF] w-full h-[173px] py-10">
+            <div className="page-title-wrapper bg-[#D3EFFF] w-full h-[173px] py-10">
               <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>
@@ -207,7 +207,9 @@ export default function CheckoutPage() {
                             type="line"
                             width={137}
                             height={40}
+
                             className=" relative flex items-stretch overflow-y-hidden w-full border-b-2 border-solid border-gray-300"
+
                           >
                             <div
                               color="textSecondary"
@@ -405,7 +407,7 @@ export default function CheckoutPage() {
                                       style={{ textAlign: "right" }}
                                     >
                                       <div type="body" color="success500"
-                                        className=" border-solid border-transparent border-1 opacity-100 text-green-500 font-medium text-base leading-5 overflow-hidden line-clamp-none max-w-none min-w-none transition-colors duration-300"
+                                        className=" border-solid border-transparent border-1 opacity-100 text-blue-600 font-medium text-base leading-5 overflow-hidden line-clamp-none max-w-none min-w-none transition-colors duration-300"
                                       >
                                         Miễn phí
                                       </div>
@@ -475,16 +477,16 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex-1 ">
                   <h1 className="sm:text-2xl text-xl text-black font-medium mb-5">
-                    Order Summary
+                    Thông tin đơn hàng
                   </h1>
                   <div className="w-full px-10 py-[30px] border border-[#EDEDED]">
                     <div className="sub-total mb-6">
                       <div className=" flex justify-between mb-5">
                         <p className="text-[13px] font-medium text-black uppercase">
-                          Product
+                          Sản phẩm
                         </p>
                         <p className="text-[13px] font-medium text-black uppercase">
-                          total
+                          Tổng
                         </p>
                       </div>
                       <div className="w-full h-[1px] bg-[#EDEDED]" />
@@ -522,7 +524,7 @@ export default function CheckoutPage() {
                     <div className="mt-[30px]">
                       <div className=" flex justify-between mb-5">
                         <p className="text-[13px] font-medium text-black uppercase">
-                          SUBTOTAL
+                          Tổng tạm tính
                         </p>
                         <p className="text-[15px] font-medium text-black uppercase">
                           {formatPrice(totalAmountAll)}
@@ -533,15 +535,13 @@ export default function CheckoutPage() {
                       <div className="sub-total mb-6">
                         <div className=" flex justify-between mb-5">
                           <div>
-                            <span className="text-xs text-qgraytwo mb-3 block">
-                              SHIPPING
+                            <span className="text-[16px] text-qgraytwo mb-3 block">
+                              Phí vận chuyển
                             </span>
-                            <p className="text-base font-medium text-black">
-                              Free Shipping
-                            </p>
+                            
                           </div>
-                          <p className="text-[15px] font-medium text-black">
-                            +15,000
+                          <p className="text-[15px] font-medium text-blue-700">
+                           Miễn phí
                           </p>
                         </div>
                         <div className="w-full h-[1px] bg-[#EDEDED]" />
@@ -549,11 +549,12 @@ export default function CheckoutPage() {
                     </div>
                     <div className="mt-[30px]">
                       <div className=" flex justify-between mb-5">
-                        <p className="text-2xl font-medium text-black">Total</p>
-                        <p className="text-2xl font-medium text-qred">
+                        <p className="text-2xl font-medium text-black">Thành tiền</p>
+                        <p className="text-2xl font-medium text-qred text-blue-800 text-bold">
                           {" "}
-                          {formatPrice(totalAmountAll - 15000)}
+                          {formatPrice(totalAmountAll)}
                         </p>
+
                       </div>
                     </div>
                     <div className="shipping mt-[30px]">
@@ -592,7 +593,7 @@ export default function CheckoutPage() {
 
                     <button
                       type="submit"
-                      className="w-full h-[50px] bg-black text-white flex justify-center items-center"
+                      className="w-full h-[50px] bg-blue-700 text-white flex justify-center items-center rounded-lg"
                     >
                       <span className="text-sm font-semibold">
                         Place Order Now

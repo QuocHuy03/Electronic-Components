@@ -6,6 +6,7 @@ import { login } from "../../stores/authentication/actions";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import createNotification from "../../utils/notification";
 import Loading from "../../components/Loading";
+import { COLOR } from "../../constants/style.constants";
 
 const getGoogleAuthUrl = () => {
   const url = `https://accounts.google.com/o/oauth2/v2/auth`;
@@ -93,7 +94,7 @@ export default function LoginPage() {
                 <div className="w-full">
                   <div className="title-area flex flex-col justify-center items-center relative text-center mb-7">
                     <h1 className="text-[34px] font-bold leading-[74px] text-qblack">
-                      Log In
+                      Đăng nhập
                     </h1>
                     <div className="shape -mt-6">
                       <svg
@@ -117,12 +118,12 @@ export default function LoginPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="email"
                         >
-                          Email Address*
+                          Email *
                         </label>
-                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                           <input
                             placeholder="example@gmail.com"
-                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                             type="email"
                             onChange={handleChange}
                             name="email"
@@ -144,12 +145,12 @@ export default function LoginPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="password"
                         >
-                          Password*
+                          Mật khẩu *
                         </label>
-                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
+                        <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                           <input
                             placeholder="● ● ● ● ● ●"
-                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
+                            className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                             type={passwordVisible ? "text" : "password"}
                             onChange={handlePasswordChange}
                             value={isPassword}
@@ -158,15 +159,15 @@ export default function LoginPage() {
 
                           <div
                             onClick={togglePasswordVisibility}
-                            className="absolute right-6 bottom-[17px] z-10 cursor-pointer"
+                            className="absolute right-6 bottom-[7px] z-10 cursor-pointer"
                           >
                             {passwordVisible ? (
                               <svg
                                 viewBox="0 0 25 21"
                                 fill="none"
                                 xmlns="http://www.w3.org/2000/svg"
-                                width={25}
-                                height={21}
+                                width={22}
+                                height={18}
                               >
                                 <path
                                   d="M20.5483 16.3524C20.156 15.9557 19.7696 15.5605 19.3802 15.1683C18.7802 14.5653 18.1787 13.9638 17.5728 13.3667C17.4972 13.2911 17.4871 13.2388 17.5379 13.1415C19.3482 9.66037 17.2125 5.46008 13.3332 4.87747C12.1143 4.69441 10.9534 4.89636 9.85791 5.46299C9.78672 5.49931 9.73587 5.53563 9.65596 5.45572C8.88157 4.67262 8.10136 3.89678 7.32261 3.11803C7.30082 3.09624 7.28338 3.07154 7.24561 3.0265C7.5667 2.90591 7.8689 2.78387 8.17837 2.67926C10.0758 2.03563 12.0242 1.83513 14.0132 2.05161C18.879 2.58337 23.1752 5.85381 24.9768 10.3926C25 10.4522 25.0073 10.5379 24.9826 10.596C24.0484 12.8916 22.5955 14.792 20.6282 16.2986C20.6137 16.3117 20.5963 16.3219 20.5483 16.3524Z"
@@ -222,20 +223,21 @@ export default function LoginPage() {
                     <div className="forgot-password-area flex justify-end items-center mb-7">
                       <Link
                         to={URL_CONSTANTS.FORGOT_PASSWORD}
-                        className="text-base text-blue-400"
+                        className="text-base text-blue-500"
                       >
-                        Forgot Password?
+                        Quên mật khẩu ?
                       </Link>
                     </div>
                     <div className="signin-area mb-3.5">
-                      <div className="flex justify-center">
-                        <button className="bg-black mb-4 text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center">
-                          <span>{loading ? <Loading /> : "Log In"}</span>
+                      <div className="flex justify-center ">
+                        <button className="mb-4 text-sm text-white w-full h-[45px] font-semibold flex justify-center bg-purple items-center rounded-md"
+                        style={{background: COLOR.BLUE}}>
+                          <span>{loading ? <Loading /> : "Đăng nhập"}</span>
                         </button>
                       </div>
                       <Link
                         to={oauthURL}
-                        className="w-full border border-qgray-border h-[50px] flex space-x-3 justify-center bg-[#FAFAFA] items-center"
+                        className="w-full border border-qgray-border h-[50px] flex space-x-3 justify-center bg-[#FAFAFA] items-center rounded-md"
                       >
                         <svg
                           width={19}
@@ -288,8 +290,8 @@ export default function LoginPage() {
                     </div>
                     <div className="signup-area flex justify-center">
                       <p className="text-base text-gray-400 font-normal">
-                        Dont’t have an account ?
-                        <Link to={URL_CONSTANTS.REGISTER}> Sign Up</Link>
+                        Bạn chưa có tài khoản ?
+                        <Link to={URL_CONSTANTS.REGISTER}> <a className="text-blue-500 ml-2">Đăng kí</a></Link>
                       </p>
                     </div>
                   </form>

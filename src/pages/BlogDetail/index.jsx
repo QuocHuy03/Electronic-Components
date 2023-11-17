@@ -20,7 +20,7 @@ export default function BlogDetail() {
       <div className="w-full  pt-0 pb-0">
         <div className="blog-page-wrapper w-full" >
           <div className="title-area mb-[60px]">
-            <div className="page-title-wrapper bg-[#FFFAEF] w-full h-[173px] py-10">
+            <div className="page-title-wrapper bg-[#D3EFFF] w-full h-[173px] py-10">
               <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>

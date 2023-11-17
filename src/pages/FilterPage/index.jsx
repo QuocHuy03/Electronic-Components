@@ -365,8 +365,18 @@ export default function FilterPage() {
             <ListFilterPage filterData={filteredData} />
           )
         ) : (
-          <div className="flex justify-center items-center">
-            <img src="https://i.imgur.com/Z8JXCXq.png" width={400} alt="" />
+          <div
+            className="opacity-100 mt-10 mb-10"
+            style={{ textAlign: "center" }}
+          >
+            <div height={200} width={200} className="relative inline-block overflow-hidden h-200 w-200">
+              <img
+                src="https://i.imgur.com/NKeOh8y.png"
+              />
+            </div>
+            <div type="subtitle" className="opacity-100 text-inherit font-semibold text-base leading-6 overflow-hidden">
+              Không tìm thấy sản phẩm nào
+            </div>
           </div>
         )}
       </div>
