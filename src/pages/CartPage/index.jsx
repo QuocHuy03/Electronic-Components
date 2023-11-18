@@ -124,19 +124,19 @@ export default function CartPage() {
   }, [carts, isCoupons]);
   // Tính tổng giảm giá từ các coupon cho từng sản phẩm trong giỏ hàng
   const totalDiscount = carts?.reduce((total, cartItem) => {
-    const productDiscount = discounts?.find((man) => {
-      return man.coupon.some(
-        (coupon) => coupon.productID === cartItem.productID
-      );
-    });
-    // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
-    if (productDiscount) {
-      const productCoupon = productDiscount.coupon.find(
-        (coupon) => coupon.productID === cartItem.productID
-      );
-      return total + parseInt(productCoupon.price);
-    }
-    return total;
+    // const productDiscount = discounts?.find((man) => {
+    //   return man.coupon.some(
+    //     (coupon) => coupon.coupon.productID === cartItem.productID
+    //   );
+    // });
+    // // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
+    // if (productDiscount) {
+    //   const productCoupon = productDiscount.coupon.find(
+    //     (coupon) => coupon.coupon.productID === cartItem.productID
+    //   );
+    //   return total + parseInt(productCoupon.price);
+    // }
+    // return total;
   }, 0);
 
   const handleCouponChange = useCallback(
@@ -145,7 +145,7 @@ export default function CartPage() {
         couponID: huyit._id,
       };
       const isCurrentlyApplied = discounts.some(
-        (coupon) => coupon.couponID == huyit._id
+        (dis) => dis.coupon?._id == huyit._id
       );
       setIsCurrent(isCurrentlyApplied);
       const response = await dispatch(
@@ -484,8 +484,8 @@ export default function CartPage() {
                                           >
                                             <div className="leading-[20px] opacity-1 font-[400] text-[13px] overflow-hidden">
                                               {discounts?.some(
-                                                (coupon) =>
-                                                  coupon.couponID == huyit._id
+                                                (dis) => dis.coupon._id == huyit._id
+  
                                               )
                                                 ? "Bỏ Chọn"
                                                 : "Áp Dụng"}

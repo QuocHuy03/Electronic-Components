@@ -83,7 +83,7 @@ const couponReducer = (state = initialState, action) => {
       return {
         ...state,
         discounts: state.discounts.filter(
-          (coupon) => coupon.couponID !== action.payload
+          (e) => e.coupon._id !== action.payload
         ),
       };
     case GET_FILTER_COUPON_PRODUCT_FAILED:
