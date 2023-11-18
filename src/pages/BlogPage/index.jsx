@@ -21,7 +21,7 @@ export default function BlogPage() {
       <div className="w-full  pt-[0px] pb-[0px]">
         <div className="blogs-wrapper w-full-width">
           <div className="title-bar">
-            <div className="page-title-wrapper bg-[#FFFAEF] w-full h-[173px] py-10">
+            <div className="page-title-wrapper bg-[#D3EFFF] w-full h-[173px] py-10">
               <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>

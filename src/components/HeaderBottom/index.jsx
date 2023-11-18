@@ -70,7 +70,7 @@ export default function HeaderBottom() {
                       </svg>
                     </span>
                     <span className="text-sm font-600 text-qblacktext">
-                      All Categories
+                      Danh mục sản phẩm
                     </span>
                   </div>
                   <div>
