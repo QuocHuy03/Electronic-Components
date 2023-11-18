@@ -394,7 +394,7 @@ export default function HomePage() {
                                 display: "inline",
                               }}
                             >
-                              ACER
+                             {item.brand.nameBrand}
                             </div>
                           </div>
                           <div className="h-12">
@@ -555,7 +555,7 @@ export default function HomePage() {
                             display: "inline",
                           }}
                         >
-                          ACER
+                          {item.brand.nameBrand}
                         </div>
                       </div>
                       <div className="h-12">
