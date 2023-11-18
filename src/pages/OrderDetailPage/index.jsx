@@ -27,9 +27,11 @@ export default function OrderDetailPage() {
     const statusList = [
       OrderStatus.PROCESSING,
       OrderStatus.SHIPPED,
+      OrderStatus.SHIPPED_CONFIRMED,
       OrderStatus.DELIVERED,
       OrderStatus.CANCELLED,
     ];
+    
     return statusList.indexOf(status);
   }
 
@@ -68,13 +70,14 @@ export default function OrderDetailPage() {
       </div>
     );
   }
-
   function getImageUrl(status) {
+    if (status.includes(OrderStatus.SHIPPED) || status.includes(OrderStatus.SHIPPED_CONFIRMED)) {
+      return "https://icon-library.com/images/money-order-icon/money-order-icon-14.jpg";
+    }
+  
     switch (status) {
       case OrderStatus.PROCESSING:
         return "https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/orders-icon.png";
-      case OrderStatus.SHIPPED:
-        return "https://icon-library.com/images/money-order-icon/money-order-icon-14.jpg";
       case OrderStatus.DELIVERED:
         return "https://cdn.iconscout.com/icon/premium/png-256-thumb/successful-delivery-1786644-1522008.png";
       case OrderStatus.CANCELLED:
@@ -83,13 +86,15 @@ export default function OrderDetailPage() {
         return "";
     }
   }
-
+  
   function getLeftPosition(status) {
+    if (status.includes('SHIPPED') || status.includes('SHIPPED_CONFIRMED')) {
+      return 71;
+    }
+  
     switch (status) {
       case "PROCESSING":
         return 63;
-      case "SHIPPED":
-        return 71;
       case "DELIVERED":
         return 67;
       case "CANCELLED":
@@ -98,13 +103,15 @@ export default function OrderDetailPage() {
         return 0;
     }
   }
-
+  
   function getWidth(status) {
+    if (status.includes('SHIPPED') || status.includes('SHIPPED_CONFIRMED')) {
+      return 175;
+    }
+  
     switch (status) {
       case "PROCESSING":
         return 190;
-      case "SHIPPED":
-        return 175;
       case "DELIVERED":
         return 180;
       case "CANCELLED":
@@ -113,6 +120,7 @@ export default function OrderDetailPage() {
         return 0;
     }
   }
+  
 
   return (
     <Layout>
@@ -210,7 +218,10 @@ export default function OrderDetailPage() {
                   </div>
                 </div> */}
                 {getOrderStatus(OrderStatus.PROCESSING, "Đã đặt hàng")}
-                {getOrderStatus(OrderStatus.SHIPPED, "Đã xác nhận đơn")}
+                {getOrderStatus(
+                  [OrderStatus.SHIPPED, OrderStatus.SHIPPED_CONFIRMED],
+                  "Đã xác nhận đơn"
+                )}
                 {getOrderStatus(OrderStatus.DELIVERED, "Đã giao cho ĐVVC")}
                 {getOrderStatus(OrderStatus.CANCELLED, "Đã nhận được hàng")}
               </div>
@@ -412,7 +423,7 @@ export default function OrderDetailPage() {
                         Phương thức thanh toán
                       </p>
                       <p className="text-[15px] font-medium text-qred">
-                        {isOrder?.payment[0].namePayment}
+                        {isOrder?.payment.namePayment}
                       </p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />
