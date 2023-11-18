@@ -1345,8 +1345,8 @@ export default function ProfilePage() {
                         </React.Fragment>
                       ) : activeTab === 4 ? (
                         <React.Fragment>
-                          <div className="w-[80%]">
-                            <h5 className="text[16px]">Sổ địa chỉ</h5>
+                          <div className="w-[100%]">
+                            <h4 className="text-2xl pb-5">Sổ địa chỉ</h4>
                             <button className="inline-flex justify-center text-center w-full p-4 bg-white text-blue-500 mb-4 rounded-lg border border-dashed border-gray-300">
                               <span size={26} className="inline-block w-26 h-26 bg-var(--button-icon-color, #757575) mask bg-center bg-no-repeat" />
                               <div className="spacer css-1x3u27e" />
@@ -1354,32 +1354,31 @@ export default function ProfilePage() {
                             </button>
                             <div className="opacity-100 mt-3 p-4 rounded-lg bg-gray-50 relative">
                               <div className="teko-card-body css-0">
-                                <div className="items-center justify-center">
+                                <div className="flex items-center justify-between">
                                   <div
                                     className="teko-col css-17ajfcv"
-                                    style={{ flex: "0 0 65%" }}
                                   >
                                     <div className="flex items-center gap-2">
                                       <div
                                         type="subtitle"
                                         className="border-w-1 opacity-100 text-inherit font-medium text-base leading-6 "
                                       >
-                                        trình
+                                       DINH TAN TRINH
                                       </div>
-                                      <span className="opacity-100 inline-flex items-center px-1/4 h-1rem rounded-1/4 bg-blue-100">
+                                      <span className=" opacity-100 inline-flex items-center  bg-blue-100 h-[15px] rounded-md">
                                         <div
                                           type="caption"
                                           color="primary600"
-                                          className="opacity-100 text-rgb-18-48-176 font-medium text-10 leading-16"
+                                          className="opacity-100 text-blue-500  text-[10px] leading-16"
                                         >
-                                          MẶC ĐỊNH
+                                          Mặc định
                                         </div>
                                       </span>
                                     </div>
                                     <div
                                       type="body"
                                       color="textSecondary"
-                                      className="mt-2 text-rgb-130-134-158 font-normal text-13"
+                                      className=" mt-2 text-rgb-130-134-158 font-normal text-13 text-gray-500"
                                     >
                                       Địa chỉ: da nang, Phường 17, Quận Gò Vấp,
                                       Thành phố Hồ Chí Minh
@@ -1387,19 +1386,18 @@ export default function ProfilePage() {
                                     <div
                                       type="body"
                                       color="textSecondary"
-                                      className="css-1npqwgp"
+                                      className="css-1npqwgp text-gray-500"
                                     >
                                       Điện thoại: 0987654321
                                     </div>
                                   </div>
                                   <div
-                                    className="teko-col css-17ajfcv"
-                                    style={{ flex: "0 0 35%" }}
+                                    
                                   >
                                     <div className=" justify-end">
                                       <button
                                         height="2rem"
-                                        className="opacity-100 h-2rem px-1.25rem rounded-0.25rem bg-transparent relative border border-1.5 border-red-500"
+                                        className="w-[120px] h-[35px] opacity-100 h-2rem px-1.25rem rounded-md bg-transparent relative border border-1.5 border-red-500"
                                         type="button"
                                       >
                                         <div
