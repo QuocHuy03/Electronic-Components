@@ -339,10 +339,9 @@ export default function HomePage() {
             </div>
             <img
               alt="LAPTOP"
-              src="https://lh3.googleusercontent.com/gVKL-i0fwAwNW07q1BlrXWrszrk3f-ktPdrMadJm2W8HX-fciH_nxiLcwz5EC9YmJLDLENX_H_BQIgFoabdpO4goEyMZVKJy=w1232"
-              width="100%"
-              height="100%"
-              className="absolute top-0 rounded"
+              src="https://i.imgur.com/Osaxw8n.png"
+              
+              className="absolute top-0 rounded w-[1200px] h-[420px]"
             />
 
             <div className="relative p-[12px] w-full">
@@ -355,7 +354,7 @@ export default function HomePage() {
               >
                 {data?.map((item, index) => (
                   <SwiperSlide key={index}>
-                    <div data-aos="fade-up" className="bg-white w-full">
+                    <div data-aos="fade-up" className="bg-white w-full w[140px]">
                       <div className="relative w-full h-full p-4 flex flex-col bg-white justify-between">
                         <div className="relative flex-1 flex-grow-0 flex-shrink-0 flex-basis-auto">
                           <div className="relative">
