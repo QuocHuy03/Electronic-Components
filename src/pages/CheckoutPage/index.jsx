@@ -124,7 +124,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     dispatch(getAddress());
-  }, []);
+  }, [billings]);
 
   const handleInputChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;

@@ -3,6 +3,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import Layout from "../../components/Layout";
@@ -23,7 +24,13 @@ import Pagination from "../../components/Pagination";
 import { Empty } from "antd";
 import { COLOR } from "../../constants/style.constants";
 import { AppContext } from "../../contexts/AppContextProvider";
-import { getAddress } from "../../stores/address/actions";
+import {
+  addAddress,
+  getAddress,
+  updateAddress,
+} from "../../stores/address/actions";
+import Modal from "../../components/Modal";
+import { SET_EDIT_MODE } from "../../stores/address/types";
 
 const initialValues = (user) => ({
   id: user?._id,
@@ -49,6 +56,8 @@ export default function ProfilePage() {
   const [selectedCommune, setSelectedCommune] = useState("");
   const [inputs, setInputs] = useState(initialValues());
   const [validationErrors, setValidationErrors] = useState([]);
+  const [isAddressPageOpen, setIsAddressPageOpen] = useState(false);
+  const modalAddressRef = useRef();
 
   const handleTabClick = (index) => {
     setActiveTab(index);
@@ -130,9 +139,66 @@ export default function ProfilePage() {
     setValidationErrors([]);
   };
 
+  const filteredDistricts = useMemo(
+    () =>
+      districts?.filter(
+        (district) => district.province_id === Number(selectedProvince)
+      ),
+    [districts, selectedProvince]
+  );
+
+  const filteredWards = useMemo(
+    () =>
+      wards?.filter((ward) => ward.district_id === Number(selectedDistrict)),
+    [wards, selectedDistrict]
+  );
+
+
+  const handleEditModalAddress = (item) => {
+    setInputs(initialValues(item));
+    setSelectedProvince(item.city);
+    setSelectedDistrict(item.district);
+    setSelectedCommune(item.commune);
+    setValidationErrors([]);
+    dispatch({ type: SET_EDIT_MODE, payload: true });
+    setIsAddressPageOpen(true);
+  };
+
+  const handleCloseModalAddress = () => {
+    setInputs(initialValues());
+    setSelectedProvince("");
+    setSelectedDistrict("");
+    setSelectedCommune("");
+    setValidationErrors([]);
+    dispatch({ type: SET_EDIT_MODE, payload: false });
+    setIsAddressPageOpen(false);
+  };
+
+  const handleDocumentClick = (event) => {
+    if (
+      modalAddressRef.current &&
+      !modalAddressRef.current.contains(event.target)
+    ) {
+      setInputs(initialValues());
+      setSelectedProvince("");
+      setSelectedDistrict("");
+      setSelectedCommune("");
+      setValidationErrors([]);
+      dispatch({ type: SET_EDIT_MODE, payload: false });
+      setIsAddressPageOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
+
   useEffect(() => {
     dispatch(getAddress());
-  }, []);
+  }, [billings]);
 
   const handleInputChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
@@ -174,6 +240,28 @@ export default function ProfilePage() {
     setDistricts(huydev.districts);
     setWards(huydev.wards);
   }, []);
+
+  const handleSubmitAddress = useCallback(
+    async (e) => {
+      e.preventDefault();
+
+      const action = isEditAddress ? updateAddress : addAddress;
+      const response = await dispatch(action(inputs));
+
+      if (response.status === true) {
+        setValidationErrors([]);
+        setIsAddressPageOpen(false);
+        createNotification("success", "topRight", response.message);
+      } else {
+        if (response.status === false) {
+          setValidationErrors([]);
+          createNotification("error", "topRight", response.message);
+        }
+        setValidationErrors(response.errors);
+      }
+    },
+    [isEditAddress, inputs]
+  );
 
   const ListOrder = ({ isOrders }) => {
     const renderOrderItem = (item, index) => {
@@ -1123,7 +1211,12 @@ export default function ProfilePage() {
                         <React.Fragment>
                           <div className="w-[100%]">
                             <h4 className="text-2xl pb-5">Sổ địa chỉ</h4>
-                            <button className="inline-flex justify-center text-center w-full p-4 bg-white text-blue-500 mb-4 rounded-lg border border-dashed border-gray-300">
+                            <button
+                              ref={modalAddressRef}
+                              style={{ paddingLeft: 0, paddingRight: 8 }}
+                              onClick={() => setIsAddressPageOpen(true)}
+                              className="inline-flex justify-center text-center w-full p-4 bg-white text-blue-500 mb-4 rounded-lg border border-dashed border-gray-300"
+                            >
                               <span
                                 size={26}
                                 className="inline-block w-26 h-26 bg-var(--button-icon-color, #757575) mask bg-center bg-no-repeat"
@@ -1131,6 +1224,467 @@ export default function ProfilePage() {
                               <div className="spacer css-1x3u27e" />
                               Thêm địa chỉ mới
                             </button>
+                            <Modal
+                              title={`${
+                                isEditAddress
+                                  ? "Cập nhật thông tin nhận hàng"
+                                  : "Thông tin người nhận hàng"
+                              }`}
+                              onClickStopModal={(e) => e.stopPropagation()}
+                              isOpen={isAddressPageOpen}
+                              onClose={handleCloseModalAddress}
+                            >
+                              <form onSubmit={handleSubmitAddress}>
+                                <div className="px-4">
+                                  <div className="justify-between flex flex-wrap opacity-1">
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                        <label
+                                          htmlFor="name"
+                                          className="mr-[8px] inline-flex items-center form-item-required"
+                                          style={{ height: 40 }}
+                                        >
+                                          <div
+                                            type="body"
+                                            color="textTitle"
+                                            className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            style={{
+                                              color: "rgb(27, 29, 41)",
+                                            }}
+                                          >
+                                            Họ tên
+                                          </div>
+                                        </label>
+                                      </div>
+                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                        <div className="flex items-center">
+                                          <div
+                                            className="max-w-full"
+                                            style={{ flex: "1 1 auto" }}
+                                          >
+                                            <div className="opacity-1">
+                                              <div
+                                                className="form-input"
+                                                height={40}
+                                              >
+                                                <input
+                                                  id="name"
+                                                  type="text"
+                                                  name="name"
+                                                  placeholder="Vui lòng nhập tên người nhận"
+                                                  maxLength={255}
+                                                  className="outline-none"
+                                                  onChange={handleInputChange}
+                                                  value={inputs.name}
+                                                />
+                                              </div>
+                                              {validationErrors &&
+                                                validationErrors.name && (
+                                                  <div className="form-input-error">
+                                                    {validationErrors.name.msg}
+                                                  </div>
+                                                )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="telephone"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                            >
+                                              Số điện thoại
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div
+                                                  className="form-input"
+                                                  height={40}
+                                                >
+                                                  <input
+                                                    id="telephone"
+                                                    type="text"
+                                                    name="phone"
+                                                    placeholder="Nhập số điện thoại"
+                                                    maxLength={255}
+                                                    className="outline-none"
+                                                    onChange={handleInputChange}
+                                                    value={inputs.phone}
+                                                  />
+                                                </div>
+                                                {validationErrors &&
+                                                  validationErrors.phone && (
+                                                    <div className="form-input-error">
+                                                      {
+                                                        validationErrors.phone
+                                                          .msg
+                                                      }
+                                                    </div>
+                                                  )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="hr-checkout">
+                                    <div
+                                      width="100%"
+                                      color="divider"
+                                      className="css-yae08c"
+                                    />
+                                  </div>
+                                  <div type="title" className="title-checkout">
+                                    Địa chỉ nhận hàng
+                                  </div>
+                                  <div className="justify-between flex flex-wrap opacity-1">
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="provinceCode"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                            >
+                                              Tỉnh/Thành phố
+                                            </div>
+                                          </label>
+                                        </div>
+
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div className="relative">
+                                                  <select
+                                                    className="bg-white form-input text-[14px] w-full h-[2.5rem] pl-2 overflow-hidden cursor-pointer select-none outline-none rounded-[0.25rem] flex items-center"
+                                                    style={{
+                                                      border:
+                                                        "1px solid rgb(228, 229, 240)",
+                                                    }}
+                                                    name="city"
+                                                    onChange={
+                                                      handleSelectProvince
+                                                    }
+                                                    value={selectedProvince}
+                                                  >
+                                                    <option value="">
+                                                      Chọn Tỉnh / TP
+                                                    </option>
+                                                    {provinces?.map(
+                                                      (province) => (
+                                                        <option
+                                                          key={province.id}
+                                                          value={province.id}
+                                                        >
+                                                          {province.name}
+                                                        </option>
+                                                      )
+                                                    )}
+                                                  </select>
+                                                  {validationErrors &&
+                                                    validationErrors.city && (
+                                                      <div className="form-input-error">
+                                                        {
+                                                          validationErrors.city
+                                                            .msg
+                                                        }
+                                                      </div>
+                                                    )}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="districtCode"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            >
+                                              Quận/Huyện
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div className="relative">
+                                                  <select
+                                                    className="bg-white form-input text-[14px] w-full h-[2.5rem] pl-2 overflow-hidden cursor-pointer select-none outline-none rounded-[0.25rem] flex items-center"
+                                                    style={{
+                                                      border:
+                                                        "1px solid rgb(228, 229, 240)",
+                                                    }}
+                                                    name="district"
+                                                    value={selectedDistrict}
+                                                    onChange={
+                                                      handleSelectDistrict
+                                                    }
+                                                    disabled={!selectedProvince}
+                                                    placeholder={`Chọn Quận / Huyện ${selectedDistrict}`}
+                                                  >
+                                                    <option value="">
+                                                      Chọn Quận / Huyện
+                                                    </option>
+                                                    {filteredDistricts?.map(
+                                                      (district) => (
+                                                        <option
+                                                          key={district.id}
+                                                          value={district.id}
+                                                        >
+                                                          {district.name}
+                                                        </option>
+                                                      )
+                                                    )}
+                                                  </select>
+                                                  {validationErrors &&
+                                                    validationErrors.district && (
+                                                      <div className="form-input-error">
+                                                        {
+                                                          validationErrors
+                                                            .district.msg
+                                                        }
+                                                      </div>
+                                                    )}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="justify-between flex flex-wrap opacity-1">
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="wardCode"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            >
+                                              Phường/Xã
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div className="relative">
+                                                  <select
+                                                    className="bg-white form-input w-full text-[14px] h-[2.5rem] pl-2 overflow-hidden cursor-pointer select-none outline-none rounded-[0.25rem] flex items-center"
+                                                    style={{
+                                                      border:
+                                                        "1px solid rgb(228, 229, 240)",
+                                                    }}
+                                                    name="commune"
+                                                    value={selectedCommune}
+                                                    onChange={
+                                                      handleSelectCommune
+                                                    }
+                                                    disabled={!selectedDistrict}
+                                                    placeholder="Chọn Phường / Xã"
+                                                  >
+                                                    <option value="">
+                                                      Chọn Phường / Xã
+                                                    </option>
+                                                    {filteredWards?.map(
+                                                      (ward) => (
+                                                        <option
+                                                          key={ward.id}
+                                                          value={ward.id}
+                                                        >
+                                                          {ward.name}
+                                                        </option>
+                                                      )
+                                                    )}
+                                                  </select>
+                                                  {validationErrors &&
+                                                    validationErrors.commune && (
+                                                      <div className="form-input-error">
+                                                        {
+                                                          validationErrors
+                                                            .commune.msg
+                                                        }
+                                                      </div>
+                                                    )}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="address"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            >
+                                              Địa chỉ cụ thể
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div
+                                                  className="form-input"
+                                                  height={40}
+                                                >
+                                                  <input
+                                                    name="address"
+                                                    onChange={handleInputChange}
+                                                    value={inputs.address}
+                                                    type="text"
+                                                    placeholder="Số nhà, ngõ, tên đường..."
+                                                    maxLength={255}
+                                                    className="outline-none"
+                                                  />
+                                                </div>
+                                                {validationErrors &&
+                                                  validationErrors.address && (
+                                                    <div className="form-input-error">
+                                                      {
+                                                        validationErrors.address
+                                                          .msg
+                                                      }
+                                                    </div>
+                                                  )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-wrap justify-end opacity-1">
+                                    <div className="flex flex-wrap flex-col opacity-1 mb-[16px]">
+                                      <div className="flex items-center flex-col justify-center relative max-w-full min-h-[1px] opacity-1">
+                                        <div
+                                          className="max-w-full"
+                                          style={{
+                                            flex: "1 1 auto",
+                                          }}
+                                        >
+                                          <input
+                                            id="default-checkbox"
+                                            type="checkbox"
+                                            name="default"
+                                            onChange={handleInputChange}
+                                            checked={inputs.default}
+                                            className="w-3 h-3 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600  "
+                                          />
+                                          <label
+                                            htmlFor="default-checkbox"
+                                            className="ms-1 text-[13px] font-medium text-gray-900 dark:text-gray-300"
+                                          >
+                                            Đặt mặc định
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex items-center px-4 py-2 justify-end space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                  <button
+                                    type="submit"
+                                    className=" text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                  >
+                                    {isEditAddress ? "Update" : "Add"}
+                                  </button>
+                                  <button
+                                    onClick={handleCloseModalAddress}
+                                    type="button"
+                                    className=" text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                  >
+                                    Close
+                                  </button>
+                                </div>
+                              </form>
+                            </Modal>
                             {billings?.map((item, index) => (
                               <div
                                 className="opacity-100 mt-3 p-4 rounded-lg bg-gray-50 relative"
@@ -1188,8 +1742,10 @@ export default function ProfilePage() {
                                           type="button"
                                         >
                                           <div
-                                            type="body"
-                                            color="error500"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEditModalAddress(item);
+                                              }}
                                             className="text-[16px] text-red-500"
                                           >
                                             Chỉnh sửa
