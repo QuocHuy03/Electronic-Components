@@ -1,10 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Layout from "../../components/Layout";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import huydev from "../../json/address.json";
 import { logout } from "../../stores/authentication/actions";
 import { userService } from "../../services/user.service";
-import { LOAD_CURRENT_LOGIN_USER_SUCCESS } from "../../stores/authentication/types";
+import UpdateProfile from "../../components/UpdateProfile";
 import createNotification from "../../utils/notification";
 import { orderService } from "../../services/order.service";
 import formatDate from "../../utils/fomatDate";
@@ -16,16 +22,38 @@ import { Link } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import { Empty } from "antd";
 import { COLOR } from "../../constants/style.constants";
+import { AppContext } from "../../contexts/AppContextProvider";
+import { getAddress } from "../../stores/address/actions";
+
+const initialValues = (user) => ({
+  id: user?._id,
+  name: user?.name || "",
+  address: user?.address || "",
+  city: user?.city || "",
+  district: user?.district || "",
+  commune: user?.commune || "",
+  phone: user?.phone || "",
+  default: user?.default || false,
+});
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
-  const { user, refreshToken } = useSelector((state) => state.auth);
+  const { user, refreshToken, billings, isEditAddress } =
+    useContext(AppContext);
   const [activeTab, setActiveTab] = useState(0);
+  const [provinces, setProvinces] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedCommune, setSelectedCommune] = useState("");
+  const [inputs, setInputs] = useState(initialValues());
   const [validationErrors, setValidationErrors] = useState([]);
 
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
+
   const handleLogout = async (item) => {
     setActiveTab(item);
     persistor.purge();
@@ -102,303 +130,50 @@ export default function ProfilePage() {
     setValidationErrors([]);
   };
 
-  // update me
+  useEffect(() => {
+    dispatch(getAddress());
+  }, []);
 
-  const initialValues = (user) => ({
-    fullname: user?.fullname || "",
-    username: user?.username || "",
-    address: user?.address || "",
-    city: user?.city || "",
-    district: user?.district || "",
-    commune: user?.commune || "",
-    phone: user?.phone || "",
-  });
+  const handleInputChange = useCallback((e) => {
+    const { name, value, type, checked } = e.target;
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  }, []);
 
-  const UpdateProfile = ({ user }) => {
-    const [provinces, setProvinces] = useState([]);
-    const [selectedProvince, setSelectedProvince] = useState("");
-    const [districts, setDistricts] = useState([]);
-    const [selectedDistrict, setSelectedDistrict] = useState("");
-    const [selectedCommune, setSelectedCommune] = useState("");
-    const [wards, setWards] = useState([]);
-    const [inputs, setInputs] = useState(initialValues(user));
+  const handleSelectProvince = useCallback((e) => {
+    const selectedCity = e.target.value;
+    setSelectedProvince(selectedCity);
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      city: selectedCity,
+    }));
+  }, []);
 
-    const handleChangeInput = (e) => {
-      const { name, value } = e.target;
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        [name]: value,
-      }));
-    };
+  const handleSelectDistrict = useCallback((e) => {
+    const selectedDistrictValue = e.target.value;
+    setSelectedDistrict(selectedDistrictValue);
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      district: selectedDistrictValue,
+    }));
+  }, []);
 
-    useEffect(() => {
-      setProvinces(huydev.provinces);
-      setDistricts(huydev.districts);
-      setWards(huydev.wards);
-      if (user) {
-        setSelectedProvince(user.city);
-        setSelectedDistrict(user.district);
-        setSelectedCommune(user.commune);
-      }
-    }, [user]);
+  const handleSelectCommune = useCallback((e) => {
+    const selectedCommuneValue = e.target.value;
+    setSelectedCommune(selectedCommuneValue);
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      commune: selectedCommuneValue,
+    }));
+  }, []);
 
-    const handleSelectProvince = useCallback((e) => {
-      setSelectedProvince(e.target.value);
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        city: e.target.value,
-      }));
-    }, []);
-
-    const handleSelectDistrict = useCallback((e) => {
-      setSelectedDistrict(e.target.value);
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        district: e.target.value,
-      }));
-    }, []);
-
-    const handleSelectCommune = useCallback((e) => {
-      setSelectedCommune(e.target.value);
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        commune: e.target.value,
-      }));
-    }, []);
-
-    const filteredDistricts = useMemo(() => {
-      return districts?.filter(
-        (district) => district.province_id === Number(selectedProvince)
-      );
-    }, [districts, selectedProvince]);
-
-    const filteredWards = useMemo(() => {
-      return wards?.filter(
-        (ward) => ward.district_id === Number(selectedDistrict)
-      );
-    }, [wards, selectedDistrict]);
-
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const response = await userService.updateMe(inputs);
-        dispatch({
-          type: LOAD_CURRENT_LOGIN_USER_SUCCESS,
-          payload: response.user,
-        });
-        if (response.status === true) {
-          createNotification("success", "topRight", response.message);
-        } else {
-          createNotification("error", "topRight", response.message);
-        }
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    };
-
-    return (
-      <form onSubmit={handleSubmit}>
-        <div className="flex space-x-8">
-          <div className="w-[570px] ">
-            <div className="input-item flex space-x-2.5 mb-8">
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Họ và tên *
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md">
-                    <input
-                      placeholder="Nguyen Van A"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px] "
-                      type="text"
-                      name="fullname"
-                      onChange={handleChangeInput}
-                      value={inputs.fullname}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Tên tài khoản *
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
-                    <input
-                      placeholder="Username"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
-                      type="text"
-                      name="username"
-                      onChange={handleChangeInput}
-                      value={inputs.username}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="input-item flex space-x-2.5 mb-8">
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Email *
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
-                    <input
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
-                      type="email"
-                      name="email"
-                      disabled
-                      onChange={handleChangeInput}
-                      value={user?.email}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Số điện thoại *
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
-                    <input
-                      placeholder="012 3 *******"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
-                      type="number"
-                      min={9}
-                      name="phone"
-                      onChange={handleChangeInput}
-                      value={inputs.phone}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="input-item mb-8">
-              <div className="w-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Địa chỉ *
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
-                    <input
-                      placeholder="Address"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
-                      type="text"
-                      name="address"
-                      onChange={handleChangeInput}
-                      value={inputs.address}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="input-item mb-8">
-              <div className="w-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Tỉnh / TP *
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
-                    <select
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
-                      name="city"
-                      onChange={handleSelectProvince}
-                      value={selectedProvince}
-                      placeholder={`Vui lòng chọn Tỉnh / TP`}
-                    >
-                      <option value="">Vui lòng chọn Tỉnh / TP</option>
-                      {provinces?.map((province) => (
-                        <option key={province.id} value={province.id}>
-                          {province.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="input-item flex space-x-2.5 mb-8">
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Quận / Huyện *
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
-                    <select
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
-                      name="district"
-                      value={selectedDistrict}
-                      onChange={handleSelectDistrict}
-                      disabled={!selectedProvince}
-                      placeholder={`Vui Lòng Chọn Quận / Huyện ${selectedDistrict}`}
-                    >
-                      <option value="">Vui lòng chọn Quận / Huyện</option>
-                      {filteredDistricts?.map((district) => (
-                        <option key={district.id} value={district.id}>
-                          {district.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Phường / Xã *
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md">
-                    <select
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
-                      name="commune"
-                      value={selectedCommune}
-                      onChange={handleSelectCommune}
-                      disabled={!selectedDistrict}
-                      placeholder="Vui Lòng Chọn Phường / Xã"
-                    >
-                      <option value="">Vui lòng chọn Phường / Xã</option>
-                      {filteredWards?.map((ward) => (
-                        <option key={ward.id} value={ward.id}>
-                          {ward.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex-1">
-            <div className="update-logo w-full mb-9">
-              <div className="flex xl:justify-center justify-start">
-                <div className="relative">
-                  <div className="sm:w-[188px] sm:h-[188px] w-[189px] h-[189px] rounded-full overflow-hidden relative">
-                    <img
-                      src={`https://ui-avatars.com/api/name=${user?.fullname}`}
-                      alt
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="action-area flex space-x-4 items-center">
-          <button
-            type="submit"
-            className="w-[164px] h-[50px] bg-black text-white text-sm rounded-lg"
-            style={{
-              background: COLOR.BLUE,
-              color: "white",
-            }}
-          >
-            Cập nhật thông tin
-          </button>
-        </div>
-      </form>
-    );
-  };
+  useEffect(() => {
+    setProvinces(huydev.provinces);
+    setDistricts(huydev.districts);
+    setWards(huydev.wards);
+  }, []);
 
   const ListOrder = ({ isOrders }) => {
     const renderOrderItem = (item, index) => {
@@ -732,6 +507,7 @@ export default function ProfilePage() {
                       </div>
                     </div>
                   </div>
+
                   <div className="flex-1">
                     <div className="item-body dashboard-wrapper w-full">
                       {activeTab === 0 ? (
@@ -1348,72 +1124,83 @@ export default function ProfilePage() {
                           <div className="w-[100%]">
                             <h4 className="text-2xl pb-5">Sổ địa chỉ</h4>
                             <button className="inline-flex justify-center text-center w-full p-4 bg-white text-blue-500 mb-4 rounded-lg border border-dashed border-gray-300">
-                              <span size={26} className="inline-block w-26 h-26 bg-var(--button-icon-color, #757575) mask bg-center bg-no-repeat" />
+                              <span
+                                size={26}
+                                className="inline-block w-26 h-26 bg-var(--button-icon-color, #757575) mask bg-center bg-no-repeat"
+                              />
                               <div className="spacer css-1x3u27e" />
                               Thêm địa chỉ mới
                             </button>
-                            <div className="opacity-100 mt-3 p-4 rounded-lg bg-gray-50 relative">
-                              <div className="teko-card-body css-0">
-                                <div className="flex items-center justify-between">
-                                  <div
-                                    className="teko-col css-17ajfcv"
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      <div
-                                        type="subtitle"
-                                        className="border-w-1 opacity-100 text-inherit font-medium text-base leading-6 "
-                                      >
-                                       DINH TAN TRINH
+                            {billings?.map((item, index) => (
+                              <div
+                                className="opacity-100 mt-3 p-4 rounded-lg bg-gray-50 relative"
+                                key={index}
+                              >
+                                <div className="teko-card-body css-0">
+                                  <div className="flex items-center justify-between">
+                                    <div className="teko-col css-17ajfcv">
+                                      <div className="flex items-center gap-2">
+                                        <div className="border-w-1 opacity-100 text-inherit font-medium text-base leading-6 ">
+                                          {item.name}
+                                        </div>
+                                        {item.default === true && (
+                                          <span className="p-1 opacity-100 inline-flex items-center  bg-blue-100 h-[15px] rounded-md">
+                                            <div className="opacity-100 text-blue-500  text-[10px] leading-16">
+                                              Mặc định
+                                            </div>
+                                          </span>
+                                        )}
                                       </div>
-                                      <span className=" opacity-100 inline-flex items-center  bg-blue-100 h-[15px] rounded-md">
-                                        <div
-                                          type="caption"
-                                          color="primary600"
-                                          className="opacity-100 text-blue-500  text-[10px] leading-16"
+                                      <div className=" mt-2 text-rgb-130-134-158 font-normal text-13 text-gray-500">
+                                        Địa chỉ: {item.address},{" "}
+                                        {
+                                          wards.find(
+                                            (commune) =>
+                                              commune.id ===
+                                              Number(item.commune)
+                                          )?.name
+                                        }
+                                        ,{" "}
+                                        {
+                                          districts.find(
+                                            (district) =>
+                                              district.id ===
+                                              Number(item.district)
+                                          )?.name
+                                        }
+                                        ,{" "}
+                                        {
+                                          provinces.find(
+                                            (city) =>
+                                              city.id === Number(item.city)
+                                          )?.name
+                                        }
+                                      </div>
+                                      <div className="text-gray-500">
+                                        Điện thoại: {item.phone}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className=" justify-end">
+                                        <button
+                                          height="2rem"
+                                          className="w-[120px] h-[35px] opacity-100 h-2rem px-1.25rem rounded-md bg-transparent relative border border-1.5 border-red-500"
+                                          type="button"
                                         >
-                                          Mặc định
-                                        </div>
-                                      </span>
-                                    </div>
-                                    <div
-                                      type="body"
-                                      color="textSecondary"
-                                      className=" mt-2 text-rgb-130-134-158 font-normal text-13 text-gray-500"
-                                    >
-                                      Địa chỉ: da nang, Phường 17, Quận Gò Vấp,
-                                      Thành phố Hồ Chí Minh
-                                    </div>
-                                    <div
-                                      type="body"
-                                      color="textSecondary"
-                                      className="css-1npqwgp text-gray-500"
-                                    >
-                                      Điện thoại: 0987654321
-                                    </div>
-                                  </div>
-                                  <div
-                                    
-                                  >
-                                    <div className=" justify-end">
-                                      <button
-                                        height="2rem"
-                                        className="w-[120px] h-[35px] opacity-100 h-2rem px-1.25rem rounded-md bg-transparent relative border border-1.5 border-red-500"
-                                        type="button"
-                                      >
-                                        <div
-                                          type="body"
-                                          color="error500"
-                                          className="text-[16px] text-red-500"
-                                        >
-                                          Chỉnh sửa
-                                        </div>
-                                        
-                                      </button>
+                                          <div
+                                            type="body"
+                                            color="error500"
+                                            className="text-[16px] text-red-500"
+                                          >
+                                            Chỉnh sửa
+                                          </div>
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            ))}
                           </div>
                         </React.Fragment>
                       ) : null}

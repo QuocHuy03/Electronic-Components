@@ -9,7 +9,7 @@ export const AppContext = createContext({});
 export function AppContextProvider({ children }) {
   const dispatch = useDispatch();
   const { carts } = useSelector((state) => state.cart);
-  const { accessToken, user } = useSelector((state) => state.auth);
+  const { accessToken,refreshToken, user } = useSelector((state) => state.auth);
   const { orders } = useSelector((state) => state.order);
   const { coupons, discounts } = useSelector((state) => state.coupon);
   const { address, isEditAddress } = useSelector((state) => state.address);
@@ -25,6 +25,7 @@ export function AppContextProvider({ children }) {
     <AppContext.Provider
       value={{
         accessToken,
+        refreshToken,
         carts,
         user,
         order: orders,
