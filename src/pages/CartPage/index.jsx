@@ -122,22 +122,15 @@ export default function CartPage() {
     };
     fetchData();
   }, [carts, isCoupons]);
-  // Tính tổng giảm giá từ các coupon cho từng sản phẩm trong giỏ hàng
+
   const totalDiscount = carts?.reduce((total, cartItem) => {
-    // const productDiscount = discounts?.find((man) => {
-    //   return man.coupon.some(
-    //     (coupon) => coupon.coupon.productID === cartItem.productID
-    //   );
-    // });
-    // // Nếu có coupon cho sản phẩm này, tính tổng giảm giá
-    // if (productDiscount) {
-    //   const productCoupon = productDiscount.coupon.find(
-    //     (coupon) => coupon.coupon.productID === cartItem.productID
-    //   );
-    //   return total + parseInt(productCoupon.price);
-    // }
-    // return total;
+    const productDiscount = discounts?.find((man) => man.coupon.productID === cartItem.productID);
+    if (productDiscount) {
+        return total + parseInt(productDiscount.coupon.price);
+    }
+    return total;
   }, 0);
+  
 
   const handleCouponChange = useCallback(
     async (huyit) => {
@@ -359,9 +352,11 @@ export default function CartPage() {
                       <button
                         type="button"
                         className="w-[140px] h-[50px]  text-white rounded-md"
-                        style={{background: COLOR.BLUE}}
+                        style={{ background: COLOR.BLUE }}
                       >
-                        <span className="text-sm font-semibold">Áp dụng khuyến mãi</span>
+                        <span className="text-sm font-semibold">
+                          Áp dụng khuyến mãi
+                        </span>
                       </button>
                     </div>
                     <Modal
@@ -484,8 +479,8 @@ export default function CartPage() {
                                           >
                                             <div className="leading-[20px] opacity-1 font-[400] text-[13px] overflow-hidden">
                                               {discounts?.some(
-                                                (dis) => dis.coupon._id == huyit._id
-  
+                                                (dis) =>
+                                                  dis.coupon._id == huyit._id
                                               )
                                                 ? "Bỏ Chọn"
                                                 : "Áp Dụng"}
@@ -536,7 +531,7 @@ export default function CartPage() {
                       <Link
                         to={`/checkout/${uuidv4()}`}
                         className="w-full h-[50px] bg-black text-white flex justify-center items-center rounded-md"
-                        style={{background: COLOR.BLUE}}
+                        style={{ background: COLOR.BLUE }}
                       >
                         <span className="text-sm font-semibold">
                           Tiếp tục thanh toán
