@@ -684,7 +684,7 @@ export default function HomePage() {
                 TIN CÔNG NGHỆ
               </div>
             </Link>
-            <Link to={URL_CONSTANTS.FILTER}>
+            <Link to={URL_CONSTANTS.BLOG}>
               <div className="flex space-x-2 items-center">
                 <p className="text-base font-[500] text-black">Xem thêm</p>
                 <span className="animate-right-dir">
