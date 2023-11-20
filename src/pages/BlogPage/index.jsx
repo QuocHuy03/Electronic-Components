@@ -78,7 +78,7 @@ export default function BlogPage() {
                             </div>
                             {/* Tiêu đề tin tức */}
                             <Link to={`/tin-tuc/${item.slugBlog}`}>
-                              <h2 className="text-2xl font-semibold mb-2">
+                              <h2 className="text-xl font-semibold mb-2">
                                 {item.titleBlog}
                               </h2>
                             </Link>
@@ -92,7 +92,7 @@ export default function BlogPage() {
                             {/* Nội dung tin tức */}
                             <Link to={`/tin-tuc/${item.slugBlog}`}>
                               <p
-                                className="text-[20px] line-clamp-2"
+                                className="text-[18px] line-clamp-2"
                                 dangerouslySetInnerHTML={{
                                   __html: item?.contentBlog,
                                 }}
