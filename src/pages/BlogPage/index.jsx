@@ -68,13 +68,13 @@ export default function BlogPage() {
             </div>
           </div>
         </div>
-        <div className="w-full py-[20px]">
+        <div className="w-full py-5 lg:py-20">
           <div className="max-w-6xl mx-auto">
             <div className="w-full">
-              <div className="max-w-6xl mx-auto flex">
+              <div className="max-w-6xl mx-auto flex flex-col lg:flex-row">
                 {/* Cột 1 (70%) */}
-                <div className="w-9/12 pr-5">
-                  <div className="bg-white mb-4 shadow-sm rounded-md">
+                <div className="w-full lg:w-9/12 pr-5 mb-4 lg:mb-0">
+                  <div className="bg-white shadow-sm rounded-md">
                     {/* Hàng 1 */}
                     {isLoading ? (
                       <Loading />
@@ -85,7 +85,7 @@ export default function BlogPage() {
                           <img
                             src={`${item.imageBlog}`}
                             alt="Mô tả ảnh"
-                            className="w-[200px] h-[190px] object-cover mr-5 rounded-md"
+                            className="w-full lg:w-[200px] h-[190px] lg:mr-5 rounded-md object-cover mb-4 lg:mb-0 mx-auto"
                           />
 
                           {/* Phần thông tin tin tức (tiêu đề, tác giả, nội dung) */}
@@ -96,7 +96,7 @@ export default function BlogPage() {
                             </div>
                             {/* Tiêu đề tin tức */}
                             <Link to={`/tin-tuc/${item.slugBlog}`}>
-                              <h2 className="text-xl font-semibold mb-2">
+                              <h2 className="text-xl lg:text-2xl font-semibold mb-2">
                                 {item.titleBlog}
                               </h2>
                             </Link>
@@ -110,7 +110,7 @@ export default function BlogPage() {
                             {/* Nội dung tin tức */}
                             <Link to={`/tin-tuc/${item.slugBlog}`}>
                               <p
-                                className="text-[18px] line-clamp-2"
+                                className="text-[18px] lg:text-base line-clamp-2"
                                 dangerouslySetInnerHTML={{
                                   __html: item?.contentBlog,
                                 }}
@@ -123,7 +123,7 @@ export default function BlogPage() {
                   </div>
                 </div>
                 {/* Cột 2 (30%) */}
-                <div className="w-3/12">
+                <div className="w-full lg:w-3/12">
                   {/* Nội dung cột 2 */}
                   <div className="bg-white p-4 shadow-md flex flex-col rounded-md">
                     <p className="bg-blue-700 text-white py-0.5 px-1 mb-2 w-[256px] rounded-md text-center text-[23px]">
@@ -168,7 +168,7 @@ export default function BlogPage() {
                   </div>
                 </div>
               </div>
-              <div class="mt-[1rem] opacity-1">
+              <div class="mt-4 lg:mt-[1rem] opacity-1">
                 <div class="w-full text-center opacity-1 mt-[1rem]">
                   <div class="inline-flex">
                     <button

@@ -7,13 +7,10 @@ import { Link, useParams } from "react-router-dom";
 import Loading from "../../components/Loading";
 
 export default function BlogDetail() {
-  
-
   // Xử lý khi nhấp vào liên kết
- 
 
   const { slug } = useParams();
-  const { data, isLoading, refetch  } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     ["blog"],
     () => blogService.fetchBlogBySlug(slug),
     {
@@ -34,18 +31,19 @@ export default function BlogDetail() {
     refetch();
   }, [slug]);
 
+  
   return (
     <Layout>
       <div className="w-full  pt-0 pb-0">
         <div className="w-full py-[20px]">
           <div className="max-w-6xl mx-auto">
             <div className="w-full">
-              <div className="max-w-6xl mx-auto flex">
+            <div className="max-w-6xl mx-auto flex flex-col lg:flex-row">
                 {/* Cột 1 */}
                 {isLoading ? (
                   <Loading />
                 ) : (
-                  <div className="w-9/12 pr-5">
+                  <div className="w-full lg:w-9/12 pr-5 mb-4 lg:mb-0">
                     <div className="bg-white mb-4 shadow-sm rounded-md">
                       <div className="p-4 shadow-sm flex">
                         <div>
@@ -112,7 +110,7 @@ export default function BlogDetail() {
                 )}
 
                 {/* Cột 2*/}
-                <div className="w-3/12">
+                <div className="w-full lg:w-3/12">
                   <div className="bg-white p-4 shadow-md flex flex-col rounded-md">
                     <p className="bg-blue-700 text-white py-0.5 px-1 mb-2 w-[256px] rounded-md text-center text-[20px]">
                       Bài viết gần đây
@@ -135,9 +133,7 @@ export default function BlogDetail() {
                             <div className="flex-1">
                               <div className="flex items-center">
                                 <Link to={`/tin-tuc/${item.slugBlog}`}>
-                                  <div
-                                   
-                                  >
+                                  <div>
                                     <b>{item.titleBlog}</b>
                                   </div>
                                 </Link>
