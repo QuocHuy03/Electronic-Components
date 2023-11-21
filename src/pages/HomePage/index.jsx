@@ -510,13 +510,13 @@ export default function HomePage() {
                 </div>
               </Link>
             </div>
-            <div className="flex flex-wrap gap-1 place-content-start bg-gray-50 py-2">
+            <div className="flex flex-wrap place-content-start bg-gray-50 py-2">
               {data?.map((item) => (
                 <div
                   data-aos="fade-up"
-                  className="bg-white mb-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
+                  className="bg-white mb-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/5 xl:w-1/5"
                 >
-                  <div className="relative w-full h-full p-4 flex flex-col bg-white justify-between">
+                  <div className="relative w-full h-full p-2 flex flex-col bg-white justify-between">
                     <div className="relative flex-1 flex-grow-0 flex-shrink-0 flex-basis-auto mb-2">
                       <div className="relative mb-1">
                         <div className="relative pb-[100%]">
