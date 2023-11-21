@@ -1,21 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { blogService } from "./../../services/blog.service";
 import { Link } from "react-router-dom";
-import { URL_CONSTANTS } from "../../constants/url.constants";
 import Loading from "../../components/Loading";
 
 export default function BlogPage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const itemsPerPage = 4; // Move the itemsPerPage declaration here
+
   const { data, isLoading } = useQuery(
-    ["blog"],
-    () => blogService.fetchAllBlogs(),
+    ["blog", currentPage],
+    () => blogService.fetchAllBlogs(currentPage),
     {
       retry: 3,
       retryDelay: 1000,
     }
   );
-  console.log(data);
+
+  useEffect(() => {
+    if (data) {
+      setTotalPages(Math.ceil(data.length / itemsPerPage));
+    }
+  }, [data, itemsPerPage]);
+
+  const dataExists = data && Array.isArray(data);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const displayedBlogs = dataExists ? data.slice(startIndex, endIndex) : [];
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   return (
     <Layout>
@@ -61,8 +79,8 @@ export default function BlogPage() {
                     {isLoading ? (
                       <Loading />
                     ) : (
-                      data?.map((item) => (
-                        <div className="p-4 shadow-sm flex">
+                      displayedBlogs?.map((item) => (
+                        <div key={item.id} className="p-4 shadow-sm flex">
                           {/* Ảnh (nằm ngoài cùng bên trái) */}
                           <img
                             src={`${item.imageBlog}`}
@@ -147,6 +165,75 @@ export default function BlogPage() {
                         </div>
                       ))
                     )}
+                  </div>
+                </div>
+              </div>
+              <div class="mt-[1rem] opacity-1">
+                <div class="w-full text-center opacity-1 mt-[1rem]">
+                  <div class="inline-flex">
+                    <button
+                      disabled={currentPage === 1}
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      class="bg-gray-200 z-[1] w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.25rem] border border-solid border-[rgb(228, 229, 240)]"
+                    >
+                      <svg
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        size="16"
+                        class="css-26qhcs"
+                        color="placeholder"
+                        height="16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M15.5 5L8.5 12L15.5 19"
+                          stroke="#82869E"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        ></path>
+                      </svg>
+                    </button>
+                    {[...Array(totalPages).keys()].map((page) => (
+                      <button
+                        key={page + 1}
+                        onClick={() => handlePageChange(page + 1)}
+                        className={`ml-[0.5rem] z-[1] w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.25rem] ${
+                          currentPage === page + 1
+                            ? "bg-blue-700 text-white"
+                            : "bg-gray-200 text-gray-700"
+                        }`}
+                      >
+                        <div class="m-0 p-0 opacity-1 text-[13px] leading-[24px] overflow-hidden">
+                          {page + 1}
+                        </div>
+                      </button>
+                    ))}
+                    <button
+                      disabled={currentPage === totalPages}
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      class="bg-gray-200 ml-[0.5rem] z-[1] w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.25rem] border border-solid border-[rgb(228, 229, 240)]"
+                    >
+                      <svg
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        size="16"
+                        class="css-26qhcs"
+                        color="placeholder"
+                        height="16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8.5 19L15.5 12L8.5 5"
+                          stroke="#82869E"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        ></path>
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
