@@ -14,6 +14,7 @@ import { addToCart } from "../../stores/cart/actions";
 import createNotification from "../../utils/notification";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
+import { Link } from "react-router-dom";
 import "./style.css";
 import {
   calculateDiscountPercentage,

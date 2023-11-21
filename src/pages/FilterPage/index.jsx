@@ -558,7 +558,7 @@ export default function FilterPage() {
                         {loadingBrand ? (
                           <Loading />
                         ) : (
-                          isBrands?.slice(0, visibleItems).map((item) => (
+                          isBrands?.filter((item) => item.categoryID.slugCategory === isSlug).slice(0, visibleItems).map((item) => (
                             <li key={item._id} className="mb-2">
                               <div className="flex space-x-[10px] items-center">
                                 <input
