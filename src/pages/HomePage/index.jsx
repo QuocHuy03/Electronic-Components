@@ -14,8 +14,6 @@ import { bannerService } from "../../services/banner.service";
 import Loading from "./../../components/Loading/index";
 import Slider from "../../components/Carousel";
 import { SwiperSlide } from "swiper/react";
-import { categoryService } from "../../services/category.service";
-import { Carousel } from "antd";
 import { COLOR } from "../../constants/style.constants";
 
 export default function HomePage() {
@@ -35,15 +33,6 @@ export default function HomePage() {
       retryDelay: 1000,
     }
   );
-  const { data: isCategories, isloading: loadingCategory } = useQuery(
-    ["categories"],
-    () => categoryService.fetchAllCategories(),
-    {
-      retry: 3,
-      retryDelay: 1000,
-    }
-  );
-  console.log();
 
   const { data: bannerData } = useQuery(
     ["banner"],
@@ -54,10 +43,10 @@ export default function HomePage() {
     }
   );
 
+  
+
   return (
     <Layout>
-      {/* Banner */}
-
       <div className="w-full banner-wrapper mb-[20px]" data-aos="fade-up">
         <div className="max-w-6xl mx-auto">
           <div className="main-wrapper w-full">
