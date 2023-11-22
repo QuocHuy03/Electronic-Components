@@ -41,7 +41,7 @@ export default function CartPage() {
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
     0
   );
-console.log(coupons)
+
   const handleUpdateCart = useCallback(
     async (item, operation) => {
       const updatedItem = { ...item };
@@ -71,13 +71,13 @@ console.log(coupons)
     async (item) => {
       await dispatch(deleteToCartItem(item));
     },
-    [dispatch, coupons]
+    [dispatch]
   );
 
   const handleDeleteAll = useCallback(async () => {
     await dispatch(deleteToCartAll());
     // Xử lý logic sau khi xóa tất cả mục
-  }, [dispatch, coupons]);
+  }, [dispatch]);
 
   const handleDocumentClick = (event) => {
     if (
