@@ -9,7 +9,7 @@ import Layout from "../../components/Layout";
 import { productService } from "../../services/product.service";
 import { commentService } from "../../services/comment.service";
 import { useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { addToCart } from "../../stores/cart/actions";
 import createNotification from "../../utils/notification";
 import { useQuery } from "@tanstack/react-query";

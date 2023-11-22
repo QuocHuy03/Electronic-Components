@@ -60,7 +60,7 @@ export default function Discount() {
               className="sm:w-[158px] w-[80px] h-full bg-amber-400 text-sm font-bold rounded-r-lg"
               style={{background: COLOR.BLUE}}
             >
-             Nhận phiếu giảm giá
+             <a className="text-white">Nhận phiếu giảm giá</a> 
             </button>
           </div>
         </div>
