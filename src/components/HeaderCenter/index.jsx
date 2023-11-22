@@ -28,7 +28,7 @@ export default function HeaderCenter() {
   const searchBoardRef = useRef();
   const notificationRef = useRef();
   const sidebarRef = useRef();
-  const handleSearch = () => {
+  const handleSearchBoard = () => {
     setIsSearchBoard(true);
   };
   const handleNotification = () => {
@@ -68,6 +68,10 @@ export default function HeaderCenter() {
     }
   );
 
+  const handleSearch = (event) => {
+    dispatch(searchProductSuccess(event.target.value));
+  };
+
   return (
     <React.Fragment>
       <div className="w-full h-[86px] bg-white quomodo-shop-middle-bar lg:block hidden">
@@ -93,11 +97,12 @@ export default function HeaderCenter() {
                 <div className="relative w-[517px] h-[44px]">
                   <div
                     className="flex bg-[#F5F5F5] border border-solid border-[#eaeaea] rounded-[8px]"
-                    onClick={handleSearch}
+                    onClick={handleSearchBoard}
                     ref={searchBoardRef}
                   >
                     <div className="inline-block w-full">
                       <input
+                        onChange={handleSearch}
                         className="block bg-[#F5F5F5] text-[14px] outline-none w-full py-[0.375rem] px-[0.75rem] min-h-[16px] h-full"
                         placeholder="Nhập từ khoá cần tìm"
                       />
