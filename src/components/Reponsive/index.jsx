@@ -1,10 +1,17 @@
 import React from "react";
 
-export default function Reponsive() {
+export default function Reponsive({ isOpenSidebar, onClickStopModal, onClose }) {
   return (
     <div className="drawer-wrapper w-full  h-full relative ">
-      <div className="w-full h-screen bg-black bg-opacity-40 z-40 left-0 top-0 fixed"></div>
-      <div className="w-[280px] transition-all duration-300 ease-in-out h-screen overflow-y-auto overflow-x-hidden overflow-style-none bg-white fixed  top-0 z-50 -left-[280px]">
+      {isOpenSidebar && (
+        <div className="w-full h-screen bg-black bg-opacity-40 z-40 left-0 top-0 fixed"></div>
+      )}
+      <div
+       onClick={onClickStopModal}
+        className={`w-[280px] transition-all duration-300 ease-in-out h-screen overflow-y-auto overflow-x-hidden overflow-style-none bg-white fixed  top-0 z-50 ${
+          isOpenSidebar ? "left-0" : "-left-[280px]"
+        }`}
+      >
         <div className="w-full px-5 mt-5 mb-4">
           <div className="flex justify-between items-center">
             <div className="flex space-x-5 items-center">
@@ -51,7 +58,7 @@ export default function Reponsive() {
                 </span>
               </div>
             </div>
-            <button type="button">
+            <button type="button" onClick={onClose}>
               <svg
                 width={34}
                 height={34}

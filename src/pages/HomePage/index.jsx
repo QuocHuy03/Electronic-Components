@@ -43,8 +43,6 @@ export default function HomePage() {
     }
   );
 
-
-
   return (
     <Layout>
       <div className="w-full banner-wrapper mb-[20px]" data-aos="fade-up">
@@ -329,7 +327,6 @@ export default function HomePage() {
             <img
               alt="LAPTOP"
               src="https://i.imgur.com/Osaxw8n.png"
-              
               className="absolute top-0 rounded w-[1200px] h-[420px]"
             />
 
@@ -340,10 +337,27 @@ export default function HomePage() {
                 navigation={true}
                 pagination={false}
                 slidesPerView={5}
+                breakpoints={{
+                  1024: {
+                    slidesPerView: 5,
+                  },
+                  768: {
+                    slidesPerView: 3,
+                  },
+                  640: {
+                    slidesPerView: 2,
+                  },
+                  320: {
+                    slidesPerView: 2,
+                  },
+                }}
               >
                 {data?.map((item, index) => (
                   <SwiperSlide key={index}>
-                    <div data-aos="fade-up" className="bg-white w-full w[140px]">
+                    <div
+                      data-aos="fade-up"
+                      className="bg-white w-full w[140px]"
+                    >
                       <div className="relative w-full h-full p-4 flex flex-col bg-white justify-between">
                         <div className="relative flex-1 flex-grow-0 flex-shrink-0 flex-basis-auto">
                           <div className="relative">
@@ -383,7 +397,7 @@ export default function HomePage() {
                                 display: "inline",
                               }}
                             >
-                             {item.brand.nameBrand}
+                              {item.brand.nameBrand}
                             </div>
                           </div>
                           <div className="h-12">
@@ -499,11 +513,12 @@ export default function HomePage() {
                 </div>
               </Link>
             </div>
-            <div className="flex flex-wrap place-content-start bg-gray-50 py-2">
-              {data?.map((item) => (
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-1 py-2">
+              {data?.map((item, index) => (
                 <div
+                  key={index}
                   data-aos="fade-up"
-                  className="bg-white mb-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/5 xl:w-1/5"
+                  className="bg-white p-2 flex flex-col h-full"
                 >
                   <div className="relative w-full h-full p-2 flex flex-col bg-white justify-between">
                     <div className="relative flex-1 flex-grow-0 flex-shrink-0 flex-basis-auto mb-2">
@@ -708,6 +723,20 @@ export default function HomePage() {
                   navigation={true}
                   pagination={false}
                   slidesPerView={4}
+                  breakpoints={{
+                    1024: {
+                      slidesPerView: 5,
+                    },
+                    768: {
+                      slidesPerView: 3,
+                    },
+                    640: {
+                      slidesPerView: 2,
+                    },
+                    320: {
+                      slidesPerView: 2,
+                    },
+                  }}
                 >
                   {blogData?.map((item, index) => (
                     <SwiperSlide key={index}>

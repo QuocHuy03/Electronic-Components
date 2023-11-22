@@ -6,6 +6,7 @@ import { formatPrice } from "../../utils/fomatPrice";
 import { deleteToCartItem } from "../../stores/cart/actions";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
+import Reponsive from "../Reponsive";
 import "./index.css";
 
 export default function HeaderCenter() {
@@ -21,8 +22,10 @@ export default function HeaderCenter() {
   };
   const [isSearchBoard, setIsSearchBoard] = useState(false);
   const [isNotification, setNotification] = useState(false);
+  const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const searchBoardRef = useRef();
   const notificationRef = useRef();
+  const sidebarRef = useRef();
   const handleSearch = () => {
     setIsSearchBoard(true);
   };
@@ -43,6 +46,12 @@ export default function HeaderCenter() {
         !notificationRef.current.contains(event.target)
       ) {
         setNotification(false);
+      }
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target)
+      ) {
+        setIsOpenSidebar(false);
       }
     };
     document.addEventListener("click", handleClickOutside);
@@ -194,7 +203,7 @@ export default function HeaderCenter() {
                     </p>
                   </div>
                   <div
-                  onClick={(event) => event.stopPropagation()}
+                    onClick={(event) => event.stopPropagation()}
                     className="bg-white w-[336px] top-[60px] right-0 z-[100] absolute notify_menu rounded-[12px]"
                     style={
                       isNotification
@@ -239,7 +248,7 @@ export default function HeaderCenter() {
                       <div className="my-[16px] text-center">
                         {" "}
                         <img
-                        className="inline"
+                          className="inline"
                           src="https://shopjk.net/assets/frontend/theme_5/image/nam/notification_mailbox.png"
                           alt
                         />
@@ -261,9 +270,7 @@ export default function HeaderCenter() {
                   </div>
                   <div className="hidden bg-white">
                     <div className="hidden">
-                      <a
-                        className="link-back close-step"
-                      />
+                      <a className="link-back close-step" />
                       <p className="text-black font-[500px] text-[12px] leading-[24px]">
                         Thông báo
                       </p>
@@ -452,7 +459,7 @@ export default function HeaderCenter() {
 
       <div className="lg:hidden block w-full h-[60px] bg-white">
         <div className="w-full h-full flex justify-between items-center px-5">
-          <div>
+          <div   ref={sidebarRef} onClick={() => setIsOpenSidebar(!isOpenSidebar)} >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -470,9 +477,9 @@ export default function HeaderCenter() {
           </div>
           <div className="cursor-pointer">
             <img
-              width={152}
+              width={102}
               height={36}
-              src="https://i.imgur.com/gSR0WOr.jpg"
+              src="https://i.imgur.com/ZEyJnBt.png"
               alt="logo"
             />
           </div>
@@ -494,11 +501,16 @@ export default function HeaderCenter() {
               </span>
             </a>
             <span className="w-[18px] h-[18px] rounded-full  absolute -top-2.5 -right-2.5 flex justify-center items-center text-[9px] bg-qyellow text-qblack">
-              15
+              {carts?.length > 0 ? carts?.length : 0}
             </span>
           </div>
         </div>
       </div>
+      <Reponsive
+        onClickStopModal={(e) => e.stopPropagation()}
+        isOpenSidebar={isOpenSidebar}
+        onClose={() => setIsOpenSidebar(false)}
+      />
     </React.Fragment>
   );
 }
