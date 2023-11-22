@@ -162,7 +162,7 @@ export default function FilterPage() {
                 parseInt(b.price_has_dropped) - parseInt(a.price_has_dropped)
               );
             } else if (filters.sorts === "SBPA") {
-              return (
+              return ( 
                 new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
               );
             }
