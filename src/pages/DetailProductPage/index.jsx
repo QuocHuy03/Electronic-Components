@@ -244,7 +244,7 @@ export default function DetailProductPage() {
       {isDetailProductLoading ? (
         <Loading />
       ) : (
-        <div className="w-full  pt-0 pb-0">
+        <div className="w-full px-2">
           <div className="single-product-wrapper w-full">
             <div className="product-view-main-wrapper bg-white pt-[30px] w-full">
               <div class="breadcrumb-wrapper w-full ">

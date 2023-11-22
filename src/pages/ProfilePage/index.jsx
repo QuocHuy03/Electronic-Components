@@ -153,7 +153,6 @@ export default function ProfilePage() {
     [wards, selectedDistrict]
   );
 
-
   const handleEditModalAddress = (item) => {
     setInputs(initialValues(item));
     setSelectedProvince(item.city);
@@ -1735,20 +1734,33 @@ export default function ProfilePage() {
                                       </div>
                                     </div>
                                     <div>
-                                      <div className=" justify-end">
+                                      <div className="flex justify-end flex-wrap">
                                         <button
                                           height="2rem"
-                                          className="w-[120px] h-[35px] opacity-100 h-2rem px-1.25rem rounded-md bg-transparent relative border border-1.5 border-red-500"
+                                          className="w-[120px] opacity-100 h-[2rem] px-1.25rem rounded-md bg-transparent relative border border-1.5 border-red-500"
                                           type="button"
                                         >
                                           <div
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleEditModalAddress(item);
-                                              }}
-                                            className="text-[16px] text-red-500"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleEditModalAddress(item);
+                                            }}
+                                            className="text-[13px] text-red-500 font-[500]"
                                           >
                                             Chỉnh sửa
+                                          </div>
+                                        </button>
+                                        <button
+                                          height="2rem"
+                                          className="h-[2rem] ml-[0.5rem] px-[1.25rem] rounded-[0.25rem] relative flex items-center justify-center outline-none min-w-[2rem] border border-solid border-gray-500"
+                                          type="button"
+                                        >
+                                          <div
+                                            type="body"
+                                            color="textPrimary"
+                                            className="text-[13px] text-black font-[500]"
+                                          >
+                                            Xóa
                                           </div>
                                         </button>
                                       </div>

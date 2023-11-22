@@ -69,14 +69,13 @@ export default function CartPage() {
 
   const handleDeleteItem = useCallback(
     async (item) => {
-      const response = await dispatch(deleteToCartItem(item));
-      // Xử lý logic sau khi xóa một mục
+      await dispatch(deleteToCartItem(item));
     },
     [dispatch]
   );
 
   const handleDeleteAll = useCallback(async () => {
-    const response = await dispatch(deleteToCartAll());
+    await dispatch(deleteToCartAll());
     // Xử lý logic sau khi xóa tất cả mục
   }, [dispatch]);
 
@@ -124,13 +123,14 @@ export default function CartPage() {
   }, [carts, isCoupons]);
 
   const totalDiscount = carts?.reduce((total, cartItem) => {
-    const productDiscount = discounts?.find((man) => man.coupon.productID === cartItem.productID);
+    const productDiscount = discounts?.find(
+      (man) => man.coupon.productID === cartItem.productID
+    );
     if (productDiscount) {
-        return total + parseInt(productDiscount.coupon.price);
+      return total + parseInt(productDiscount.coupon.price);
     }
     return total;
   }, 0);
-  
 
   const handleCouponChange = useCallback(
     async (huyit) => {
