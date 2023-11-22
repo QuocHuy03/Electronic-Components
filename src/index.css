@@ -195,6 +195,24 @@ input:disabled {
   transition: color 0.3s ease 0s;
   min-height: 16px;
 }
+.bg-content {
+  overflow: hidden;
+  position: relative;
+}
+.bg-content::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: -webkit-gradient(linear,left top,left bottom,from(transparent),to(#fff));
+  background: linear-gradient(transparent,#fff);
+  height: 200px;
+}
+.bg-content img {
+ text-align: center
+ 
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
