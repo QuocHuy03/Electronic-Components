@@ -48,7 +48,7 @@ export default function HomePage() {
       <div className="w-full banner-wrapper mb-[20px]" data-aos="fade-up">
         <div className="max-w-6xl mx-auto">
           <div className="main-wrapper w-full">
-            <div className="banner-card mb-[30px]">
+            <div className="banner-card mb-[20px]">
               <div className="w-full mt-[30px]">
                 <Slider
                   className="swiper rounded-[12px]"
