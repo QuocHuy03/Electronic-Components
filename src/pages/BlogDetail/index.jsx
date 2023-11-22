@@ -7,8 +7,6 @@ import { Link, useParams } from "react-router-dom";
 import Loading from "../../components/Loading";
 
 export default function BlogDetail() {
-  // Xử lý khi nhấp vào liên kết
-
   const { slug } = useParams();
   const { data, isLoading, refetch } = useQuery(
     ["blog"],
@@ -26,7 +24,6 @@ export default function BlogDetail() {
       retryDelay: 1000,
     }
   );
-  // Gọi lại dữ liệu khi slug thay đổi
   React.useEffect(() => {
     refetch();
   }, [slug]);

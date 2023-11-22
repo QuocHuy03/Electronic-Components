@@ -30,6 +30,7 @@ export default function HeaderBottom() {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+  
   const { data: isCategories, isloading: loadingCategory } = useQuery(
     ["categories"],
     () => categoryService.fetchAllCategories(),

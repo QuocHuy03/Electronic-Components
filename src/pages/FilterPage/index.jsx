@@ -162,7 +162,7 @@ export default function FilterPage() {
                 parseInt(b.price_has_dropped) - parseInt(a.price_has_dropped)
               );
             } else if (filters.sorts === "SBPA") {
-              return ( 
+              return (
                 new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
               );
             }
@@ -369,12 +369,17 @@ export default function FilterPage() {
             className="opacity-100 mt-10 mb-10"
             style={{ textAlign: "center" }}
           >
-            <div height={200} width={200} className="relative inline-block overflow-hidden h-200 w-200">
-              <img
-                src="https://i.imgur.com/NKeOh8y.png"
-              />
+            <div
+              height={200}
+              width={200}
+              className="relative inline-block overflow-hidden h-200 w-200"
+            >
+              <img src="https://i.imgur.com/NKeOh8y.png" />
             </div>
-            <div type="subtitle" className="opacity-100 text-inherit font-semibold text-base leading-6 overflow-hidden">
+            <div
+              type="subtitle"
+              className="opacity-100 text-inherit font-semibold text-base leading-6 overflow-hidden"
+            >
               Không tìm thấy sản phẩm nào
             </div>
           </div>
@@ -557,41 +562,53 @@ export default function FilterPage() {
                       <ul>
                         {loadingBrand ? (
                           <Loading />
+                        ) : isBrands?.length > 0 ? (
+                          <React.Fragment>
+                            {isBrands
+                              .filter(
+                                (item) =>
+                                  item.categoryID.slugCategory === isSlug
+                              )
+                              .slice(0, visibleItems)
+                              .map((item) => (
+                                <li key={item._id} className="mb-2">
+                                  <div className="flex space-x-[10px] items-center">
+                                    <input
+                                      onChange={() =>
+                                        handleFilterChange(
+                                          "brands",
+                                          item.slugBrand
+                                        )
+                                      }
+                                      checked={filters.brands.includes(
+                                        item.slugBrand
+                                      )}
+                                      type="checkbox"
+                                      name={item.nameBrand}
+                                      id={item.nameBrand}
+                                    />
+                                    <div>
+                                      <label
+                                        htmlFor={item.nameBrand}
+                                        className="text-xs font-400 capitalize"
+                                      >
+                                        {item.nameBrand}
+                                      </label>
+                                    </div>
+                                  </div>
+                                </li>
+                              ))}
+                            {visibleItems < isBrands.length && (
+                              <span
+                                className="text-[#1990FF] cursor-pointer text-[0.75rem] text-center"
+                                onClick={handleLoadMore}
+                              >
+                                Xem thêm
+                              </span>
+                            )}
+                          </React.Fragment>
                         ) : (
-                          isBrands?.filter((item) => item.categoryID.slugCategory === isSlug).slice(0, visibleItems).map((item) => (
-                            <li key={item._id} className="mb-2">
-                              <div className="flex space-x-[10px] items-center">
-                                <input
-                                  onChange={() =>
-                                    handleFilterChange("brands", item.slugBrand)
-                                  }
-                                  checked={filters.brands.includes(
-                                    item.slugBrand
-                                  )}
-                                  type="checkbox"
-                                  name={item.nameBrand}
-                                  id={item.nameBrand}
-                                />
-
-                                <div>
-                                  <label
-                                    htmlFor={item.nameBrand}
-                                    className="text-xs font-400 capitalize"
-                                  >
-                                    {item.nameBrand}
-                                  </label>
-                                </div>
-                              </div>
-                            </li>
-                          ))
-                        )}
-                        {isBrands && visibleItems < isBrands.length && (
-                          <span
-                            className="text-[#1990FF] cursor-pointer text-[0.75rem] text-center"
-                            onClick={handleLoadMore}
-                          >
-                            Xem thêm
-                          </span>
+                          <p>Rỗng</p>
                         )}
                       </ul>
                     </div>

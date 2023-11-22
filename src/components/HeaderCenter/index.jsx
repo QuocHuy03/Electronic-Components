@@ -7,7 +7,9 @@ import { deleteToCartItem } from "../../stores/cart/actions";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import Reponsive from "../Reponsive";
+import { categoryService } from "../../services/category.service";
 import "./index.css";
+import { useQuery } from "@tanstack/react-query";
 
 export default function HeaderCenter() {
   const { carts } = useContext(AppContext);
@@ -47,10 +49,7 @@ export default function HeaderCenter() {
       ) {
         setNotification(false);
       }
-      if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target)
-      ) {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
         setIsOpenSidebar(false);
       }
     };
@@ -59,6 +58,15 @@ export default function HeaderCenter() {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  const { data: isCategories, isloading: loadingCategory } = useQuery(
+    ["categories"],
+    () => categoryService.fetchAllCategories(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
 
   return (
     <React.Fragment>
@@ -171,16 +179,24 @@ export default function HeaderCenter() {
                           background: "rgb(255, 255, 255)",
                         }}
                       >
-                        <div
-                          className="h-[32px] leading-[32px] px-[16px] rounded-[999px] text-[14px] cursor-pointer"
-                          style={{
-                            background: "rgb(245, 245, 245)",
-                            color: "rgb(51, 51, 51)",
-                            margin: "0px 4px 10px",
-                          }}
-                        >
-                          máy in brother
-                        </div>
+                        {isCategories
+                          ?.filter(
+                            (item) => item.outstandingCategory === "outstanding"
+                          )
+                          .map((item, index) => (
+                            <Link
+                              to={`/filter/${item.slugCategory}`}
+                              key={index}
+                              className="h-[32px] leading-[32px] px-[16px] rounded-[999px] text-[14px] cursor-pointer"
+                              style={{
+                                background: "rgb(245, 245, 245)",
+                                color: "rgb(51, 51, 51)",
+                                margin: "0px 4px 10px",
+                              }}
+                            >
+                              {item.nameCategory}
+                            </Link>
+                          ))}
                       </div>
                     </div>
                   </div>
@@ -459,7 +475,10 @@ export default function HeaderCenter() {
 
       <div className="lg:hidden block w-full h-[60px] bg-white">
         <div className="w-full h-full flex justify-between items-center px-5">
-          <div   ref={sidebarRef} onClick={() => setIsOpenSidebar(!isOpenSidebar)} >
+          <div
+            ref={sidebarRef}
+            onClick={() => setIsOpenSidebar(!isOpenSidebar)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"

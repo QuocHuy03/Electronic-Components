@@ -14,7 +14,6 @@ import { addToCart } from "../../stores/cart/actions";
 import createNotification from "../../utils/notification";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
-import { Link } from "react-router-dom";
 import Slider from "../../components/Carousel";
 import { SwiperSlide } from "swiper/react";
 import "./style.css";
@@ -25,13 +24,13 @@ import {
 import { AppContext } from "../../contexts/AppContextProvider";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import "./style.css";
+import { blogService } from "../../services/blog.service";
 
 export default function DetailProductPage() {
   const { accessToken } = useContext(AppContext);
 
   const [isSeeMore, setIsSeeMore] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isReview, setIsReview] = useState(true);
   const [rating, setRating] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
   const [showColorError, setShowColorError] = useState(false);
@@ -40,6 +39,15 @@ export default function DetailProductPage() {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [isLoadingCart, setIsLoadingCart] = useState(false);
+
+  const { data, isLoading } = useQuery(
+    ["blog"],
+    () => blogService.fetchAllBlogs(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
 
   const toggleSeeMore = useCallback(() => {
     setIsSeeMore(!isSeeMore);
@@ -558,9 +566,9 @@ export default function DetailProductPage() {
               </div>
             </div>
 
-            <div className="flex justify-center flex-col lg:flex-row max-w-6xl m-auto">
-              <div className="lg:w-8/12 relative pb-[60px]">
-                <div className="tab-buttons w-full mb-10 mt-5 sm:mt-0">
+            <div className="flex justify-center flex-col lg:flex-row max-w-6xl m-auto gap-5">
+              <div className="lg:w-8/12 relative pb-[20px]">
+                <div className="tab-buttons w-full mb-3 mt-5 sm:mt-0">
                   <div className="max-w-6xl mx-auto">
                     <ul className="flex space-x-12 ">
                       <li onClick={() => handleTabClick(0)}>
@@ -951,8 +959,40 @@ export default function DetailProductPage() {
                   </div>
                 </div>
               </div>
-              <div className="lg:w-4/12 relative pb-[60px]">
-                
+              <div className="lg:w-4/12 relative pb-[20px]">
+                <div className="flex flex-col rounded-md">
+                  <p className="py-[15px] sm:text-[15px] text-sm sm:block border-b font-medium cursor-pointer">
+                    Tin tức mới nhất
+                  </p>
+                  <div className="py-[20px] leading-[18px]" style={{
+                    borderBottom: "1px solid #E5EAF1",
+                  }}>
+                    <Link href="/cau-hinh-may-tinh-do-hoa" className="text-center mb-[12px] block">
+                      <img
+                        src="https://hoanghapccdn.com/media/news/14_pc_do_hoa_hoanghapc_min.jpg"
+                        alt="100+ Cấu Hình Máy Tính Đồ Họa Theo Ngân Sách✔️"
+                        width={352}
+                        height={235}
+                        className="w-auto h-auto block m-auto"
+                      />
+                    </Link>
+                    <div>
+                      <a
+                        href="/cau-hinh-may-tinh-do-hoa"
+                        className="font-[600] text-[16px] leading-[20px] mb-[4px]"
+                      >
+                        100+ Cấu Hình Máy Tính Đồ Họa Theo Ngân Sách✔️
+                      </a>
+                      <div className="text-ellipsis overflow-hidden line-clamp-2" style={{
+                        
+                      }}>
+                        Cấu hình máy tính đồ họa chuyên dụng cho công việc thiết
+                        kế đồ họa, làm phim, Render và xử lý các thuật toán AI
+                        trí tuệ nhân tạo phù hợp nhất mọi công việc.
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
