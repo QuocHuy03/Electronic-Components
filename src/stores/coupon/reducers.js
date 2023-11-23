@@ -37,31 +37,43 @@ const couponReducer = (state = initialState, action) => {
     case GET_DISCOUNT_REQUEST:
       return { ...state, loading: true };
 
-      case GET_FILTER_COUPON_PRODUCT_SUCCESS:
-        const { carts, coupon } = action.payload;
-        const { coupons } = state;
-      
-        // Lặp qua từng sản phẩm trong giỏ hàng
-        for (const cartItem of carts) {
-          // Kiểm tra xem sản phẩm có coupon từ danh sách không
-          const foundCoupon = coupon?.find(
-            (huydev) => huydev.product._id === cartItem.productID
-          );
+    case GET_FILTER_COUPON_PRODUCT_SUCCESS:
+      const { carts, coupon } = action.payload;
+      const { coupons } = state;
 
-      
-          if (foundCoupon) {
-            // Nếu có coupon và chưa tồn tại trong mảng coupons, thêm vào
-            if (!coupons.some(existingCoupon => existingCoupon.code === foundCoupon.code)) {
-              coupons.push(foundCoupon);
-            }
-          }
+      // Tạo một bộ ID sản phẩm từ giỏ hàng hiện tại
+      const cartProductIDs = new Set(
+        carts.map((cartItem) => cartItem.productID)
+      );
+      // console.log(cartProductIDs)
+
+      // Lọc phiếu giảm giá cho các sản phẩm không có trong giỏ hàng hiện tại
+      const updatedCoupons = coupons.filter((existingCoupon) =>
+        cartProductIDs.has(existingCoupon.product._id)
+      );
+      // console.log(updatedCoupons)
+
+      // Thêm phiếu giảm giá mới cho sản phẩm trong giỏ hàng hiện tại
+      for (const cartItem of carts) {
+        const foundCoupon = coupon?.find(
+          (huydev) => huydev.product._id === cartItem.productID
+        );
+
+        if (
+          foundCoupon &&
+          !updatedCoupons.some(
+            (existingCoupon) => existingCoupon.code === foundCoupon.code
+          )
+        ) {
+          updatedCoupons.push(foundCoupon);
         }
-      
-        return {
-          ...state,
-          coupons,
-        };
-      
+      }
+
+      return {
+        ...state,
+        coupons: updatedCoupons,
+      };
+
     case GET_DISCOUNT_SUCCESS:
       return {
         ...state,
@@ -83,7 +95,7 @@ const couponReducer = (state = initialState, action) => {
       return {
         ...state,
         discounts: state.discounts.filter(
-          (coupon) => coupon.couponID !== action.payload
+          (e) => e.coupon._id !== action.payload
         ),
       };
     case GET_FILTER_COUPON_PRODUCT_FAILED:

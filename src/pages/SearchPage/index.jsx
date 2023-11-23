@@ -34,7 +34,7 @@ const sort = [
   },
 ];
 
-export default function FilterPage() {
+export default function SearchPage() {
   const { slug } = useParams();
   const [isSlug, setSlug] = useState(null);
   useEffect(() => {

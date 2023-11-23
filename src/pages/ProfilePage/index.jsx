@@ -1,10 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Layout from "../../components/Layout";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import huydev from "../../json/address.json";
 import { logout } from "../../stores/authentication/actions";
 import { userService } from "../../services/user.service";
-import { LOAD_CURRENT_LOGIN_USER_SUCCESS } from "../../stores/authentication/types";
+import UpdateProfile from "../../components/UpdateProfile";
 import createNotification from "../../utils/notification";
 import { orderService } from "../../services/order.service";
 import formatDate from "../../utils/fomatDate";
@@ -16,16 +23,46 @@ import { Link } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import { Empty } from "antd";
 import { COLOR } from "../../constants/style.constants";
+import { AppContext } from "../../contexts/AppContextProvider";
+import {
+  addAddress,
+  getAddress,
+  updateAddress,
+} from "../../stores/address/actions";
+import Modal from "../../components/Modal";
+import { SET_EDIT_MODE } from "../../stores/address/types";
+
+const initialValues = (user) => ({
+  id: user?._id,
+  name: user?.name || "",
+  address: user?.address || "",
+  city: user?.city || "",
+  district: user?.district || "",
+  commune: user?.commune || "",
+  phone: user?.phone || "",
+  default: user?.default || false,
+});
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
-  const { user, refreshToken } = useSelector((state) => state.auth);
+  const { user, refreshToken, billings, isEditAddress } =
+    useContext(AppContext);
   const [activeTab, setActiveTab] = useState(0);
+  const [provinces, setProvinces] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedCommune, setSelectedCommune] = useState("");
+  const [inputs, setInputs] = useState(initialValues());
   const [validationErrors, setValidationErrors] = useState([]);
+  const [isAddressPageOpen, setIsAddressPageOpen] = useState(false);
+  const modalAddressRef = useRef();
 
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
+
   const handleLogout = async (item) => {
     setActiveTab(item);
     persistor.purge();
@@ -102,328 +139,128 @@ export default function ProfilePage() {
     setValidationErrors([]);
   };
 
-  // update me
-
-  const initialValues = (user) => ({
-    fullname: user?.fullname || "",
-    username: user?.username || "",
-    address: user?.address || "",
-    city: user?.city || "",
-    district: user?.district || "",
-    commune: user?.commune || "",
-    phone: user?.phone || "",
-  });
-
-  const UpdateProfile = ({ user }) => {
-    const [provinces, setProvinces] = useState([]);
-    const [selectedProvince, setSelectedProvince] = useState("");
-    const [districts, setDistricts] = useState([]);
-    const [selectedDistrict, setSelectedDistrict] = useState("");
-    const [selectedCommune, setSelectedCommune] = useState("");
-    const [wards, setWards] = useState([]);
-    const [inputs, setInputs] = useState(initialValues(user));
-
-    const handleChangeInput = (e) => {
-      const { name, value } = e.target;
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        [name]: value,
-      }));
-    };
-
-    useEffect(() => {
-      setProvinces(huydev.provinces);
-      setDistricts(huydev.districts);
-      setWards(huydev.wards);
-      if (user) {
-        setSelectedProvince(user.city);
-        setSelectedDistrict(user.district);
-        setSelectedCommune(user.commune);
-      }
-    }, [user]);
-
-    const handleSelectProvince = useCallback((e) => {
-      setSelectedProvince(e.target.value);
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        city: e.target.value,
-      }));
-    }, []);
-
-    const handleSelectDistrict = useCallback((e) => {
-      setSelectedDistrict(e.target.value);
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        district: e.target.value,
-      }));
-    }, []);
-
-    const handleSelectCommune = useCallback((e) => {
-      setSelectedCommune(e.target.value);
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        commune: e.target.value,
-      }));
-    }, []);
-
-    const filteredDistricts = useMemo(() => {
-      return districts?.filter(
+  const filteredDistricts = useMemo(
+    () =>
+      districts?.filter(
         (district) => district.province_id === Number(selectedProvince)
-      );
-    }, [districts, selectedProvince]);
+      ),
+    [districts, selectedProvince]
+  );
 
-    const filteredWards = useMemo(() => {
-      return wards?.filter(
-        (ward) => ward.district_id === Number(selectedDistrict)
-      );
-    }, [wards, selectedDistrict]);
+  const filteredWards = useMemo(
+    () =>
+      wards?.filter((ward) => ward.district_id === Number(selectedDistrict)),
+    [wards, selectedDistrict]
+  );
 
-    const handleSubmit = async (e) => {
+  const handleEditModalAddress = (item) => {
+    setInputs(initialValues(item));
+    setSelectedProvince(item.city);
+    setSelectedDistrict(item.district);
+    setSelectedCommune(item.commune);
+    setValidationErrors([]);
+    dispatch({ type: SET_EDIT_MODE, payload: true });
+    setIsAddressPageOpen(true);
+  };
+
+  const handleCloseModalAddress = () => {
+    setInputs(initialValues());
+    setSelectedProvince("");
+    setSelectedDistrict("");
+    setSelectedCommune("");
+    setValidationErrors([]);
+    dispatch({ type: SET_EDIT_MODE, payload: false });
+    setIsAddressPageOpen(false);
+  };
+
+  const handleDocumentClick = (event) => {
+    if (
+      modalAddressRef.current &&
+      !modalAddressRef.current.contains(event.target)
+    ) {
+      setInputs(initialValues());
+      setSelectedProvince("");
+      setSelectedDistrict("");
+      setSelectedCommune("");
+      setValidationErrors([]);
+      dispatch({ type: SET_EDIT_MODE, payload: false });
+      setIsAddressPageOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    dispatch(getAddress());
+  }, [billings]);
+
+  const handleInputChange = useCallback((e) => {
+    const { name, value, type, checked } = e.target;
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  }, []);
+
+  const handleSelectProvince = useCallback((e) => {
+    const selectedCity = e.target.value;
+    setSelectedProvince(selectedCity);
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      city: selectedCity,
+    }));
+  }, []);
+
+  const handleSelectDistrict = useCallback((e) => {
+    const selectedDistrictValue = e.target.value;
+    setSelectedDistrict(selectedDistrictValue);
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      district: selectedDistrictValue,
+    }));
+  }, []);
+
+  const handleSelectCommune = useCallback((e) => {
+    const selectedCommuneValue = e.target.value;
+    setSelectedCommune(selectedCommuneValue);
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      commune: selectedCommuneValue,
+    }));
+  }, []);
+
+  useEffect(() => {
+    setProvinces(huydev.provinces);
+    setDistricts(huydev.districts);
+    setWards(huydev.wards);
+  }, []);
+
+  const handleSubmitAddress = useCallback(
+    async (e) => {
       e.preventDefault();
-      try {
-        const response = await userService.updateMe(inputs);
-        dispatch({
-          type: LOAD_CURRENT_LOGIN_USER_SUCCESS,
-          payload: response.user,
-        });
-        if (response.status === true) {
-          createNotification("success", "topRight", response.message);
-        } else {
+
+      const action = isEditAddress ? updateAddress : addAddress;
+      const response = await dispatch(action(inputs));
+
+      if (response.status === true) {
+        setValidationErrors([]);
+        setIsAddressPageOpen(false);
+        createNotification("success", "topRight", response.message);
+      } else {
+        if (response.status === false) {
+          setValidationErrors([]);
           createNotification("error", "topRight", response.message);
         }
-      } catch (error) {
-        console.error("An error occurred:", error);
+        setValidationErrors(response.errors);
       }
-    };
-
-    return (
-      <form onSubmit={handleSubmit}>
-        <div className="flex space-x-8">
-          <div className="w-[570px] ">
-            <div className="input-item flex space-x-2.5 mb-8">
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Full Name*
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                    <input
-                      placeholder="Nguyen Van A"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                      type="text"
-                      name="fullname"
-                      onChange={handleChangeInput}
-                      value={inputs.fullname}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    User Name*
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                    <input
-                      placeholder="Username"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                      type="text"
-                      name="username"
-                      onChange={handleChangeInput}
-                      value={inputs.username}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="input-item flex space-x-2.5 mb-8">
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Email*
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                    <input
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                      type="email"
-                      name="email"
-                      disabled
-                      onChange={handleChangeInput}
-                      value={user?.email}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Phone Number*
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                    <input
-                      placeholder="012 3 *******"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                      type="number"
-                      min={9}
-                      name="phone"
-                      onChange={handleChangeInput}
-                      value={inputs.phone}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="input-item mb-8">
-              <div className="w-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Address*
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                    <input
-                      placeholder="Address"
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                      type="text"
-                      name="address"
-                      onChange={handleChangeInput}
-                      value={inputs.address}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="input-item mb-8">
-              <div className="w-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Tỉnh / TP*
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                    <select
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                      name="city"
-                      onChange={handleSelectProvince}
-                      value={selectedProvince}
-                      placeholder={`Vui lòng chọn Tỉnh / TP`}
-                    >
-                      <option value="">Vui lòng chọn Tỉnh / TP</option>
-                      {provinces?.map((province) => (
-                        <option key={province.id} value={province.id}>
-                          {province.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="input-item flex space-x-2.5 mb-8">
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Quận / Huyện*
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                    <select
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                      name="district"
-                      value={selectedDistrict}
-                      onChange={handleSelectDistrict}
-                      disabled={!selectedProvince}
-                      placeholder={`Vui Lòng Chọn Quận / Huyện ${selectedDistrict}`}
-                    >
-                      <option value="">Vui lòng chọn Quận / Huyện</option>
-                      {filteredDistricts?.map((district) => (
-                        <option key={district.id} value={district.id}>
-                          {district.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div className="w-1/2 h-full">
-                <div className="input-com w-full h-full">
-                  <label className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal">
-                    Phường / Xã*
-                  </label>
-                  <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
-                    <select
-                      className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                      name="commune"
-                      value={selectedCommune}
-                      onChange={handleSelectCommune}
-                      disabled={!selectedDistrict}
-                      placeholder="Vui Lòng Chọn Phường / Xã"
-                    >
-                      <option value="">Vui lòng chọn Phường / Xã</option>
-                      {filteredWards?.map((ward) => (
-                        <option key={ward.id} value={ward.id}>
-                          {ward.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex-1">
-            <div className="update-logo w-full mb-9">
-              <h1 className="text-xl tracking-wide font-bold text-black flex items-center mb-2">
-                Update Profile
-                <span className="ml-1">
-                  <svg
-                    width={20}
-                    height={20}
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10 0C4.47457 0 0 4.47791 0 10C0 15.5221 4.47791 20 10 20C15.5221 20 20 15.5221 20 10C19.9967 4.48126 15.5221 0.00669344 10 0ZM10 16.67C9.53815 16.67 9.16667 16.2985 9.16667 15.8367C9.16667 15.3748 9.53815 15.0033 10 15.0033C10.4618 15.0033 10.8333 15.3748 10.8333 15.8367C10.8333 16.2952 10.4618 16.67 10 16.67ZM11.6098 10.425C11.1078 10.7396 10.8132 11.2952 10.8333 11.8842V12.5033C10.8333 12.9652 10.4618 13.3367 10 13.3367C9.53815 13.3367 9.16667 12.9652 9.16667 12.5033V11.8842C9.14324 10.6861 9.76907 9.56827 10.8032 8.96586C11.4357 8.61781 11.7704 7.90161 11.6366 7.19545C11.5027 6.52276 10.9772 5.99732 10.3046 5.8668C9.40094 5.69946 8.5308 6.29853 8.36346 7.20214C8.34673 7.30254 8.33668 7.40295 8.33668 7.50335C8.33668 7.96519 7.9652 8.33668 7.50335 8.33668C7.0415 8.33668 6.67002 7.96519 6.67002 7.50335C6.67002 5.66265 8.16265 4.17001 10.0067 4.17001C11.8474 4.17001 13.34 5.66265 13.34 7.50669C13.3333 8.71821 12.674 9.83601 11.6098 10.425Z"
-                      fill="#374557"
-                      fillOpacity="0.6"
-                    />
-                  </svg>
-                </span>
-              </h1>
-              {/* <p className="text-sm text-qgraytwo mb-5 ">
-                                  Profile of at least Size
-                                  <span className="ml-1 text-qblack">
-                                    300x300
-                                  </span>
-                                  . Gifs work too.
-                                  <span className="ml-1 text-qblack">
-                                    Max 5mb
-                                  </span>
-                                  .
-                                </p> */}
-              <div className="flex xl:justify-center justify-start">
-                <div className="relative">
-                  <div className="sm:w-[198px] sm:h-[198px] w-[199px] h-[199px] rounded-full overflow-hidden relative">
-                    <img
-                      src={`https://ui-avatars.com/api/name=${user?.fullname}`}
-                      alt
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="action-area flex space-x-4 items-center">
-          <button
-            type="submit"
-            className="w-[164px] h-[50px] bg-black text-white text-sm"
-          >
-            Update Profile
-          </button>
-        </div>
-      </form>
-    );
-  };
+    },
+    [isEditAddress, inputs]
+  );
 
   const ListOrder = ({ isOrders }) => {
     const renderOrderItem = (item, index) => {
@@ -520,12 +357,12 @@ export default function ProfilePage() {
           <tbody>
             <tr className="text-base text-gray-400 whitespace-nowrap px-2 border-b default-border-bottom ">
               <td className="py-4 block whitespace-nowrap text-center">
-                Order
+                Đơn hàng
               </td>
-              <td className="py-4 whitespace-nowrap text-center">Date</td>
-              <td className="py-4 whitespace-nowrap text-center">Status</td>
-              <td className="py-4 whitespace-nowrap text-center">Amount</td>
-              <td className="py-4 whitespace-nowrap text-center">Action</td>
+              <td className="py-4 whitespace-nowrap text-center">Ngày đặt</td>
+              <td className="py-4 whitespace-nowrap text-center">Trạng thái</td>
+              <td className="py-4 whitespace-nowrap text-center">Tổng tiền</td>
+              <td className="py-4 whitespace-nowrap text-center">Hoạt động</td>
             </tr>
           </tbody>
           {isOrders.length > 0 ? (
@@ -568,7 +405,7 @@ export default function ProfilePage() {
               <div className="w-full bg-white px-10 py-9 border">
                 <div className="title-area w-full flex justify-between items-center">
                   <h1 className="text-[22px] font-bold text-black">
-                    Your Dashboard
+                    Tổng quan của bạn
                   </h1>
                 </div>
                 <div className="profile-wrapper w-full mt-8 flex space-x-10">
@@ -605,7 +442,7 @@ export default function ProfilePage() {
                           <span
                             className={`font-normal text-base whitespace-nowrap`}
                           >
-                            Dashboard
+                            Bảng điều khiển
                           </span>
                         </div>
                       </div>
@@ -632,7 +469,7 @@ export default function ProfilePage() {
                             </svg>
                           </span>
                           <span className=" font-normal text-base">
-                            Parsonal Info
+                            Thông tin tài khoản
                           </span>
                         </div>
                       </div>
@@ -659,7 +496,9 @@ export default function ProfilePage() {
                               <path d="M8.8449 6.1337C7.15883 6.12476 5.787 4.74744 5.78906 3.06549C5.79113 1.37254 7.18564 -0.00685072 8.88753 2.55979e-05C10.5702 0.00690192 11.9413 1.38835 11.9392 3.07374C11.9372 4.77563 10.555 6.14264 8.8449 6.1337ZM9.94924 1.61802C9.38194 2.22039 8.85178 2.78287 8.31199 3.35636C8.11326 3.12806 7.94342 2.93278 7.76394 2.72786C7.48201 2.96853 7.22553 3.1872 6.95735 3.41618C7.28191 3.80125 7.57484 4.16708 7.8884 4.51502C8.10157 4.75225 8.43232 4.77082 8.65236 4.54458C9.33656 3.83907 10.0042 3.11775 10.6382 2.44593C10.4031 2.16332 10.1858 1.9027 9.94924 1.61802Z" />
                             </svg>
                           </span>
-                          <span className=" font-normal text-base">Order</span>
+                          <span className=" font-normal text-base">
+                            Quản lí đơn hàng
+                          </span>
                         </div>
                       </div>
 
@@ -667,7 +506,7 @@ export default function ProfilePage() {
                         <div
                           onClick={() => handleTabClick(3)}
                           className={`flex space-x-3 items-center cursor-pointer ${
-                            activeTab === 4
+                            activeTab === 3
                               ? "text-blue-400"
                               : "text-slate-500 hover:text-black"
                           }`}
@@ -685,14 +524,50 @@ export default function ProfilePage() {
                             </svg>
                           </span>
                           <span className=" font-normal text-base">
-                            Change Password
+                            Đổi mật khẩu
                           </span>
                         </div>
                       </div>
 
                       <div className="item group">
                         <div
-                          onClick={() => handleLogout(4)}
+                          onClick={() => handleTabClick(4)}
+                          className={`flex space-x-3 items-center cursor-pointer ${
+                            activeTab === 4
+                              ? "text-blue-400"
+                              : "text-slate-500 hover:text-black"
+                          }`}
+                        >
+                          <span>
+                            <svg
+                              width={14}
+                              height={20}
+                              viewBox="0 0 14 20"
+                              fill="none"
+                              className="fill-current"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path d="M11.864 15.982C11.4632 12.6503 9.25877 11.1115 7.04363 11.0543C5.70166 11.0221 4.5422 11.5123 3.57598 12.4607C2.60976 13.4054 2.19465 14.5935 1.99067 16.0285C1.37873 15.7458 0.809733 15.506 0.272945 15.2126C0.147695 15.1446 0.0582333 14.8941 0.0582333 14.7259C0.0439189 13.5629 -0.0849134 12.3819 0.0940158 11.2475C0.365988 9.54055 1.99067 8.23794 3.71555 8.05544C4.60661 7.96239 5.46547 7.95166 6.35296 8.16995C6.88617 8.30236 7.51243 8.19142 8.06711 8.05902C10.2357 7.52938 13.1559 8.64948 13.7571 10.997C14.0577 12.1672 14.0577 13.3661 13.8751 14.5613C13.8107 14.9979 13.6068 15.32 13.1737 15.481C12.7336 15.6385 12.3042 15.8102 11.864 15.982Z" />
+                              <path d="M10.6071 3.72194C10.5928 5.77962 8.96814 7.38999 6.93193 7.36494C4.8814 7.33989 3.24241 5.7009 3.26388 3.69331C3.28535 1.59984 4.90287 -0.0212607 6.94982 0.000210833C9.01824 0.0181038 10.6215 1.64994 10.6071 3.72194Z" />
+                              <path d="M10.9467 16.0178C10.9109 18.2795 9.07512 19.9972 6.74188 19.9507C4.58041 19.9077 2.77681 18.0719 2.80902 15.9498C2.8448 13.7454 4.69493 11.9776 6.9387 12.0062C9.17174 12.0384 10.9789 13.8492 10.9467 16.0178ZM6.84208 18.4834C7.27509 18.462 7.76893 18.4262 8.26278 18.419C8.62779 18.4154 8.74947 18.2222 8.74947 17.8966C8.74947 17.1808 8.75305 16.4687 8.74589 15.753C8.74589 15.6599 8.70652 15.5025 8.65642 15.4882C8.32719 15.4059 8.40234 15.1482 8.38087 14.9263C8.36298 14.7367 8.34151 14.547 8.30572 14.3645C8.15542 13.6309 7.64011 13.2122 6.91723 13.2229C6.22299 13.2337 5.64683 13.7418 5.52874 14.4432C5.4679 14.8154 5.65041 15.2735 5.17088 15.5096C5.14941 15.5204 5.14941 15.5919 5.14941 15.6349C5.14941 16.4508 5.1351 17.2667 5.16015 18.0826C5.16372 18.19 5.34981 18.3689 5.4679 18.3868C5.90449 18.4477 6.34108 18.4548 6.84208 18.4834Z" />
+                              <path
+                                d="M7.78818 15.3706C7.81323 14.8159 7.93491 14.2684 7.41601 13.9069C7.09036 13.6815 6.70745 13.6851 6.40327 13.9499C5.95953 14.3328 6.03826 14.8481 6.08836 15.3706C6.66451 15.3706 7.19414 15.3706 7.78818 15.3706ZM6.76113 17.643C6.8828 17.643 7.00448 17.643 7.11899 17.643C7.15836 17.3209 7.22635 17.0239 7.21561 16.7304C7.21204 16.6088 7.02953 16.4978 6.92933 16.3797C6.83986 16.4835 6.6824 16.5837 6.67883 16.6911C6.67167 16.9988 6.72892 17.3137 6.76113 17.643Z"
+                                fill="white"
+                              />
+                              <path d="M7.78818 15.3706C7.19414 15.3706 6.66451 15.3706 6.08836 15.3706C6.03826 14.8445 5.95953 14.3328 6.40327 13.9499C6.71103 13.6851 7.09394 13.6815 7.41601 13.9069C7.93491 14.2684 7.81323 14.8159 7.78818 15.3706Z" />
+                              <path d="M6.76261 17.6421C6.7304 17.3129 6.67314 17.0016 6.6803 16.6902C6.68388 16.5865 6.84134 16.4827 6.9308 16.3789C7.031 16.4934 7.21351 16.6079 7.21709 16.7296C7.22782 17.0231 7.15983 17.3201 7.12046 17.6421C7.00595 17.6421 6.88786 17.6421 6.76261 17.6421Z" />
+                            </svg>
+                          </span>
+
+                          <span className=" font-normal text-base">
+                            Quản lí địa chỉ
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="item group">
+                        <div
+                          onClick={() => handleLogout(5)}
                           className={`flex space-x-3 items-center cursor-pointer ${
                             activeTab === 5
                               ? "text-blue-400"
@@ -712,11 +587,14 @@ export default function ProfilePage() {
                               <path d="M13.4942 6.75005C13.4942 6.02423 13.5009 5.33425 13.492 4.64651C13.4875 4.27463 13.5927 3.96997 13.9532 3.81539C14.3136 3.66082 14.6046 3.79523 14.8688 4.06181C15.8002 5.0027 16.7405 5.93462 17.674 6.87326C18.1061 7.30786 18.1129 7.69094 17.6897 8.11882C16.7494 9.06642 15.8024 10.0073 14.8599 10.9549C14.6091 11.2058 14.327 11.3402 13.9755 11.1946C13.6129 11.0445 13.492 10.7533 13.4964 10.3769C13.5032 9.68695 13.4987 8.99473 13.4987 8.24875C13.3576 8.24875 13.2345 8.24875 13.1114 8.24875C12.2808 8.24875 11.4479 8.25099 10.6173 8.24651C10.0711 8.24427 9.75315 7.962 9.75987 7.4938C9.76435 7.03456 10.0912 6.75453 10.6352 6.75229C11.5666 6.75005 12.5024 6.75005 13.4942 6.75005Z" />
                             </svg>
                           </span>
-                          <span className=" font-normal text-base">Logout</span>
+                          <span className=" font-normal text-base">
+                            Đăng xuất
+                          </span>
                         </div>
                       </div>
                     </div>
                   </div>
+
                   <div className="flex-1">
                     <div className="item-body dashboard-wrapper w-full">
                       {activeTab === 0 ? (
@@ -724,15 +602,20 @@ export default function ProfilePage() {
                           <div className="welcome-msg w-full">
                             <div>
                               <p className="text-qblack text-lg">
-                                Hello, {user?.fullname}
+                                Xin chào, {user?.fullname}
                               </p>
                               <h1 className="font-bold text-[24px] text-qblack">
-                                Welcome to your Profile
+                                Chào mừng đến với hồ sơ của bạn
                               </h1>
                             </div>
                           </div>
                           <div className="quick-view-grid w-full flex justify-between items-center mt-3 ">
-                            <div className="qv-item w-[252px] h-[208px] bg-black group hover:bg-yellow-400 transition-all duration-300 ease-in-out p-6">
+                            <div
+                              className={`qv-item w-[252px] h-[208px] group  transition-all duration-300 ease-in-out p-6 rounded-lg`}
+                              style={{
+                                background: COLOR.BLUE,
+                              }}
+                            >
                               <div className="w-[62px] h-[62px] rounded bg-white flex justify-center items-center">
                                 <span>
                                   <svg
@@ -744,21 +627,21 @@ export default function ProfilePage() {
                                   >
                                     <path
                                       d="M32.4473 8.03086C32.482 8.37876 32.5 8.73144 32.5 9.08829C32.5 14.919 27.7564 19.6625 21.9258 19.6625C16.0951 19.6625 11.3516 14.919 11.3516 9.08829C11.3516 8.73144 11.3695 8.37876 11.4042 8.03086H8.98055L8.05537 0.628906H0.777344V2.74375H6.18839L8.56759 21.7774H34.1868L35.8039 8.03086H32.4473Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       d="M9.09669 26.0074H6.06485C4.31566 26.0074 2.89258 27.4305 2.89258 29.1797C2.89258 30.9289 4.31566 32.352 6.06485 32.352H6.24672C6.12935 32.6829 6.06485 33.0386 6.06485 33.4094C6.06485 35.1586 7.48793 36.5816 9.23711 36.5816C11.4247 36.5816 12.9571 34.4091 12.2274 32.352H22.1081C21.377 34.413 22.9157 36.5816 25.0985 36.5816C26.8476 36.5816 28.2707 35.1586 28.2707 33.4094C28.2707 33.0386 28.2061 32.6829 28.0888 32.352H30.3856V30.2371H6.06485C5.48178 30.2371 5.00742 29.7628 5.00742 29.1797C5.00742 28.5966 5.48178 28.1223 6.06485 28.1223H33.4407L33.9384 23.8926H8.83233L9.09669 26.0074Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       d="M21.9262 17.5477C26.5907 17.5477 30.3856 13.7528 30.3856 9.08829C30.3856 4.42378 26.5907 0.628906 21.9262 0.628906C17.2616 0.628906 13.4668 4.42378 13.4668 9.08829C13.4668 13.7528 17.2617 17.5477 21.9262 17.5477ZM20.8688 5.91602H22.9836V8.6503L24.7886 10.4554L23.2932 11.9508L20.8687 9.5262V5.91602H20.8688Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                   </svg>
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                Orders Processing
+                                Đơn hàng chờ xác nhận
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
                                 {
@@ -770,7 +653,12 @@ export default function ProfilePage() {
                                 }
                               </span>
                             </div>
-                            <div className="qv-item w-[252px] h-[208px] bg-black group hover:bg-yellow-400 transition-all duration-300 ease-in-out p-6">
+                            <div
+                              className={`qv-item w-[252px] h-[208px] transition-all duration-300 ease-in-out p-6 rounded-lg`}
+                              style={{
+                                background: COLOR.BLUE,
+                              }}
+                            >
                               <div className="w-[62px] h-[62px] rounded bg-white flex justify-center items-center">
                                 <span>
                                   <svg
@@ -782,13 +670,13 @@ export default function ProfilePage() {
                                   >
                                     <path
                                       d="M30.2253 12.8816H29.4827L28.6701 9.36514C28.376 8.10431 27.2552 7.22168 25.9662 7.22168H21.8474V3.84528C21.8474 2.03804 20.3764 0.581055 18.5831 0.581055H3.17237C1.46313 0.581055 0.0761719 1.96801 0.0761719 3.67717V20.0967C0.0761719 21.8058 1.46313 23.1928 3.17237 23.1928H4.29313C4.89555 25.1962 6.74485 26.6533 8.93037 26.6533C11.1159 26.6533 12.9792 25.1962 13.5816 23.1928C13.8455 23.1928 20.3459 23.1928 20.1942 23.1928C20.7966 25.1962 22.6459 26.6533 24.8315 26.6533C27.031 26.6533 28.8803 25.1962 29.4827 23.1928H30.2253C31.7663 23.1928 32.9992 21.9599 32.9992 20.4189V15.6555C32.9992 14.1145 31.7663 12.8816 30.2253 12.8816ZM8.93037 23.8513C7.78968 23.8513 6.88491 22.8969 6.88491 21.7918C6.88491 20.657 7.79558 19.7324 8.93037 19.7324C10.0652 19.7324 10.9898 20.657 10.9898 21.7918C10.9898 22.9151 10.0692 23.8513 8.93037 23.8513ZM13.9739 8.06224L9.79897 11.3125C9.20227 11.7767 8.30347 11.6903 7.82363 11.0604L6.21247 8.94486C5.7361 8.32843 5.86222 7.4458 6.47866 6.98346C7.08107 6.50717 7.96369 6.63321 8.44006 7.24965L9.19656 8.23035L12.2507 5.84867C12.8531 5.3864 13.7357 5.48448 14.2121 6.10092C14.6884 6.71727 14.5763 7.58595 13.9739 8.06224ZM24.8315 23.8513C23.6906 23.8513 22.7861 22.8969 22.7861 21.7918C22.7861 20.657 23.7107 19.7324 24.8315 19.7324C25.9662 19.7324 26.8909 20.657 26.8909 21.7918C26.8909 22.9166 25.9683 23.8513 24.8315 23.8513ZM22.618 10.0236H25.2798C25.6021 10.0236 25.8962 10.2337 26.0083 10.542L26.8629 13.0497C27.031 13.5541 26.6667 14.0724 26.1344 14.0724H22.618C22.1976 14.0724 21.8474 13.7222 21.8474 13.3019V10.7942C21.8474 10.3739 22.1976 10.0236 22.618 10.0236Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                   </svg>
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                Orders Shipped
+                                Đơn hàng đang giao
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
                                 {
@@ -802,7 +690,12 @@ export default function ProfilePage() {
                                 }
                               </span>
                             </div>
-                            <div className="qv-item w-[252px] h-[208px] bg-black group hover:bg-yellow-400 transition-all duration-300 ease-in-out p-6">
+                            <div
+                              className={`qv-item w-[252px] h-[208px] transition-all duration-300 ease-in-out p-6 rounded-lg`}
+                              style={{
+                                background: COLOR.BLUE,
+                              }}
+                            >
                               <div className="w-[62px] h-[62px] rounded bg-white flex justify-center items-center">
                                 <span>
                                   <svg
@@ -814,21 +707,21 @@ export default function ProfilePage() {
                                   >
                                     <path
                                       d="M9.79749 18.4331C6.71621 20.0289 5.95627 20.8019 4.64859 23.6816C3.76653 22.8387 2.90107 22.0123 2.00953 21.1599C2.5288 20.3146 3.03267 19.4942 3.53535 18.6726C3.88035 18.1071 3.46066 17.0579 2.82282 16.899C1.88623 16.6666 0.94845 16.4426 0 16.2114C0 14.4034 0 12.6274 0 10.7827C0.921182 10.561 1.85422 10.3405 2.78489 10.1117C3.46777 9.94331 3.8922 8.90476 3.52705 8.30605C3.03385 7.49868 2.5371 6.6925 2.06051 5.91596C3.35514 4.62014 4.62251 3.35396 5.92426 2.05339C6.70673 2.53355 7.52832 3.03978 8.35347 3.54246C8.88698 3.8673 9.94331 3.44524 10.0927 2.84416C10.3262 1.90638 10.5491 0.965048 10.7839 0C12.5883 0 14.3785 0 16.2197 0C16.4366 0.906955 16.6548 1.8234 16.8777 2.73865C17.0555 3.46777 18.0763 3.89694 18.7082 3.50926C19.5144 3.01489 20.3182 2.52051 21.0829 2.05102C22.3763 3.34447 23.6318 4.59998 24.943 5.9124C24.4783 6.67235 23.9756 7.49038 23.4753 8.31079C23.1114 8.90713 23.5405 9.93976 24.2258 10.1081C25.1434 10.3334 26.0646 10.5503 27 10.7756C27 12.5954 27 14.3892 27 16.2197C26.1298 16.426 25.2667 16.6287 24.4048 16.8338C23.4658 17.0579 23.0651 18.0122 23.5654 18.8267C24.029 19.5819 24.4914 20.3383 24.9727 21.122C24.1487 22.004 23.3473 22.8612 22.4901 23.7776C21.5393 21.1741 19.8297 19.4243 17.3163 18.4592C20.5565 15.5332 19.8558 11.4668 17.659 9.41099C15.2973 7.19992 11.5995 7.26157 9.31378 9.56393C7.15368 11.7406 6.71858 15.6885 9.79749 18.4331Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       d="M21.0695 30.3147C16.0415 30.3147 11.0847 30.3147 6.03891 30.3147C6.03891 29.9768 6.03416 29.6496 6.04009 29.3224C6.06262 28.0396 5.97963 26.7426 6.13612 25.4752C6.53566 22.2576 9.12611 19.9244 12.3722 19.8213C13.5886 19.7821 14.8417 19.7762 16.0249 20.0169C18.8643 20.5954 20.8916 23.0258 21.0552 25.9364C21.1359 27.3709 21.0695 28.8138 21.0695 30.3147Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       d="M13.5375 17.9235C11.2244 17.9093 9.35005 16.0112 9.38325 13.7195C9.41763 11.4124 11.3169 9.55701 13.6157 9.58428C15.8849 9.61036 17.7486 11.5013 17.7403 13.7693C17.7332 16.0752 15.8481 17.9378 13.5375 17.9235Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                   </svg>
                                 </span>
                               </div>
                               <p className="text-xl text-white group-hover:text-qblacktext mt-5">
-                                Orders Delivered
+                                Đơn hàng đã giao
                               </p>
                               <span className="text-[40px] text-white group-hover:text-qblacktext font-bold leading-none mt-1 block">
                                 {
@@ -857,12 +750,12 @@ export default function ProfilePage() {
                               <div className="w-[397px] mb-10">
                                 <div className="input-field mb-6">
                                   <label
-                                    className="input-label text-gray-500 text-sm block mb-2.5"
+                                    className="input-label text-gray-800 text-sm block mb-2.5"
                                     htmlfor="old_password"
                                   >
-                                    Old Password*
+                                    Mật khẩu cũ *
                                   </label>
-                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[58px] overflow-hidden relative ">
+                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[43px] overflow-hidden relative rounded-lg ">
                                     <input
                                       placeholder="● ● ● ● ● ●"
                                       className="input-field placeholder:text-base text-bese px-4 text-dark-gray w-full h-full bg-[#FAFAFA] focus:ring-0 focus:outline-none"
@@ -886,9 +779,9 @@ export default function ProfilePage() {
                                     className="input-label text-qgray text-sm block mb-2.5"
                                     htmlfor="old_password"
                                   >
-                                    Password*
+                                    Mật khẩu mới *
                                   </label>
-                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[58px] overflow-hidden relative ">
+                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[43px] overflow-hidden relative rounded-lg ">
                                     <input
                                       placeholder="● ● ● ● ● ●"
                                       className="input-field placeholder:text-base text-bese px-4 text-dark-gray w-full h-full bg-[#FAFAFA] focus:ring-0 focus:outline-none"
@@ -910,9 +803,9 @@ export default function ProfilePage() {
                                     className="input-label text-qgray text-sm block mb-2.5"
                                     htmlfor="old_password"
                                   >
-                                    Re-enter Password*
+                                    Nhập lại mật khẩu mới *
                                   </label>
-                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[58px] overflow-hidden relative ">
+                                  <div className="input-wrapper border border-[#E8E8E8] w-full h-[43px] overflow-hidden relative rounded-lg ">
                                     <input
                                       placeholder="● ● ● ● ● ●"
                                       className="input-field placeholder:text-base text-bese px-4 text-dark-gray w-full h-full bg-[#FAFAFA] focus:ring-0 focus:outline-none"
@@ -936,17 +829,17 @@ export default function ProfilePage() {
                                 </div>
                                 <div className="w-full mt-[30px] flex justify-start">
                                   <div className="sm:flex sm:space-x-[30px] items-center">
-                                    <div className="w-[180px] h-[50px]">
+                                    <div className="w-[170px] h-[43px]">
                                       <button
                                         type="submit"
-                                        className="flex w-full h-full items-center justify-center leading-0 opacity-1"
+                                        className="flex w-full h-full items-center justify-center leading-0 opacity-1 rounded-lg"
                                         style={{
                                           background: COLOR.BLUE,
-                                          color: "white"
+                                          color: "white",
                                         }}
                                       >
                                         <div className="w-full text-sm font-semibold">
-                                          Update Password
+                                          Đổi mật khẩu
                                         </div>
                                       </button>
                                     </div>
@@ -955,7 +848,7 @@ export default function ProfilePage() {
                                       type="button"
                                     >
                                       <div className="w-full text-sm font-semibold text-black mb-5 sm:mb-0">
-                                        Cancel
+                                        Quay lại
                                       </div>
                                     </button>
                                   </div>
@@ -997,17 +890,17 @@ export default function ProfilePage() {
                                     <path
                                       opacity="0.65"
                                       d="M205.407 171.483H70.3673C69.9547 171.483 69.6206 171.149 69.6206 170.737V151.224C69.6206 150.812 69.9547 150.478 70.3673 150.478H205.407C205.82 150.478 206.154 150.812 206.154 151.224V170.737C206.154 171.148 205.82 171.483 205.407 171.483Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       opacity="0.65"
                                       d="M204.671 205.757H69.6309C69.2183 205.757 68.8843 205.423 68.8843 205.01V185.498C68.8843 185.085 69.2183 184.751 69.6309 184.751H204.671C205.084 184.751 205.418 185.085 205.418 185.498V205.01C205.418 205.421 205.084 205.757 204.671 205.757Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                     <path
                                       opacity="0.65"
                                       d="M178.306 246.63H91.9473C91.4385 246.63 91.0259 246.218 91.0259 245.709V220.772C91.0259 220.263 91.4385 219.851 91.9473 219.851H178.306C178.815 219.851 179.227 220.263 179.227 220.772V245.709C179.227 246.218 178.815 246.63 178.306 246.63Z"
-                                      fill="#FFBB38"
+                                      fill={COLOR.BLUE}
                                     />
                                   </g>
                                   <path
@@ -1126,7 +1019,7 @@ export default function ProfilePage() {
                                   />
                                   <path
                                     d="M71.6147 264.57C71.7164 264.335 71.6644 264.057 71.4852 263.879L66.3749 258.799C67.0087 255.419 67.1348 251.907 66.6934 248.388L72.0969 243.691C72.2861 243.526 72.3558 243.253 72.2684 243.01L69.2918 234.72C69.2044 234.478 68.9809 234.319 68.7354 234.326L61.7158 234.521C59.8342 231.571 57.5301 229.014 54.9263 226.909L55.5756 219.561C55.5988 219.304 55.4628 219.059 55.2382 218.952L47.5572 215.286C47.3326 215.179 47.0683 215.233 46.899 215.421L42.0751 220.776C38.8552 220.102 35.5102 219.962 32.1619 220.416L27.6754 214.73C27.5183 214.531 27.2584 214.458 27.0272 214.548L19.1404 217.654C18.9103 217.745 18.7599 217.98 18.7676 218.238L18.97 225.612C16.1649 227.581 13.738 229.994 11.7403 232.724L4.74284 232.025C4.49728 232.001 4.26499 232.143 4.16322 232.378L0.691044 240.438C0.589279 240.673 0.641268 240.951 0.820463 241.129L5.93084 246.208C5.29702 249.589 5.17092 253.101 5.61227 256.619L0.208766 261.318C0.019616 261.483 -0.0500705 261.756 0.0373147 261.998L3.01394 270.289C3.10133 270.531 3.32477 270.689 3.57033 270.683L10.5899 270.488C12.4715 273.438 14.7755 275.994 17.3783 278.099L16.729 285.448C16.7058 285.705 16.8418 285.95 17.0664 286.057L24.7474 289.723C24.972 289.83 25.2363 289.776 25.4056 289.588L30.2295 284.233C33.4494 284.907 36.7944 285.047 40.1427 284.593L44.6292 290.279C44.7863 290.478 45.0473 290.551 45.2774 290.461L53.1642 287.355C53.3943 287.264 53.5447 287.029 53.5381 286.77L53.3357 279.397C56.1397 277.428 58.5677 275.014 60.5654 272.284L67.5629 272.984C67.8084 273.008 68.0407 272.866 68.1425 272.631L71.6147 264.57Z"
-                                    fill="#FFBB38"
+                                    fill={COLOR.BLUE}
                                   />
                                   <path
                                     opacity="0.7"
@@ -1140,7 +1033,7 @@ export default function ProfilePage() {
                                   />
                                   <path
                                     d="M112.331 302.649C112.398 302.492 112.364 302.306 112.244 302.187L108.825 298.788C109.25 296.526 109.333 294.175 109.039 291.821L112.655 288.677C112.782 288.567 112.827 288.384 112.77 288.223L110.778 282.676C110.719 282.513 110.57 282.408 110.405 282.412L105.707 282.543C104.448 280.568 102.906 278.858 101.164 277.45L101.599 272.533C101.614 272.361 101.524 272.197 101.373 272.125L96.233 269.672C96.0826 269.6 95.9056 269.636 95.7928 269.761L92.565 273.345C90.4103 272.894 88.1726 272.801 85.9315 273.104L82.9294 269.299C82.8244 269.165 82.6496 269.116 82.4958 269.177L77.2184 271.256C77.0647 271.317 76.964 271.474 76.9684 271.646L77.1034 276.581C75.2263 277.898 73.6025 279.513 72.2651 281.339L67.5828 280.871C67.4191 280.855 67.2632 280.95 67.1957 281.107L64.8728 286.499C64.8053 286.657 64.8396 286.842 64.9591 286.962L68.3793 290.361C67.9545 292.623 67.8715 294.974 68.1658 297.327L64.5498 300.471C64.4226 300.582 64.3772 300.764 64.4348 300.926L66.4269 306.473C66.4855 306.636 66.6349 306.741 66.7997 306.736L71.4975 306.606C72.7563 308.58 74.2982 310.29 76.0404 311.698L75.6057 316.615C75.5902 316.788 75.6809 316.952 75.8313 317.023L80.9716 319.477C81.122 319.549 81.299 319.512 81.4118 319.387L84.6395 315.803C86.7943 316.255 89.032 316.348 91.2731 316.045L94.2751 319.85C94.3802 319.983 94.555 320.032 94.7088 319.971L99.9861 317.893C100.14 317.832 100.241 317.675 100.236 317.502L100.101 312.568C101.978 311.25 103.602 309.636 104.939 307.809L109.622 308.277C109.785 308.294 109.941 308.199 110.01 308.042L112.331 302.649Z"
-                                    fill="#FFBB38"
+                                    fill={COLOR.BLUE}
                                   />
                                   <path
                                     opacity="0.7"
@@ -1312,6 +1205,571 @@ export default function ProfilePage() {
                               </div>
                             </div>
                           </form>
+                        </React.Fragment>
+                      ) : activeTab === 4 ? (
+                        <React.Fragment>
+                          <div className="w-[100%]">
+                            <h4 className="text-2xl pb-5">Sổ địa chỉ</h4>
+                            <button
+                              ref={modalAddressRef}
+                              style={{ paddingLeft: 0, paddingRight: 8 }}
+                              onClick={() => setIsAddressPageOpen(true)}
+                              className="inline-flex justify-center text-center w-full p-4 bg-white text-blue-500 mb-4 rounded-lg border border-dashed border-gray-300"
+                            >
+                              <span
+                                size={26}
+                                className="inline-block w-26 h-26 bg-var(--button-icon-color, #757575) mask bg-center bg-no-repeat"
+                              />
+                              <div className="spacer css-1x3u27e" />
+                              Thêm địa chỉ mới
+                            </button>
+                            <Modal
+                              title={`${
+                                isEditAddress
+                                  ? "Cập nhật thông tin nhận hàng"
+                                  : "Thông tin người nhận hàng"
+                              }`}
+                              onClickStopModal={(e) => e.stopPropagation()}
+                              isOpen={isAddressPageOpen}
+                              onClose={handleCloseModalAddress}
+                            >
+                              <form onSubmit={handleSubmitAddress}>
+                                <div className="px-4">
+                                  <div className="justify-between flex flex-wrap opacity-1">
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                        <label
+                                          htmlFor="name"
+                                          className="mr-[8px] inline-flex items-center form-item-required"
+                                          style={{ height: 40 }}
+                                        >
+                                          <div
+                                            type="body"
+                                            color="textTitle"
+                                            className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            style={{
+                                              color: "rgb(27, 29, 41)",
+                                            }}
+                                          >
+                                            Họ tên
+                                          </div>
+                                        </label>
+                                      </div>
+                                      <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                        <div className="flex items-center">
+                                          <div
+                                            className="max-w-full"
+                                            style={{ flex: "1 1 auto" }}
+                                          >
+                                            <div className="opacity-1">
+                                              <div
+                                                className="form-input"
+                                                height={40}
+                                              >
+                                                <input
+                                                  id="name"
+                                                  type="text"
+                                                  name="name"
+                                                  placeholder="Vui lòng nhập tên người nhận"
+                                                  maxLength={255}
+                                                  className="outline-none"
+                                                  onChange={handleInputChange}
+                                                  value={inputs.name}
+                                                />
+                                              </div>
+                                              {validationErrors &&
+                                                validationErrors.name && (
+                                                  <div className="form-input-error">
+                                                    {validationErrors.name.msg}
+                                                  </div>
+                                                )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="telephone"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                            >
+                                              Số điện thoại
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div
+                                                  className="form-input"
+                                                  height={40}
+                                                >
+                                                  <input
+                                                    id="telephone"
+                                                    type="text"
+                                                    name="phone"
+                                                    placeholder="Nhập số điện thoại"
+                                                    maxLength={255}
+                                                    className="outline-none"
+                                                    onChange={handleInputChange}
+                                                    value={inputs.phone}
+                                                  />
+                                                </div>
+                                                {validationErrors &&
+                                                  validationErrors.phone && (
+                                                    <div className="form-input-error">
+                                                      {
+                                                        validationErrors.phone
+                                                          .msg
+                                                      }
+                                                    </div>
+                                                  )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="hr-checkout">
+                                    <div
+                                      width="100%"
+                                      color="divider"
+                                      className="css-yae08c"
+                                    />
+                                  </div>
+                                  <div type="title" className="title-checkout">
+                                    Địa chỉ nhận hàng
+                                  </div>
+                                  <div className="justify-between flex flex-wrap opacity-1">
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="provinceCode"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                            >
+                                              Tỉnh/Thành phố
+                                            </div>
+                                          </label>
+                                        </div>
+
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div className="relative">
+                                                  <select
+                                                    className="bg-white form-input text-[14px] w-full h-[2.5rem] pl-2 overflow-hidden cursor-pointer select-none outline-none rounded-[0.25rem] flex items-center"
+                                                    style={{
+                                                      border:
+                                                        "1px solid rgb(228, 229, 240)",
+                                                    }}
+                                                    name="city"
+                                                    onChange={
+                                                      handleSelectProvince
+                                                    }
+                                                    value={selectedProvince}
+                                                  >
+                                                    <option value="">
+                                                      Chọn Tỉnh / TP
+                                                    </option>
+                                                    {provinces?.map(
+                                                      (province) => (
+                                                        <option
+                                                          key={province.id}
+                                                          value={province.id}
+                                                        >
+                                                          {province.name}
+                                                        </option>
+                                                      )
+                                                    )}
+                                                  </select>
+                                                  {validationErrors &&
+                                                    validationErrors.city && (
+                                                      <div className="form-input-error">
+                                                        {
+                                                          validationErrors.city
+                                                            .msg
+                                                        }
+                                                      </div>
+                                                    )}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="districtCode"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            >
+                                              Quận/Huyện
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div className="relative">
+                                                  <select
+                                                    className="bg-white form-input text-[14px] w-full h-[2.5rem] pl-2 overflow-hidden cursor-pointer select-none outline-none rounded-[0.25rem] flex items-center"
+                                                    style={{
+                                                      border:
+                                                        "1px solid rgb(228, 229, 240)",
+                                                    }}
+                                                    name="district"
+                                                    value={selectedDistrict}
+                                                    onChange={
+                                                      handleSelectDistrict
+                                                    }
+                                                    disabled={!selectedProvince}
+                                                    placeholder={`Chọn Quận / Huyện ${selectedDistrict}`}
+                                                  >
+                                                    <option value="">
+                                                      Chọn Quận / Huyện
+                                                    </option>
+                                                    {filteredDistricts?.map(
+                                                      (district) => (
+                                                        <option
+                                                          key={district.id}
+                                                          value={district.id}
+                                                        >
+                                                          {district.name}
+                                                        </option>
+                                                      )
+                                                    )}
+                                                  </select>
+                                                  {validationErrors &&
+                                                    validationErrors.district && (
+                                                      <div className="form-input-error">
+                                                        {
+                                                          validationErrors
+                                                            .district.msg
+                                                        }
+                                                      </div>
+                                                    )}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="justify-between flex flex-wrap opacity-1">
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="wardCode"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            >
+                                              Phường/Xã
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div className="relative">
+                                                  <select
+                                                    className="bg-white form-input w-full text-[14px] h-[2.5rem] pl-2 overflow-hidden cursor-pointer select-none outline-none rounded-[0.25rem] flex items-center"
+                                                    style={{
+                                                      border:
+                                                        "1px solid rgb(228, 229, 240)",
+                                                    }}
+                                                    name="commune"
+                                                    value={selectedCommune}
+                                                    onChange={
+                                                      handleSelectCommune
+                                                    }
+                                                    disabled={!selectedDistrict}
+                                                    placeholder="Chọn Phường / Xã"
+                                                  >
+                                                    <option value="">
+                                                      Chọn Phường / Xã
+                                                    </option>
+                                                    {filteredWards?.map(
+                                                      (ward) => (
+                                                        <option
+                                                          key={ward.id}
+                                                          value={ward.id}
+                                                        >
+                                                          {ward.name}
+                                                        </option>
+                                                      )
+                                                    )}
+                                                  </select>
+                                                  {validationErrors &&
+                                                    validationErrors.commune && (
+                                                      <div className="form-input-error">
+                                                        {
+                                                          validationErrors
+                                                            .commune.msg
+                                                        }
+                                                      </div>
+                                                    )}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="relative max-w-full min-h-[1px] opacity-1"
+                                      style={{ flex: "0 0 49%" }}
+                                    >
+                                      <div className="flex-col justify-center flex flex-wrap mb-[16px]">
+                                        <div className="text-left relative max-w-full min-h-[1px] opacity-1">
+                                          <label
+                                            htmlFor="address"
+                                            className="form-item-required mr-[8px] inline-flex items-center"
+                                            style={{ height: 40 }}
+                                          >
+                                            <div
+                                              style={{
+                                                color: "rgb(27, 29, 41)",
+                                              }}
+                                              className="m-0 p-0 opacity-1 font-[500] leading-[20px] overflow-hidden"
+                                            >
+                                              Địa chỉ cụ thể
+                                            </div>
+                                          </label>
+                                        </div>
+                                        <div className="flex flex-col justify-center relative max-w-full min-h-[1px]">
+                                          <div className="flex items-center">
+                                            <div
+                                              className="max-w-full"
+                                              style={{ flex: "1 1 auto" }}
+                                            >
+                                              <div className="opacity-1">
+                                                <div
+                                                  className="form-input"
+                                                  height={40}
+                                                >
+                                                  <input
+                                                    name="address"
+                                                    onChange={handleInputChange}
+                                                    value={inputs.address}
+                                                    type="text"
+                                                    placeholder="Số nhà, ngõ, tên đường..."
+                                                    maxLength={255}
+                                                    className="outline-none"
+                                                  />
+                                                </div>
+                                                {validationErrors &&
+                                                  validationErrors.address && (
+                                                    <div className="form-input-error">
+                                                      {
+                                                        validationErrors.address
+                                                          .msg
+                                                      }
+                                                    </div>
+                                                  )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-wrap justify-end opacity-1">
+                                    <div className="flex flex-wrap flex-col opacity-1 mb-[16px]">
+                                      <div className="flex items-center flex-col justify-center relative max-w-full min-h-[1px] opacity-1">
+                                        <div
+                                          className="max-w-full"
+                                          style={{
+                                            flex: "1 1 auto",
+                                          }}
+                                        >
+                                          <input
+                                            id="default-checkbox"
+                                            type="checkbox"
+                                            name="default"
+                                            onChange={handleInputChange}
+                                            checked={inputs.default}
+                                            className="w-3 h-3 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600  "
+                                          />
+                                          <label
+                                            htmlFor="default-checkbox"
+                                            className="ms-1 text-[13px] font-medium text-gray-900 dark:text-gray-300"
+                                          >
+                                            Đặt mặc định
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex items-center px-4 py-2 justify-end space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                  <button
+                                    type="submit"
+                                    className=" text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                  >
+                                    {isEditAddress ? "Update" : "Add"}
+                                  </button>
+                                  <button
+                                    onClick={handleCloseModalAddress}
+                                    type="button"
+                                    className=" text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                  >
+                                    Close
+                                  </button>
+                                </div>
+                              </form>
+                            </Modal>
+                            {billings?.map((item, index) => (
+                              <div
+                                className="opacity-100 mt-3 p-4 rounded-lg bg-gray-50 relative"
+                                key={index}
+                              >
+                                <div className="teko-card-body css-0">
+                                  <div className="flex items-center justify-between">
+                                    <div className="teko-col css-17ajfcv">
+                                      <div className="flex items-center gap-2">
+                                        <div className="border-w-1 opacity-100 text-inherit font-medium text-base leading-6 ">
+                                          {item.name}
+                                        </div>
+                                        {item.default === true && (
+                                          <span className="p-1 opacity-100 inline-flex items-center  bg-blue-100 h-[15px] rounded-md">
+                                            <div className="opacity-100 text-blue-500  text-[10px] leading-16">
+                                              Mặc định
+                                            </div>
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className=" mt-2 text-rgb-130-134-158 font-normal text-13 text-gray-500">
+                                        Địa chỉ: {item.address},{" "}
+                                        {
+                                          wards.find(
+                                            (commune) =>
+                                              commune.id ===
+                                              Number(item.commune)
+                                          )?.name
+                                        }
+                                        ,{" "}
+                                        {
+                                          districts.find(
+                                            (district) =>
+                                              district.id ===
+                                              Number(item.district)
+                                          )?.name
+                                        }
+                                        ,{" "}
+                                        {
+                                          provinces.find(
+                                            (city) =>
+                                              city.id === Number(item.city)
+                                          )?.name
+                                        }
+                                      </div>
+                                      <div className="text-gray-500">
+                                        Điện thoại: {item.phone}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="flex justify-end flex-wrap">
+                                        <button
+                                          height="2rem"
+                                          className="w-[120px] opacity-100 h-[2rem] px-1.25rem rounded-md bg-transparent relative border border-1.5 border-red-500"
+                                          type="button"
+                                        >
+                                          <div
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleEditModalAddress(item);
+                                            }}
+                                            className="text-[13px] text-red-500 font-[500]"
+                                          >
+                                            Chỉnh sửa
+                                          </div>
+                                        </button>
+                                        <button
+                                          height="2rem"
+                                          className="h-[2rem] ml-[0.5rem] px-[1.25rem] rounded-[0.25rem] relative flex items-center justify-center outline-none min-w-[2rem] border border-solid border-gray-500"
+                                          type="button"
+                                        >
+                                          <div
+                                            type="body"
+                                            color="textPrimary"
+                                            className="text-[13px] text-black font-[500]"
+                                          >
+                                            Xóa
+                                          </div>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </React.Fragment>
                       ) : null}
                     </div>

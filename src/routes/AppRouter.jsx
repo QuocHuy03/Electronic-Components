@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, Navigate, useSearchParams } from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import BlogPage from "../pages/BlogPage";
@@ -12,12 +12,14 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import NotFound from "../pages/NotFoundPage";
 import { URL_CONSTANTS } from "../constants/url.constants";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import FilterPage from "../pages/FilterPage";
 import OrderPage from "../pages/OrderPage";
 import OrderDetailPage from "../pages/OrderDetailPage";
+import { google } from "../stores/authentication/actions";
+import SearchPage from "../pages/SearchPage";
 
 const privateRoutes = [
   { path: URL_CONSTANTS.PROFILE, component: ProfilePage },
@@ -39,8 +41,24 @@ const publicRoutes = [
   { path: URL_CONSTANTS.RESET_PASSWORD, component: ResetPasswordPage },
   { path: URL_CONSTANTS.FILTER, component: FilterPage },
   { path: URL_CONSTANTS.ORDER_DETAIL, component: OrderDetailPage },
+  { path: URL_CONSTANTS.SEARCH, component: SearchPage },
 ];
 const AppRouter = () => {
+  const dispatch = useDispatch();
+  const [params] = useSearchParams();
+  useEffect(() => {
+    const accessToken = params.get("accessToken");
+    const refreshToken = params.get("refreshToken");
+    if (accessToken && refreshToken) {
+      dispatch(
+        google({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        })
+      );
+    }
+    const newUser = params.get("newUser");
+  }, [params]);
   const auth = useSelector((state) => state.auth);
   return (
     <Routes>

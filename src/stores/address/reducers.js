@@ -42,11 +42,15 @@ const addressReducer = (state = initialState, action) => {
     case GET_ADDRESS_SUCCESS:
       const { address } = state;
       const newAddresses = action.payload;
+
       newAddresses.forEach((newAddress) => {
-        const addressExists = address.some(
+        const existingIndex = address.findIndex(
           (existing) => existing._id === newAddress._id
         );
-        if (!addressExists) {
+
+        if (existingIndex !== -1) {
+          address[existingIndex] = newAddress;
+        } else {
           address.push(newAddress);
         }
       });

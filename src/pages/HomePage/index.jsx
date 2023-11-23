@@ -14,8 +14,6 @@ import { bannerService } from "../../services/banner.service";
 import Loading from "./../../components/Loading/index";
 import Slider from "../../components/Carousel";
 import { SwiperSlide } from "swiper/react";
-import { categoryService } from "../../services/category.service";
-import { Carousel } from "antd";
 import { COLOR } from "../../constants/style.constants";
 
 export default function HomePage() {
@@ -35,15 +33,6 @@ export default function HomePage() {
       retryDelay: 1000,
     }
   );
-  const { data: isCategories, isloading: loadingCategory } = useQuery(
-    ["categories"],
-    () => categoryService.fetchAllCategories(),
-    {
-      retry: 3,
-      retryDelay: 1000,
-    }
-  );
-  console.log();
 
   const { data: bannerData } = useQuery(
     ["banner"],
@@ -56,12 +45,10 @@ export default function HomePage() {
 
   return (
     <Layout>
-      {/* Banner */}
-
       <div className="w-full banner-wrapper mb-[20px]" data-aos="fade-up">
         <div className="max-w-6xl mx-auto">
           <div className="main-wrapper w-full">
-            <div className="banner-card mb-[30px]">
+            <div className="banner-card mb-[20px]">
               <div className="w-full mt-[30px]">
                 <Slider
                   className="swiper rounded-[12px]"
@@ -339,10 +326,8 @@ export default function HomePage() {
             </div>
             <img
               alt="LAPTOP"
-              src="https://lh3.googleusercontent.com/gVKL-i0fwAwNW07q1BlrXWrszrk3f-ktPdrMadJm2W8HX-fciH_nxiLcwz5EC9YmJLDLENX_H_BQIgFoabdpO4goEyMZVKJy=w1232"
-              width="100%"
-              height="100%"
-              className="absolute top-0 rounded"
+              src="https://i.imgur.com/Osaxw8n.png"
+              className="absolute top-0 rounded w-[1200px] h-[420px]"
             />
 
             <div className="relative p-[12px] w-full">
@@ -352,10 +337,27 @@ export default function HomePage() {
                 navigation={true}
                 pagination={false}
                 slidesPerView={5}
+                breakpoints={{
+                  1024: {
+                    slidesPerView: 5,
+                  },
+                  768: {
+                    slidesPerView: 3,
+                  },
+                  640: {
+                    slidesPerView: 2,
+                  },
+                  320: {
+                    slidesPerView: 2,
+                  },
+                }}
               >
                 {data?.map((item, index) => (
                   <SwiperSlide key={index}>
-                    <div data-aos="fade-up" className="bg-white w-full">
+                    <div
+                      data-aos="fade-up"
+                      className="bg-white w-full w[140px]"
+                    >
                       <div className="relative w-full h-full p-4 flex flex-col bg-white justify-between">
                         <div className="relative flex-1 flex-grow-0 flex-shrink-0 flex-basis-auto">
                           <div className="relative">
@@ -395,7 +397,7 @@ export default function HomePage() {
                                 display: "inline",
                               }}
                             >
-                              ACER
+                              {item.brand.nameBrand}
                             </div>
                           </div>
                           <div className="h-12">
@@ -511,13 +513,14 @@ export default function HomePage() {
                 </div>
               </Link>
             </div>
-            <div className="flex flex-wrap gap-1 place-content-start bg-gray-50 py-2">
-              {data?.map((item) => (
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-1 py-2">
+              {data?.map((item, index) => (
                 <div
+                  key={index}
                   data-aos="fade-up"
-                  className="bg-white mb-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
+                  className="bg-white p-2 flex flex-col h-full"
                 >
-                  <div className="relative w-full h-full p-4 flex flex-col bg-white justify-between">
+                  <div className="relative w-full h-full p-2 flex flex-col bg-white justify-between">
                     <div className="relative flex-1 flex-grow-0 flex-shrink-0 flex-basis-auto mb-2">
                       <div className="relative mb-1">
                         <div className="relative pb-[100%]">
@@ -556,7 +559,7 @@ export default function HomePage() {
                             display: "inline",
                           }}
                         >
-                          ACER
+                          {item.brand.nameBrand}
                         </div>
                       </div>
                       <div className="h-12">
@@ -685,7 +688,7 @@ export default function HomePage() {
                 TIN CÔNG NGHỆ
               </div>
             </Link>
-            <Link to={URL_CONSTANTS.FILTER}>
+            <Link to={URL_CONSTANTS.BLOG}>
               <div className="flex space-x-2 items-center">
                 <p className="text-base font-[500] text-black">Xem thêm</p>
                 <span className="animate-right-dir">
@@ -720,6 +723,20 @@ export default function HomePage() {
                   navigation={true}
                   pagination={false}
                   slidesPerView={4}
+                  breakpoints={{
+                    1024: {
+                      slidesPerView: 5,
+                    },
+                    768: {
+                      slidesPerView: 3,
+                    },
+                    640: {
+                      slidesPerView: 2,
+                    },
+                    320: {
+                      slidesPerView: 2,
+                    },
+                  }}
                 >
                   {blogData?.map((item, index) => (
                     <SwiperSlide key={index}>

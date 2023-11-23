@@ -8,8 +8,10 @@ export default function Layout({ children }) {
     <React.Fragment>
       <div className="w-full overflow-x-hidden">
         <Header />
-        <div className="w-full pt-[30px] pb-[60px]">{children}</div>
-        <Discount/>
+        <div className="w-full pt-[10px]">
+          {children}
+        </div>
+        <Discount />
         <Footer />
       </div>
     </React.Fragment>

@@ -30,6 +30,7 @@ export default function HeaderBottom() {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+  
   const { data: isCategories, isloading: loadingCategory } = useQuery(
     ["categories"],
     () => categoryService.fetchAllCategories(),
@@ -70,7 +71,7 @@ export default function HeaderBottom() {
                       </svg>
                     </span>
                     <span className="text-sm font-600 text-qblacktext">
-                      All Categories
+                      Danh mục sản phẩm
                     </span>
                   </div>
                   <div>

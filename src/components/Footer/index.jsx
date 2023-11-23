@@ -4,9 +4,9 @@ export default function Footer() {
   return (
     <React.Fragment>
       <footer className="footer-section-wrapper bg-white print:hidden">
-        <div className="max-w-6xl block mx-auto pt-[56px]">
+        <div className="max-w-6xl block mx-auto pt-[30px]">
          
-          <div className="lg:flex justify-between mb-[50px]">
+          <div className="lg:flex justify-between px-4">
             <div className="lg:w-[424px] ml-0 w-full mb-10 lg:mb-0">
               <h1 className="text-[18] font-500 text-[#2F2F2F] mb-5">
                 About Us
@@ -99,7 +99,7 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <div className="bottom-bar border-t border-qgray-border lg:h-[82px] lg:flex justify-between items-center">
+          <div className="bottom-bar border-t border-qgray-border lg:h-[82px] lg:flex justify-between items-center px-4 py-2">
             <div className="flex lg:space-x-5 justify-between items-center mb-3">
               <div className="flex space-x-5 items-center">
                 <a rel="noopener noreferrer" href="/#">
@@ -146,7 +146,7 @@ export default function Footer() {
                 <b
                   target="_blank"
                   rel="noreferrer"
-                  className="font-500 text-qblack mx-1"
+                  className="font-500 text-black mx-1"
                 >
                   GradTechShop
                 </b>
