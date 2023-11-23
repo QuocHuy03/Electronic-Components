@@ -10,6 +10,7 @@ import Reponsive from "../Reponsive";
 import { categoryService } from "../../services/category.service";
 import "./index.css";
 import { useQuery } from "@tanstack/react-query";
+import { history } from "../../helpers/history";
 
 export default function HeaderCenter() {
   const { carts } = useContext(AppContext);
@@ -68,8 +69,14 @@ export default function HeaderCenter() {
     }
   );
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
     dispatch(searchProductSuccess(event.target.value));
+  };
+  const handleSearchQuery = () => {
+    history.push(`/search?query=${encodeURIComponent(searchTerm)}`);
   };
 
   return (
@@ -108,7 +115,10 @@ export default function HeaderCenter() {
                       />
                     </div>
                     <div className="inline-block">
-                      <button className="search-icon">
+                      <button
+                        className="search-icon"
+                        onClick={handleSearchQuery}
+                      >
                         <span
                           size={26}
                           color="#616161"

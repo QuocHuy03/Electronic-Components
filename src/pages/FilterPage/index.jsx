@@ -80,12 +80,14 @@ export default function FilterPage() {
     const queryColors = params.getAll("colors");
     const querySorts = params.get("sorts");
     const queryPrices = params.get("prices");
+    const searchTerm  = params.get("search");
 
     setFilters({
       brands: querybrands || [],
       sorts: querySorts || "",
       colors: queryColors || [],
       prices: queryPrices || "",
+      search: searchTerm || "",
     });
   }, []);
 
