@@ -232,7 +232,8 @@ export default function HeaderCenter() {
 
                     {search?.length > 0 &&
                       search?.map((item, index) => (
-                        <div
+                        <Link
+                          to={`/product/${item.slugProduct}`}
                           key={index}
                           className="flex p-[0.5rem] cursor-pointer rounded-[8px] items-center mb-2"
                           style={{
@@ -261,7 +262,7 @@ export default function HeaderCenter() {
                               {item.nameProduct}
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     {search?.length === 0 && (
                       <div
