@@ -56,6 +56,7 @@ export default function HomePage() {
                   navigation={true}
                   pagination={false}
                   slidesPerView={1}
+                  autoplay={2000}
                 >
                   {bannerData?.map((item, index) => (
                     <SwiperSlide key={index}>
@@ -326,7 +327,7 @@ export default function HomePage() {
             </div>
             <img
               alt="LAPTOP"
-              src="https://i.imgur.com/Osaxw8n.png"
+              src="https://i.imgur.com/be46BZR.png"
               className="absolute top-0 rounded w-[1200px] h-[420px]"
             />
 
@@ -337,6 +338,7 @@ export default function HomePage() {
                 navigation={true}
                 pagination={false}
                 slidesPerView={5}
+                autoplay={500}
                 breakpoints={{
                   1024: {
                     slidesPerView: 5,

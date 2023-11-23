@@ -88,7 +88,7 @@ export default function Footer() {
                   Chính sách thanh toán
                 </a>
                 <a
-                  href="https://help.phongvu.vn/chinh-sach-ban-hang/giao-hang-va-lap-dat-tai-nha"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -96,7 +96,7 @@ export default function Footer() {
                   Giao hàng và Lắp đặt tại nhà
                 </a>
                 <a
-                  href="https://help.phongvu.vn/chinh-sach-ban-hang/dich-vu-lap-dat-va-nang-cap-tai-cua-hang"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -110,7 +110,7 @@ export default function Footer() {
                   Thông tin GradTechShop
                 </div>
                 <a
-                  href="https://help.phongvu.vn/"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -118,7 +118,7 @@ export default function Footer() {
                   Giới thiệu GradTechShop
                 </a>
                 <a
-                  href="https://phongvu.vn/p/he-thong-showroom-phong-vu"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -126,7 +126,7 @@ export default function Footer() {
                   Hệ thống cửa hàng
                 </a>
                 <a
-                  href="https://help.phongvu.vn/dich-vu-khach-hang/trung-tam-bao-hanh"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -134,7 +134,7 @@ export default function Footer() {
                   Trung tâm bảo hành
                 </a>
                 <a
-                  href="https://help.phongvu.vn/chinh-sach-chung/bao-mat-thong-tin"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -142,7 +142,7 @@ export default function Footer() {
                   Chính sách bảo mật
                 </a>
                 <a
-                  href="https://phongvu.vn/cong-nghe"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -150,7 +150,7 @@ export default function Footer() {
                   Tin công nghệ
                 </a>
                 <a
-                  href="https://phongvu.vn/hoi-dap"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -158,7 +158,7 @@ export default function Footer() {
                   Hỏi đáp
                 </a>
                 <a
-                  href="https://tuyendung.phongvu.vn/"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -171,14 +171,14 @@ export default function Footer() {
                 <div class="font-bold text-base mb-4">Cộng đồng GradTechShop</div>
                 <div class="text-xs w-full pt-1.5 pr-1.5">
                   Gọi mua hàng (miễn phí)
-                  <a href="tel:18006867">18006867</a>
+                  <a href="#" className="text-red-500 ml-1">18006867</a>
                 </div>
                 <div class="text-xs w-full pt-1.5 pr-1.5">
                   Gọi chăm sóc
-                  <a href="tel:18006865">18006865</a>
+                  <a href="#" className="text-red-500 ml-1">18006865</a>
                 </div>
                 <a
-                  href="https://www.facebook.com/phongvuvietnam/"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -196,7 +196,7 @@ export default function Footer() {
                   Facebook GradTechShop
                 </a>
                 <a
-                  href="https://www.youtube.com/channel/UCOJ3sqWCc6koR9BScBZkBlA"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -214,7 +214,7 @@ export default function Footer() {
                   GradTechShop Media
                 </a>
                 <a
-                  href="https://www.facebook.com/groups/phongvuvn/"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -232,7 +232,7 @@ export default function Footer() {
                   GradTechShop Hội
                 </a>
                 <a
-                  href="https://zalo.me/3951230446867820356"
+                  href="#"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
@@ -255,17 +255,17 @@ export default function Footer() {
                 <div className="font-bold text-base mb-4">Email liên hệ</div>
                 <div className="text-xs w-full pt-1.5 pr-1.5">
                   Hỗ trợ Khách hàng:
-                  <br /> <a href="mailto:cskh@phongvu.vn">cskh@phongvu.vn</a>
+                  <br /> <a href="#" className="text-red-500">cskh@gradtechshop.vn</a>
                 </div>
                 <div className="text-xs w-full pt-1.5 pr-1.5">
                   Liên hệ báo giá:
                   <br />{" "}
-                  <a href="mailto:baogia@phongvu.vn">baogia@phongvu.vn</a>
+                  <a href="#" className="text-red-500">baogia@gradtechshop.vn</a>
                 </div>
                 <div className="text-xs w-full pt-1.5 pr-1.5">
                   Hợp tác phát triển:
                   <br />{" "}
-                  <a href="mailto:hoptac@phongvu.vn">hoptac@phongvu.vn</a>
+                  <a href="#" className="text-red-500">hoptac@gradtechshop.vn</a>
                 </div>
               </div>
             </div>
@@ -297,7 +297,7 @@ export default function Footer() {
                   QR Code
                 </a>
                 <a
-                  href="https://help.phongvu.vn/chinh-sach-ban-hang/phuong-thuc-thanh-toan#thanh-toan-tien-mat"
+                  href="#"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border border-transparent select-none flex-col relative text-sm text-left text-gray-800 max-w-72 justify-start"
                 >
                   <span size={30} color="#3e3e3e" className="w-30 h-30 bg-center bg-contain bg-no-repeat"
@@ -312,7 +312,7 @@ export default function Footer() {
                   Tiền mặt
                 </a>
                 <a
-                  href="https://help.phongvu.vn/chinh-sach-ban-hang/phuong-thuc-thanh-toan#thanh-toan-tra-gop"
+                  href="#"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border border-transparent select-none flex-col relative text-sm text-left text-gray-800 max-w-72 justify-start"
                 >
                   <span size={30} color="#3e3e3e" className="w-30 h-30 bg-center bg-contain bg-no-repeat"
@@ -327,7 +327,7 @@ export default function Footer() {
                   Trả góp
                 </a>
                 <a
-                  href="https://help.phongvu.vn/chinh-sach-ban-hang/phuong-thuc-thanh-toan#thanh-toan-the-atm-noi-dia-internet-banking"
+                  href="#"
                   className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border border-transparent select-none flex-col relative text-sm text-left text-gray-800 max-w-72 justify-start"
                 >
                   <span size={30} color="#3e3e3e" className="w-30 h-30 bg-center bg-contain bg-no-repeat"
@@ -355,8 +355,8 @@ export default function Footer() {
             </div>
           </div>
         </nav>
-        <nav className="p-30 pt-0 pb-25 bg-gray-200 mt-n10 ">
-          <div className="w-full mx-auto px-4 max-w-screen-xl flex mb-10">
+        <nav className="p-30 pt-0 bg-gray-200 ">
+          <div className="w-full mx-auto px-4 max-w-screen-xl flex ">
             <div className="box-border m-0 min-w-0 flex-wrap flex w-full h-[170px]">
               <div className="w-96 mt-5">
                 <div className="text-xs uppercase font-bold mb-15">
@@ -403,7 +403,7 @@ export default function Footer() {
               </div>
               <div className="w-70 mt-3 ml-10">
                 <a
-                  href="http://online.gov.vn/Home/WebDetails/4549"
+                  href="#"
                   rel="noreferrer noopener"
                   target="_blank"
                   className="block"
@@ -416,7 +416,7 @@ export default function Footer() {
                 </a>
                 <div className="mt-2 w-full max-w-[100px]">
                   <a
-                    href="//www.dmca.com/Protection/Status.aspx?ID=53b44883-ed2a-434d-902b-5adce10aafd5&refurl=undefined"
+                    href="#"
                     title="DMCA.com Protection Status"
                     className="dmca-badge"
                   >

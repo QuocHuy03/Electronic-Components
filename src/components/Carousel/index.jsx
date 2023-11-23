@@ -13,14 +13,23 @@ const Slider = ({
   spaceBetween,
   breakpoints,
   slidesPerView,
+  autoplay,
 }) => {
   return (
     <Swiper
       loop={true}
       slidesPerView={slidesPerView}
       spaceBetween={spaceBetween}
+      autoplay={{
+        delay: autoplay,
+        disableOnInteraction: false,
+      }}
       pagination={pagination}
-      navigation={navigation ? { nextEl: ".slider-next", prevEl: ".slider-prev" } : navigation}
+      navigation={
+        navigation
+          ? { nextEl: ".slider-next", prevEl: ".slider-prev" }
+          : navigation
+      }
       modules={[Autoplay, Pagination, Navigation]}
       breakpoints={breakpoints}
       className={className + " mySwiper"}
