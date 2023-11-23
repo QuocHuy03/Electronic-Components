@@ -4,10 +4,11 @@ import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import authenticationReducer from "./authentication/reducers";
 import redirectReducer from "./redirect/reducers";
-import couponReducer from "./coupon/reducers"
+import couponReducer from "./coupon/reducers";
 import cartReducer from "./cart/reducers";
 import orderReducer from "./order/reducers";
 import addressReducer from "./address/reducers";
+import searchReducer from "./search/reducers";
 
 const persistConfig = {
   key: "root",
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   coupon: couponReducer,
   order: orderReducer,
   address: addressReducer,
+  filter: searchReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

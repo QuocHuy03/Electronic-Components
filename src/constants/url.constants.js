@@ -18,5 +18,6 @@ export const URL_CONSTANTS = {
     ORDER: "/order",
     CONTACT: "/contact",
     ORDER_DETAIL: "/order/:slug", 
+    SEARCH: "/search"
 
 };

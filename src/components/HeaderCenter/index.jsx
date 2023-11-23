@@ -11,9 +11,16 @@ import { categoryService } from "../../services/category.service";
 import "./index.css";
 import { useQuery } from "@tanstack/react-query";
 import { history } from "../../helpers/history";
+import {
+  deleteAllHistorySearch,
+  getHistorySearch,
+  postHistorySearch,
+  valueSearch,
+} from "../../stores/search/actions";
+import { useDebounce } from "../../hooks/useDebounce";
 
 export default function HeaderCenter() {
-  const { carts } = useContext(AppContext);
+  const { carts, search, historySearch } = useContext(AppContext);
   const dispatch = useDispatch();
   const totalAmountAll = carts?.reduce(
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
@@ -69,14 +76,35 @@ export default function HeaderCenter() {
     }
   );
 
-  const [searchTerm, setSearchTerm] = useState("");
+  useEffect(() => {
+    dispatch(getHistorySearch());
+  }, [historySearch]);
+
+  const [searchTerm, setSearchTerm] = useState();
+  const debouncedValue = useDebounce(searchTerm, 400);
+  const refSearch = useRef();
+
+  useEffect(() => {
+    if (refSearch.current) {
+      if (debouncedValue !== null && debouncedValue !== undefined) {
+        dispatch(valueSearch(debouncedValue));
+      }
+    }
+    refSearch.current = true;
+  }, [debouncedValue, dispatch, searchTerm]);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
-    dispatch(searchProductSuccess(event.target.value));
   };
   const handleSearchQuery = () => {
+    dispatch(postHistorySearch(searchTerm));
     history.push(`/search?query=${encodeURIComponent(searchTerm)}`);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchQuery();
+    }
   };
 
   return (
@@ -110,6 +138,7 @@ export default function HeaderCenter() {
                     <div className="inline-block w-full">
                       <input
                         onChange={handleSearch}
+                        onKeyPress={handleKeyPress}
                         className="block bg-[#F5F5F5] text-[14px] outline-none w-full py-[0.375rem] px-[0.75rem] min-h-[16px] h-full"
                         placeholder="Nhập từ khoá cần tìm"
                       />
@@ -136,84 +165,134 @@ export default function HeaderCenter() {
                     }}
                     onClick={(event) => event.stopPropagation()}
                   >
-                    <div className="flex justify-between items-center my-[4px]">
-                      <div
-                        fontWeight={500}
-                        color="#82869E"
-                        style={{
-                          color: "rgb(130, 134, 158)",
-                        }}
-                        className="font-[500] text-[14px] text-left overflow-hidden uppercase"
-                      >
-                        Lịch sử tìm kiếm
-                      </div>
-                      <div
-                        style={{
-                          color: "rgb(132, 135, 136)",
-                        }}
-                        className="cursor-pointer"
-                      >
-                        Xóa lịch sử
-                      </div>
-                    </div>
-                    <div
-                      className="flex p-[0.5rem] cursor-pointer rounded-[8px] items-center"
-                      style={{
-                        background: "rgb(245, 245, 245)",
-                      }}
-                    >
-                      <span
-                        size={20}
-                        className="history-search inline-block bg-[#757575]"
-                      />
+                    {historySearch?.length > 0 && (
+                      <React.Fragment>
+                        <div className="flex justify-between items-center my-[4px]">
+                          <div
+                            fontWeight={500}
+                            color="#82869E"
+                            style={{
+                              color: "rgb(130, 134, 158)",
+                            }}
+                            className="font-[500] text-[14px] text-left overflow-hidden uppercase"
+                          >
+                            Lịch sử tìm kiếm
+                          </div>
+                          <div
+                            onClick={() => dispatch(deleteAllHistorySearch())}
+                            style={{
+                              color: "rgb(132, 135, 136)",
+                            }}
+                            className="cursor-pointer"
+                          >
+                            Xóa lịch sử
+                          </div>
+                        </div>
+                        {historySearch?.map((item, index) => (
+                          <Link
+                            to={`/search?query=${encodeURIComponent(
+                              item.nameSearch
+                            )}`}
+                            key={index}
+                            className="flex p-[0.5rem] cursor-pointer rounded-[8px] items-center mb-2"
+                            style={{
+                              background: "rgb(245, 245, 245)",
+                            }}
+                          >
+                            <span
+                              size={20}
+                              className="history-search inline-block bg-[#757575]"
+                            />
 
-                      <div style={{ margin: "0px 0.6rem" }}>
-                        <div className="css-1488rru">ma</div>
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        margin: "8px 0px 4px",
-                      }}
-                    >
-                      <div className="flex justify-between items-center my-[4px]">
+                            <div style={{ margin: "0px 0.6rem" }}>
+                              <div className="css-1488rru">
+                                {item.nameSearch}
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </React.Fragment>
+                    )}
+
+                    {search?.length > 0 &&
+                      search?.map((item, index) => (
                         <div
-                          fontWeight={500}
-                          color="#82869E"
+                          key={index}
+                          className="flex p-[0.5rem] cursor-pointer rounded-[8px] items-center mb-2"
                           style={{
-                            color: "rgb(130, 134, 158)",
+                            background: "rgb(245, 245, 245)",
                           }}
-                          className="font-[500] text-[14px] text-left overflow-hidden uppercase"
                         >
-                          Từ khóa phổ biến
+                          <svg
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            size={20}
+                            className="css-9w5ue6"
+                            height={20}
+                            width={20}
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              clipRule="evenodd"
+                              d="M5.5 10.5508C5.5 7.7613 7.7613 5.5 10.5507 5.5C13.3402 5.5 15.6015 7.7613 15.6015 10.5508C15.6015 11.9258 15.052 13.1725 14.1607 14.0832C14.147 14.0951 14.1336 14.1076 14.1206 14.1206C14.1075 14.1336 14.0951 14.147 14.0832 14.1607C13.1724 15.0521 11.9258 15.6015 10.5507 15.6015C7.7613 15.6015 5.5 13.3402 5.5 10.5508ZM14.6222 15.6829C13.5042 16.571 12.0894 17.1015 10.5507 17.1015C6.93286 17.1015 4 14.1686 4 10.5508C4 6.93288 6.93286 4 10.5507 4C14.1686 4 17.1015 6.93288 17.1015 10.5508C17.1015 12.0895 16.571 13.5043 15.6829 14.6222L19.7812 18.7206C20.0741 19.0135 20.0741 19.4884 19.7812 19.7813C19.4883 20.0741 19.0134 20.0741 18.7205 19.7813L14.6222 15.6829Z"
+                              fill="#82869E"
+                            />
+                          </svg>
+
+                          <div style={{ margin: "0px 0.6rem" }}>
+                            <div className="css-1488rru">
+                              {item.nameProduct}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    {search?.length === 0 && (
+                      <div
+                        style={{
+                          margin: "8px 0px 4px",
+                        }}
+                      >
+                        <div className="flex justify-between items-center my-[4px]">
+                          <div
+                            fontWeight={500}
+                            color="#82869E"
+                            style={{
+                              color: "rgb(130, 134, 158)",
+                            }}
+                            className="font-[500] text-[14px] text-left overflow-hidden uppercase"
+                          >
+                            Từ khóa phổ biến
+                          </div>
+                        </div>
+                        <div
+                          className="flex pt-[4px] flex-wrap"
+                          style={{
+                            background: "rgb(255, 255, 255)",
+                          }}
+                        >
+                          {isCategories
+                            ?.filter(
+                              (item) =>
+                                item.outstandingCategory === "outstanding"
+                            )
+                            .map((item, index) => (
+                              <Link
+                                to={`/filter/${item.slugCategory}`}
+                                key={index}
+                                className="h-[32px] leading-[32px] px-[16px] rounded-[999px] text-[14px] cursor-pointer"
+                                style={{
+                                  background: "rgb(245, 245, 245)",
+                                  color: "rgb(51, 51, 51)",
+                                  margin: "0px 4px 10px",
+                                }}
+                              >
+                                {item.nameCategory}
+                              </Link>
+                            ))}
                         </div>
                       </div>
-                      <div
-                        className="flex pt-[4px] flex-wrap"
-                        style={{
-                          background: "rgb(255, 255, 255)",
-                        }}
-                      >
-                        {isCategories
-                          ?.filter(
-                            (item) => item.outstandingCategory === "outstanding"
-                          )
-                          .map((item, index) => (
-                            <Link
-                              to={`/filter/${item.slugCategory}`}
-                              key={index}
-                              className="h-[32px] leading-[32px] px-[16px] rounded-[999px] text-[14px] cursor-pointer"
-                              style={{
-                                background: "rgb(245, 245, 245)",
-                                color: "rgb(51, 51, 51)",
-                                margin: "0px 4px 10px",
-                              }}
-                            >
-                              {item.nameCategory}
-                            </Link>
-                          ))}
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>

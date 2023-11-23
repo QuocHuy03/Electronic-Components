@@ -4,16 +4,20 @@ const http = new Http();
 
 const fetchSearchFilterProducts = async (search) => {
   try {
-    const response = await http.get(`/search/getAllSearchFilter/${search}`);
-    return response.result;
+    const response = await http.get(
+      `/product/getAllSearchFilter?query=${search}`
+    );
+    return response;
   } catch (error) {
     console.error(error);
   }
 };
 
-const fetchPostHistorySearch = async () => {
+const fetchPostHistorySearch = async (data) => {
   try {
-    const response = await http.post(`/search/postHistorySearch`);
+    const response = await http.post(`/search/postHistorySearch`, {
+      nameSearch: data,
+    });
     return response;
   } catch (error) {
     console.error(error);
@@ -31,8 +35,8 @@ const fetchHistorySearchByUserID = async () => {
 
 const fetchDeleteAllHistorySearch = async () => {
   try {
-    const response = await http.get(`/search/deleteAllHistorySearch`);
-    return response.result;
+    const response = await http.delete(`/search/deleteHistorySearchAll`);
+    return response;
   } catch (error) {
     console.error(error);
   }
@@ -42,5 +46,5 @@ export const searchService = {
   fetchSearchFilterProducts,
   fetchPostHistorySearch,
   fetchHistorySearchByUserID,
-  fetchDeleteAllHistorySearch
+  fetchDeleteAllHistorySearch,
 };
