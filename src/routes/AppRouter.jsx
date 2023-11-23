@@ -19,6 +19,7 @@ import FilterPage from "../pages/FilterPage";
 import OrderPage from "../pages/OrderPage";
 import OrderDetailPage from "../pages/OrderDetailPage";
 import { google } from "../stores/authentication/actions";
+import SearchPage from "../pages/SearchPage";
 
 const privateRoutes = [
   { path: URL_CONSTANTS.PROFILE, component: ProfilePage },
@@ -40,6 +41,7 @@ const publicRoutes = [
   { path: URL_CONSTANTS.RESET_PASSWORD, component: ResetPasswordPage },
   { path: URL_CONSTANTS.FILTER, component: FilterPage },
   { path: URL_CONSTANTS.ORDER_DETAIL, component: OrderDetailPage },
+  { path: URL_CONSTANTS.SEARCH, component: SearchPage },
 ];
 const AppRouter = () => {
   const dispatch = useDispatch();

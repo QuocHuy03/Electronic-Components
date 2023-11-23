@@ -9,10 +9,13 @@ export const AppContext = createContext({});
 export function AppContextProvider({ children }) {
   const dispatch = useDispatch();
   const { carts } = useSelector((state) => state.cart);
-  const { accessToken,refreshToken, user } = useSelector((state) => state.auth);
+  const { accessToken, refreshToken, user } = useSelector(
+    (state) => state.auth
+  );
   const { orders } = useSelector((state) => state.order);
   const { coupons, discounts } = useSelector((state) => state.coupon);
   const { address, isEditAddress } = useSelector((state) => state.address);
+  const { search, historySearch } = useSelector((state) => state.filter);
   useEffect(() => {
     if (accessToken) {
       dispatch(getCart());
@@ -33,6 +36,8 @@ export function AppContextProvider({ children }) {
         discounts,
         billings: address,
         isEditAddress,
+        search,
+        historySearch,
       }}
     >
       {children}

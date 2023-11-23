@@ -3,12 +3,15 @@ import {
   DELETE_HISTORY_FAILED,
   DELETE_HISTORY_REQUEST,
   DELETE_HISTORY_SUCCESS,
+  SEARCH_FAILED,
   SEARCH_HISTORY_FAILED,
   SEARCH_HISTORY_REQUEST,
   SEARCH_HISTORY_SUCCESS,
   SEARCH_POST_HISTORY_FAILED,
   SEARCH_POST_HISTORY_REQUEST,
   SEARCH_POST_HISTORY_SUCCESS,
+  SEARCH_REQUEST,
+  SEARCH_SUCCESS,
 } from "./types";
 
 export const getHistorySearch = () => {
@@ -71,17 +74,17 @@ export const postHistorySearch = (data) => {
   };
 };
 
-export const deleteAllHistorySearch = (data) => {
+export const deleteAllHistorySearch = () => {
   return async (dispatch) => {
     dispatch({
       type: DELETE_HISTORY_REQUEST,
     });
     try {
-      const response = await searchService.fetchDeleteAllHistorySearch(data);
+      const response = await searchService.fetchDeleteAllHistorySearch();
+      console.log('Delete response:', response);
       if (response.status === true) {
         dispatch({
           type: DELETE_HISTORY_SUCCESS,
-          payload: data,
         });
         return {
           status: true,
@@ -101,6 +104,32 @@ export const deleteAllHistorySearch = (data) => {
           message: error.message,
         },
       });
+    }
+  };
+};
+
+export const valueSearch = (data) => {
+  return async (dispatch) => {
+    dispatch({
+      type: SEARCH_REQUEST,
+      payload: data
+    });
+    try {
+      const response = await searchService.fetchSearchFilterProducts(data);
+      dispatch({
+        type: SEARCH_SUCCESS,
+        payload: response,
+      });
+      return response;
+    } catch (error) {
+      dispatch({
+        type: SEARCH_FAILED,
+        payload: {
+          status: false,
+          message: error.message,
+        },
+      });
+      console.log(error);
     }
   };
 };

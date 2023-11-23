@@ -165,15 +165,14 @@ export const deleteToCartItem = (data) => {
   };
 };
 
-export const deleteToCartAll = (data) => {
+export const deleteToCartAll = () => {
   return async (dispatch) => {
     dispatch({
       type: REMOVE_ALL_CART_REQUEST,
-      payload: data,
     });
 
     try {
-      const response = await cartService.fetchDeleteCartAllByUserID(data);
+      const response = await cartService.fetchDeleteCartAllByUserID();
       if (response.status === true) {
         dispatch({
           type: REMOVE_ALL_CART_SUCCESS,
