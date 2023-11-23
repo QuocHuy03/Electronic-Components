@@ -9,7 +9,7 @@ export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const itemsPerPage = 4; // Move the itemsPerPage declaration here
+  const itemsPerPage = 4;
 
   const { data, isLoading } = useQuery(
     ["blog", currentPage],
@@ -140,9 +140,6 @@ export default function BlogPage() {
                     ) : (
                       data?.map((item, index) => (
                         <div>
-                          {/* Ảnh */}
-
-                          {/* Danh sách bài viết tin tức */}
                           <ul
                             className="list-decimal text-gray-600 flex-1"
                             key={index}

@@ -7,7 +7,10 @@ import { deleteToCartItem } from "../../stores/cart/actions";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import Reponsive from "../Reponsive";
+import { categoryService } from "../../services/category.service";
 import "./index.css";
+import { useQuery } from "@tanstack/react-query";
+import { history } from "../../helpers/history";
 
 export default function HeaderCenter() {
   const { carts } = useContext(AppContext);
@@ -26,7 +29,7 @@ export default function HeaderCenter() {
   const searchBoardRef = useRef();
   const notificationRef = useRef();
   const sidebarRef = useRef();
-  const handleSearch = () => {
+  const handleSearchBoard = () => {
     setIsSearchBoard(true);
   };
   const handleNotification = () => {
@@ -47,10 +50,7 @@ export default function HeaderCenter() {
       ) {
         setNotification(false);
       }
-      if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target)
-      ) {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
         setIsOpenSidebar(false);
       }
     };
@@ -59,6 +59,25 @@ export default function HeaderCenter() {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  const { data: isCategories, isloading: loadingCategory } = useQuery(
+    ["categories"],
+    () => categoryService.fetchAllCategories(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+    dispatch(searchProductSuccess(event.target.value));
+  };
+  const handleSearchQuery = () => {
+    history.push(`/search?query=${encodeURIComponent(searchTerm)}`);
+  };
 
   return (
     <React.Fragment>
@@ -85,17 +104,21 @@ export default function HeaderCenter() {
                 <div className="relative w-[517px] h-[44px]">
                   <div
                     className="flex bg-[#F5F5F5] border border-solid border-[#eaeaea] rounded-[8px]"
-                    onClick={handleSearch}
+                    onClick={handleSearchBoard}
                     ref={searchBoardRef}
                   >
                     <div className="inline-block w-full">
                       <input
+                        onChange={handleSearch}
                         className="block bg-[#F5F5F5] text-[14px] outline-none w-full py-[0.375rem] px-[0.75rem] min-h-[16px] h-full"
                         placeholder="Nhập từ khoá cần tìm"
                       />
                     </div>
                     <div className="inline-block">
-                      <button className="search-icon">
+                      <button
+                        className="search-icon"
+                        onClick={handleSearchQuery}
+                      >
                         <span
                           size={26}
                           color="#616161"
@@ -171,16 +194,24 @@ export default function HeaderCenter() {
                           background: "rgb(255, 255, 255)",
                         }}
                       >
-                        <div
-                          className="h-[32px] leading-[32px] px-[16px] rounded-[999px] text-[14px] cursor-pointer"
-                          style={{
-                            background: "rgb(245, 245, 245)",
-                            color: "rgb(51, 51, 51)",
-                            margin: "0px 4px 10px",
-                          }}
-                        >
-                          máy in brother
-                        </div>
+                        {isCategories
+                          ?.filter(
+                            (item) => item.outstandingCategory === "outstanding"
+                          )
+                          .map((item, index) => (
+                            <Link
+                              to={`/filter/${item.slugCategory}`}
+                              key={index}
+                              className="h-[32px] leading-[32px] px-[16px] rounded-[999px] text-[14px] cursor-pointer"
+                              style={{
+                                background: "rgb(245, 245, 245)",
+                                color: "rgb(51, 51, 51)",
+                                margin: "0px 4px 10px",
+                              }}
+                            >
+                              {item.nameCategory}
+                            </Link>
+                          ))}
                       </div>
                     </div>
                   </div>
@@ -459,7 +490,10 @@ export default function HeaderCenter() {
 
       <div className="lg:hidden block w-full h-[60px] bg-white">
         <div className="w-full h-full flex justify-between items-center px-5">
-          <div   ref={sidebarRef} onClick={() => setIsOpenSidebar(!isOpenSidebar)} >
+          <div
+            ref={sidebarRef}
+            onClick={() => setIsOpenSidebar(!isOpenSidebar)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
