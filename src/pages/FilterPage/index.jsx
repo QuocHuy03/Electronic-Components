@@ -12,6 +12,7 @@ import {
   formatPrice,
 } from "../../utils/fomatPrice";
 import Pagination from "../../components/Pagination";
+import { history } from "../../helpers/history";
 
 const sort = [
   {
@@ -80,7 +81,7 @@ export default function FilterPage() {
     const queryColors = params.getAll("colors");
     const querySorts = params.get("sorts");
     const queryPrices = params.get("prices");
-    const searchTerm  = params.get("search");
+    const searchTerm = params.get("search");
 
     setFilters({
       brands: querybrands || [],
@@ -147,7 +148,7 @@ export default function FilterPage() {
     const currentPath = window.location.pathname;
     const newUrl = hasFilters ? `${currentPath}?${query}` : currentPath;
 
-    window.history.replaceState({}, "", newUrl);
+    history.push(newUrl);
   }, [filters]);
 
   let filteredData =
@@ -564,7 +565,9 @@ export default function FilterPage() {
                       <ul>
                         {loadingBrand ? (
                           <Loading />
-                        ) : isBrands?.length > 0 ? (
+                        ) : isBrands?.filter(
+                            (item) => item.categoryID.slugCategory === isSlug
+                          )?.length > 0 ? (
                           <React.Fragment>
                             {isBrands
                               .filter(

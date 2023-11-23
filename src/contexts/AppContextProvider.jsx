@@ -15,7 +15,7 @@ export function AppContextProvider({ children }) {
   const { orders } = useSelector((state) => state.order);
   const { coupons, discounts } = useSelector((state) => state.coupon);
   const { address, isEditAddress } = useSelector((state) => state.address);
-  const { search, historySearch } = useSelector((state) => state.filter);
+  const { search, historySearch , loading } = useSelector((state) => state.filter);
   useEffect(() => {
     if (accessToken) {
       dispatch(getCart());
@@ -38,6 +38,7 @@ export function AppContextProvider({ children }) {
         isEditAddress,
         search,
         historySearch,
+        loadingHistorySearch: loading
       }}
     >
       {children}

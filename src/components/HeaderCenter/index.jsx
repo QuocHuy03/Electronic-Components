@@ -1,5 +1,11 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import { AppContext } from "../../contexts/AppContextProvider";
 import { formatPrice } from "../../utils/fomatPrice";
@@ -18,9 +24,12 @@ import {
   valueSearch,
 } from "../../stores/search/actions";
 import { useDebounce } from "../../hooks/useDebounce";
+import Loading from "../Loading";
 
 export default function HeaderCenter() {
-  const { carts, search, historySearch } = useContext(AppContext);
+  const { carts, search, historySearch, loadingHistorySearch } =
+    useContext(AppContext);
+  console.log(historySearch);
   const dispatch = useDispatch();
   const totalAmountAll = carts?.reduce(
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
@@ -42,6 +51,10 @@ export default function HeaderCenter() {
   const handleNotification = () => {
     setNotification(!isNotification);
   };
+
+  useEffect(() => {
+    dispatch(getHistorySearch());
+  }, [dispatch, isSearchBoard]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -76,10 +89,6 @@ export default function HeaderCenter() {
     }
   );
 
-  useEffect(() => {
-    dispatch(getHistorySearch());
-  }, [historySearch]);
-console.log(historySearch)
   const [searchTerm, setSearchTerm] = useState();
   const debouncedValue = useDebounce(searchTerm, 400);
   const refSearch = useRef();
@@ -102,14 +111,14 @@ console.log(historySearch)
   }, [dispatch, history, searchTerm]);
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearchQuery();
     }
   };
 
   const handleDeleteHistory = useCallback(() => {
     dispatch(deleteAllHistorySearch());
-  }, [dispatch]);
+  }, []);
 
   return (
     <React.Fragment>
@@ -169,54 +178,57 @@ console.log(historySearch)
                     }}
                     onClick={(event) => event.stopPropagation()}
                   >
-                    {historySearch?.length > 0 && (
-                      <React.Fragment>
-                        <div className="flex justify-between items-center my-[4px]">
-                          <div
-                            fontWeight={500}
-                            color="#82869E"
-                            style={{
-                              color: "rgb(130, 134, 158)",
-                            }}
-                            className="font-[500] text-[14px] text-left overflow-hidden uppercase"
-                          >
-                            Lịch sử tìm kiếm
-                          </div>
-                          <div
-                            onClick={handleDeleteHistory}
-                            style={{
-                              color: "rgb(132, 135, 136)",
-                            }}
-                            className="cursor-pointer"
-                          >
-                            Xóa lịch sử
-                          </div>
-                        </div>
-                        {historySearch?.map((item, index) => (
-                          <Link
-                            to={`/search?query=${encodeURIComponent(
-                              item.nameSearch
-                            )}`}
-                            key={index}
-                            className="flex p-[0.5rem] cursor-pointer rounded-[8px] items-center mb-2"
-                            style={{
-                              background: "rgb(245, 245, 245)",
-                            }}
-                          >
-                            <span
-                              size={20}
-                              className="history-search inline-block bg-[#757575]"
-                            />
-
-                            <div style={{ margin: "0px 0.6rem" }}>
-                              <div className="css-1488rru">
-                                {item.nameSearch}
-                              </div>
+                    {historySearch?.length > 0 &&
+                      (loadingHistorySearch ? (
+                        <Loading />
+                      ) : (
+                        <React.Fragment>
+                          <div className="flex justify-between items-center my-[4px]">
+                            <div
+                              fontWeight={500}
+                              color="#82869E"
+                              style={{
+                                color: "rgb(130, 134, 158)",
+                              }}
+                              className="font-[500] text-[14px] text-left overflow-hidden uppercase"
+                            >
+                              Lịch sử tìm kiếm
                             </div>
-                          </Link>
-                        ))}
-                      </React.Fragment>
-                    )}
+                            <div
+                              onClick={handleDeleteHistory}
+                              style={{
+                                color: "rgb(132, 135, 136)",
+                              }}
+                              className="cursor-pointer"
+                            >
+                              Xóa lịch sử
+                            </div>
+                          </div>
+                          {historySearch?.map((item, index) => (
+                            <Link
+                              to={`/search?query=${encodeURIComponent(
+                                item.nameSearch
+                              )}`}
+                              key={index}
+                              className="flex p-[0.5rem] cursor-pointer rounded-[8px] items-center mb-2"
+                              style={{
+                                background: "rgb(245, 245, 245)",
+                              }}
+                            >
+                              <span
+                                size={20}
+                                className="history-search inline-block bg-[#757575]"
+                              />
+
+                              <div style={{ margin: "0px 0.6rem" }}>
+                                <div className="css-1488rru">
+                                  {item.nameSearch}
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
+                        </React.Fragment>
+                      ))}
 
                     {search?.length > 0 &&
                       search?.map((item, index) => (

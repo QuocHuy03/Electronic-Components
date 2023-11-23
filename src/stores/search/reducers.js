@@ -85,6 +85,7 @@ const searchReducer = (state = initialState, action) => {
 
       return {
         ...state,
+        loading: false,
         historySearch: updatedHistorySearch,
       };
 
