@@ -198,7 +198,7 @@ function Profile() {
 
   useEffect(() => {
     dispatch(getAddress());
-  }, [billings]);
+  }, []);
 
   const handleInputChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
@@ -390,7 +390,7 @@ function Profile() {
         </table>
       </div>
     );
-  };
+  }; 
 
   return (
     <Layout>
