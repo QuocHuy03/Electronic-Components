@@ -57,11 +57,6 @@ export default function CheckoutPage() {
   const [inputs, setInputs] = useState(initialValues());
   const [isAddressItem, setIsAddressItem] = useState(null);
 
-  useEffect(() => {
-    if (billings && billings.length > 0) {
-      setIsAddressItem(billings.filter((item) => item.default === true)[0]?._id);
-    }
-  }, [billings, isEditAddress]);
 
   const handleEditModalAddress = (item) => {
     setInputs(initialValues(item));
