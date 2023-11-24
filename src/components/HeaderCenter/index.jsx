@@ -1,10 +1,16 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import { AppContext } from "../../contexts/AppContextProvider";
 import { formatPrice } from "../../utils/fomatPrice";
 import { deleteToCartItem } from "../../stores/cart/actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import Reponsive from "../Reponsive";
 import { categoryService } from "../../services/category.service";
@@ -20,8 +26,12 @@ import {
 import { useDebounce } from "../../hooks/useDebounce";
 
 export default function HeaderCenter() {
-  const { carts, search, historySearch } = useContext(AppContext);
   const dispatch = useDispatch();
+  const { carts } = useContext(AppContext);
+  const { search, historySearch, loading } = useSelector(
+    (state) => state.filter
+  );
+
   const totalAmountAll = carts?.reduce(
     (total, item) => total + item?.product.price_has_dropped * item.quantity,
     0
@@ -42,6 +52,9 @@ export default function HeaderCenter() {
   const handleNotification = () => {
     setNotification(!isNotification);
   };
+  useEffect(() => {
+    dispatch(getHistorySearch());
+  }, [isSearchBoard]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -76,10 +89,6 @@ export default function HeaderCenter() {
     }
   );
 
-  useEffect(() => {
-    dispatch(getHistorySearch());
-  }, [historySearch]);
-
   const [searchTerm, setSearchTerm] = useState();
   const debouncedValue = useDebounce(searchTerm, 400);
   const refSearch = useRef();
@@ -96,16 +105,28 @@ export default function HeaderCenter() {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
-  const handleSearchQuery = () => {
-    dispatch(postHistorySearch(searchTerm));
-    history.push(`/search?query=${encodeURIComponent(searchTerm)}`);
-  };
-
+  const handleSearchQuery = useCallback(() => {
+    if (searchTerm) { // Check if searchTerm is not empty or falsy
+      dispatch(postHistorySearch(searchTerm));
+      dispatch(getHistorySearch());
+      history.push(`/search?query=${encodeURIComponent(searchTerm)}`);
+    } else {
+      console.log('Search term is empty or falsy. Not sending the request.');
+    }
+  }, [dispatch, history, searchTerm]);
+  
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearchQuery();
     }
   };
+
+
+  
+
+  const handleDeleteHistory = useCallback(() => {
+    dispatch(deleteAllHistorySearch());
+  }, []);
 
   return (
     <React.Fragment>
@@ -179,7 +200,7 @@ export default function HeaderCenter() {
                             Lịch sử tìm kiếm
                           </div>
                           <div
-                            onClick={() => dispatch(deleteAllHistorySearch())}
+                            onClick={handleDeleteHistory}
                             style={{
                               color: "rgb(132, 135, 136)",
                             }}
@@ -216,7 +237,8 @@ export default function HeaderCenter() {
 
                     {search?.length > 0 &&
                       search?.map((item, index) => (
-                        <div
+                        <Link
+                          to={`/product/${item.slugProduct}`}
                           key={index}
                           className="flex p-[0.5rem] cursor-pointer rounded-[8px] items-center mb-2"
                           style={{
@@ -245,7 +267,7 @@ export default function HeaderCenter() {
                               {item.nameProduct}
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     {search?.length === 0 && (
                       <div

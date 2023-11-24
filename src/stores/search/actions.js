@@ -21,11 +21,19 @@ export const getHistorySearch = () => {
     });
     try {
       const response = await searchService.fetchHistorySearchByUserID();
-      dispatch({
-        type: SEARCH_HISTORY_SUCCESS,
-        payload: response,
-      });
-      return response;
+      if (response.status === true) {
+        dispatch({
+          type: SEARCH_HISTORY_SUCCESS,
+          payload: response.result,
+        });
+        return response.result;
+      } else {
+        dispatch({
+          type: SEARCH_HISTORY_FAILED,
+          payload: response,
+        });
+        return response;
+      }
     } catch (error) {
       dispatch({
         type: SEARCH_HISTORY_FAILED,
@@ -81,15 +89,10 @@ export const deleteAllHistorySearch = () => {
     });
     try {
       const response = await searchService.fetchDeleteAllHistorySearch();
-      console.log('Delete response:', response);
       if (response.status === true) {
         dispatch({
           type: DELETE_HISTORY_SUCCESS,
         });
-        return {
-          status: true,
-          message: response.message,
-        };
       } else {
         dispatch({
           type: DELETE_HISTORY_FAILED,
@@ -112,7 +115,7 @@ export const valueSearch = (data) => {
   return async (dispatch) => {
     dispatch({
       type: SEARCH_REQUEST,
-      payload: data
+      payload: data,
     });
     try {
       const response = await searchService.fetchSearchFilterProducts(data);

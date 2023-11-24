@@ -12,6 +12,9 @@ import {
   formatPrice,
 } from "../../utils/fomatPrice";
 import Pagination from "../../components/Pagination";
+import { history } from "../../helpers/history";
+import { valueSearch } from "../../stores/search/actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const sort = [
   {
@@ -35,26 +38,13 @@ const sort = [
 ];
 
 export default function SearchPage() {
-  const { slug } = useParams();
-  const [isSlug, setSlug] = useState(null);
-  useEffect(() => {
-    if (slug) {
-      setSlug(slug);
-    }
-  }, [slug]);
-
+  const { search } = useSelector((state) => state.filter);
+  const dispatch = useDispatch();
   const [visibleItems, setVisibleItems] = useState(4);
 
   const handleLoadMore = () => {
     setVisibleItems((prevVisibleItems) => prevVisibleItems + 4);
   };
-
-  const { data: isProducts, isloading: loadingProduct } = useQuery({
-    queryKey: ["products", isSlug],
-    queryFn: () => productService.fetchProductsByCategory(isSlug),
-    staleTime: 500,
-    enabled: !!isSlug,
-  });
 
   const { data: isBrands, isloading: loadingBrand } = useQuery(
     ["brands"],
@@ -70,24 +60,26 @@ export default function SearchPage() {
     colors: [],
     sorts: "",
     prices: "",
+    query: "",
   };
   const [clickedItemId, setClickedItemId] = useState();
   const [filters, setFilters] = useState(initialFilters);
   const [priceRange, setPriceRange] = useState([1000000, 100000000]);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const querybrands = params.getAll("brands");
     const queryColors = params.getAll("colors");
     const querySorts = params.get("sorts");
     const queryPrices = params.get("prices");
-    const searchTerm  = params.get("search");
+    const searchTerm = params.get("query");
 
     setFilters({
       brands: querybrands || [],
       sorts: querySorts || "",
       colors: queryColors || [],
       prices: queryPrices || "",
-      search: searchTerm || "",
+      query: searchTerm || "",
     });
   }, []);
 
@@ -125,34 +117,41 @@ export default function SearchPage() {
     const hasFilters = Object.values(filters).some((value) =>
       Array.isArray(value) ? value.length > 0 : value !== ""
     );
+
     const queryArray = [];
 
     for (const [key, value] of Object.entries(filters)) {
       if (
         (Array.isArray(value) && value.length > 0) ||
-        (value !== "" && key !== "sorts" && key !== "prices")
+        (value !== "" && !Array.isArray(value))
       ) {
-        // If the value is an array with items, add multiple key-value pairs with the same key
-        value.forEach((item) => {
-          queryArray.push(`${key}=${encodeURIComponent(item)}`);
-        });
-      } else if (value !== "") {
-        queryArray.push(`${key}=${encodeURIComponent(value)}`);
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            value.forEach((item) => {
+              queryArray.push(`${key}[]=${encodeURIComponent(item)}`);
+            });
+          }
+        } else {
+          queryArray.push(`${key}=${encodeURIComponent(value)}`);
+        }
       }
     }
 
-    // Join all key-value pairs with "&" to create the final query string
     const query = queryArray.join("&");
 
     const currentPath = window.location.pathname;
     const newUrl = hasFilters ? `${currentPath}?${query}` : currentPath;
 
-    window.history.replaceState({}, "", newUrl);
+    history.push(newUrl);
+  }, [filters]);
+
+  useEffect(() => {
+    dispatch(valueSearch(filters.query));
   }, [filters]);
 
   let filteredData =
-    isProducts && isProducts.length > 0
-      ? isProducts
+    search && search.length > 0
+      ? search
           .slice()
           .sort((a, b) => {
             if (filters.sorts === "ASC") {
@@ -357,15 +356,11 @@ export default function SearchPage() {
     );
   };
 
-  const FilteredProducts = ({ filteredData, loadingProduct }) => {
+  const FilteredProducts = ({ filteredData }) => {
     return (
       <div>
         {filteredData?.length > 0 ? (
-          loadingProduct ? (
-            <Loading />
-          ) : (
-            <ListFilterPage filterData={filteredData} />
-          )
+          <ListFilterPage filterData={filteredData} />
         ) : (
           <div
             className="opacity-100 mt-10 mb-10"
@@ -416,9 +411,7 @@ export default function SearchPage() {
                   <a href="/">
                     <span className="mx-1 capitalize">home</span>
                   </a>
-                  <span className="sperator capitalize">
-                    / Filter / {isSlug}
-                  </span>
+                  <span className="sperator capitalize">/ Filter</span>
                 </span>
               </div>
             </div>
@@ -430,6 +423,7 @@ export default function SearchPage() {
                       value &&
                       key !== "sorts" &&
                       key !== "prices" &&
+                      key !== "query" &&
                       value.length > 0
                   ) ? (
                     <div className="filter-subject-item pb-4 border-b border-gray-border mt-5">
@@ -440,6 +434,7 @@ export default function SearchPage() {
                           value &&
                           key !== "sorts" &&
                           key !== "prices" &&
+                          key !== "query" &&
                           value.length > 0 ? (
                             <React.Fragment key={key}>
                               {Array.isArray(value)
@@ -554,102 +549,130 @@ export default function SearchPage() {
                     </p>
                   </div>
 
-                  <div className="filter-subject-item pb-5 border-b border-gray-border mt-5">
-                    <div className="subject-title mb-[20px]">
-                      <h1 className="text-black text-base font-[500]">
-                        Brands
-                      </h1>
-                    </div>
-                    <div className="filter-items">
-                      <ul>
-                        {loadingBrand ? (
-                          <Loading />
-                        ) : isBrands?.length > 0 ? (
-                          <React.Fragment>
-                            {isBrands
-                              .filter(
-                                (item) =>
-                                  item.categoryID.slugCategory === isSlug
-                              )
-                              .slice(0, visibleItems)
-                              .map((item) => (
-                                <li key={item._id} className="mb-2">
+                  {loadingBrand ? (
+                    <Loading />
+                  ) : (
+                    search
+                      ?.filter((item) =>
+                        item.nameProduct
+                          .toLowerCase()
+                          .includes(filters.query.toLowerCase())
+                      )
+                      ?.flatMap((item) => (item?.brand ? [item.brand] : []))
+                      .filter((brand) => brand).length > 0 && (
+                      <div className="filter-subject-item pb-5 border-b border-gray-border mt-5">
+                        <div className="subject-title mb-[20px]">
+                          <h1 className="text-black text-base font-[500]">
+                            Brands
+                          </h1>
+                        </div>
+                        <div className="filter-items">
+                          <ul>
+                            <React.Fragment>
+                              {Array.from(
+                                new Set(
+                                  search
+                                    ?.filter((item) =>
+                                      item.nameProduct
+                                        .toLowerCase()
+                                        .includes(filters.query.toLowerCase())
+                                    )
+                                    ?.flatMap((item) =>
+                                      item?.brand ? [item.brand] : []
+                                    )
+                                    .filter((brand) => brand)
+                                    .map((brand) =>
+                                      brand.nameBrand.toLowerCase()
+                                    )
+                                )
+                              ).map((brand, index) => (
+                                <li key={index} className="mb-2">
                                   <div className="flex space-x-[10px] items-center">
                                     <input
                                       onChange={() =>
-                                        handleFilterChange(
-                                          "brands",
-                                          item.slugBrand
-                                        )
+                                        handleFilterChange("brands", brand)
                                       }
-                                      checked={filters.brands.includes(
-                                        item.slugBrand
-                                      )}
+                                      checked={filters.brands.includes(brand)}
                                       type="checkbox"
-                                      name={item.nameBrand}
-                                      id={item.nameBrand}
+                                      name={brand}
+                                      id={brand}
                                     />
                                     <div>
                                       <label
-                                        htmlFor={item.nameBrand}
+                                        htmlFor={brand}
                                         className="text-xs font-400 capitalize"
                                       >
-                                        {item.nameBrand}
+                                        {brand}
                                       </label>
                                     </div>
                                   </div>
                                 </li>
                               ))}
-                            {visibleItems < isBrands.length && (
-                              <span
-                                className="text-[#1990FF] cursor-pointer text-[0.75rem] text-center"
-                                onClick={handleLoadMore}
-                              >
-                                Xem thêm
-                              </span>
-                            )}
-                          </React.Fragment>
-                        ) : (
-                          <p>Rỗng</p>
-                        )}
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="filter-subject-item pb-5 border-b border-gray-border mt-5">
-                    <div className="subject-title mb-[20px]">
-                      <h1 className="text-black text-base font-[500]">
-                        Colors
-                      </h1>
-                    </div>
-                    <div className="filter-items">
-                      <ul>
-                        {colors?.map((item, index) => (
-                          <li key={index} className="mb-2">
-                            <div className="flex space-x-[10px] items-center">
-                              <input
-                                onChange={() =>
-                                  handleFilterChange("colors", item.name)
-                                }
-                                checked={filters.colors.includes(item.name)}
-                                type="checkbox"
-                                name={item.name}
-                                id={item.name}
-                              />
+                            </React.Fragment>
+                          </ul>
+                        </div>
+                      </div>
+                    )
+                  )}
 
-                              <div>
-                                <label
-                                  htmlFor={item.name}
-                                  className="text-xs font-400 capitalize"
-                                >
-                                  {item.name}
-                                </label>
+                  {search
+                    ?.filter((item) =>
+                      item.nameProduct
+                        .toLowerCase()
+                        .includes(filters.query.toLowerCase())
+                    )
+                    ?.flatMap((item) => item?.colors)
+                    .filter((color) => color)
+                    .map((color) => color.nameColor.toLowerCase()).length >
+                    0 && (
+                    <div className="filter-subject-item pb-5 border-b border-gray-border mt-5">
+                      <div className="subject-title mb-[20px]">
+                        <h1 className="text-black text-base font-[500]">
+                          Colors
+                        </h1>
+                      </div>
+                      <div className="filter-items">
+                        <ul>
+                          {Array.from(
+                            new Set(
+                              search
+                                ?.filter((item) =>
+                                  item.nameProduct
+                                    .toLowerCase()
+                                    .includes(filters.query.toLowerCase())
+                                )
+                                ?.flatMap((item) => item?.colors)
+                                .filter((color) => color)
+                                .map((color) => color.nameColor.toLowerCase())
+                            )
+                          ).map((color, index) => (
+                            <li key={index} className="mb-2">
+                              <div className="flex space-x-[10px] items-center">
+                                <input
+                                  onChange={() =>
+                                    handleFilterChange("colors", color)
+                                  }
+                                  checked={filters.colors.includes(color)}
+                                  type="checkbox"
+                                  name={color}
+                                  id={color}
+                                />
+                                <div>
+                                  <label
+                                    htmlFor={color}
+                                    className="text-xs font-400 capitalize"
+                                  >
+                                    {color}
+                                  </label>
+                                </div>
                               </div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                  </div>
+                  )}
+
                   <button
                     type="button"
                     className="w-10 h-10 fixed top-5 right-5 z-50 rounded lg:hidden flex justify-center items-center border border-qred text-qred"
@@ -675,7 +698,7 @@ export default function SearchPage() {
                     <p className="font-400 text-[13px]">
                       <span className="text-qgray"> Showing</span> 1–
                       {filteredData ? filteredData?.length : 0} of{" "}
-                      {isProducts?.length} results
+                      {search?.length} results
                     </p>
                   </div>
 
@@ -749,10 +772,7 @@ export default function SearchPage() {
                     </svg>
                   </button>
                 </div>
-                <FilteredProducts
-                  loadingProduct={loadingProduct}
-                  filteredData={filteredData}
-                />
+                <FilteredProducts filteredData={filteredData} />
               </div>
             </div>
           </div>

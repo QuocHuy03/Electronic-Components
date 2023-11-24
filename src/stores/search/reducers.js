@@ -66,21 +66,27 @@ const searchReducer = (state = initialState, action) => {
       const { historySearch } = state;
       const newAddresses = action.payload;
 
-      newAddresses.forEach((newAddress) => {
-        const existingIndex = historySearch.findIndex(
-          (existing) => existing._id === newAddress._id
-        );
+      const updatedHistorySearch = newAddresses.reduce(
+        (acc, newAddress) => {
+          const existingIndex = acc.findIndex(
+            (existing) => existing._id === newAddress._id
+          );
 
-        if (existingIndex !== -1) {
-          historySearch[existingIndex] = newAddress;
-        } else {
-          historySearch.push(newAddress);
-        }
-      });
+          if (existingIndex !== -1) {
+            acc[existingIndex] = newAddress;
+          } else {
+            acc.push(newAddress);
+          }
+
+          return acc;
+        },
+        [...historySearch]
+      ); 
 
       return {
         ...state,
-        historySearch,
+        loading: false,
+        historySearch: updatedHistorySearch,
       };
 
     case DELETE_HISTORY_SUCCESS:
