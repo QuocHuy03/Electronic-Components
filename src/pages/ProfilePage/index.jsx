@@ -259,6 +259,7 @@ function Profile() {
         }
         setValidationErrors(response.errors);
       }
+      dispatch(getAddress());
     },
     [isEditAddress, inputs]
   );
@@ -390,7 +391,7 @@ function Profile() {
         </table>
       </div>
     );
-  }; 
+  };
 
   return (
     <Layout>
