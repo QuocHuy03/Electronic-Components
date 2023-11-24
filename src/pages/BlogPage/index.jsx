@@ -53,7 +53,7 @@ export default function BlogPage() {
                       </span>
                       <span>
                         <a href="/blogs">
-                          <span className="mx-1 capitalize">blogs</span>
+                          <span className="mx-1 capitalize">tin tức</span>
                         </a>
                       </span>
                     </div>
@@ -61,7 +61,7 @@ export default function BlogPage() {
                 </div>
                 <div className="flex justify-center">
                   <h1 className="text-3xl font-semibold text-qblack">
-                    Our Blogs
+                    Tin tức
                   </h1>
                 </div>
               </div>

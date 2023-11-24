@@ -20,7 +20,7 @@ export default function ContactPage() {
                       </span>
                       <span>
                         <a href="/contact">
-                          <span className="mx-1 capitalize">contact</span>
+                          <span className="mx-1 capitalize">liên hệ</span>
                         </a>
                       </span>
                     </div>
@@ -28,7 +28,7 @@ export default function ContactPage() {
                 </div>
                 <div className="flex justify-center">
                   <h1 className="text-3xl font-semibold text-qblack">
-                    Contact
+                    Liên hệ
                   </h1>
                 </div>
               </div>

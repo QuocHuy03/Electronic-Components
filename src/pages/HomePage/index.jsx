@@ -307,16 +307,7 @@ export default function HomePage() {
               >
                 <div className="box-title">
                   <div className="box-tab-menu">
-                    <p
-                      data-key="flashsale_bf24110"
-                      className={`box-tab-item button__select-tab ${
-                        selectedDate === "flashsale_bf24110" ? "active" : ""
-                      }`}
-                      style={{ backgroundColor: "rgb(215, 0, 24)" }}
-                      onClick={() => handleTabClick("flashsale_bf24110")}
-                    >
-                      24.11
-                    </p>
+                    
                     <p
                       data-key="flashsale_bf25111"
                       className={`box-tab-item button__select-tab ${
