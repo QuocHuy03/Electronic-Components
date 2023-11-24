@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import Layout from "../../components/Layout";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import huydev from "../../json/address.json";
 import { logout } from "../../stores/authentication/actions";
 import { userService } from "../../services/user.service";
@@ -26,6 +26,7 @@ import { COLOR } from "../../constants/style.constants";
 import { AppContext } from "../../contexts/AppContextProvider";
 import {
   addAddress,
+  deleteAddress,
   getAddress,
   updateAddress,
 } from "../../stores/address/actions";
@@ -43,7 +44,7 @@ const initialValues = (user) => ({
   default: user?.default || false,
 });
 
-export default function ProfilePage() {
+function Profile() {
   const dispatch = useDispatch();
   const { user, refreshToken, billings, isEditAddress } =
     useContext(AppContext);
@@ -260,6 +261,20 @@ export default function ProfilePage() {
       }
     },
     [isEditAddress, inputs]
+  );
+
+  const handleDeleteAddress = useCallback(
+    async (id) => {
+      const response = await dispatch(deleteAddress(id));
+      if (response.status === true) {
+        createNotification("success", "topRight", response.message);
+      } else {
+        if (response.status === false) {
+          createNotification("error", "topRight", response.message);
+        }
+      }
+    },
+    [dispatch]
   );
 
   const ListOrder = ({ isOrders }) => {
@@ -1756,6 +1771,10 @@ export default function ProfilePage() {
                                           type="button"
                                         >
                                           <div
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleDeleteAddress(item._id);
+                                            }}
                                             type="body"
                                             color="textPrimary"
                                             className="text-[13px] text-black font-[500]"
@@ -1783,3 +1802,14 @@ export default function ProfilePage() {
     </Layout>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    address: state.address.address,
+    isEditAddress: state.address.isEditAddress,
+  };
+};
+
+const ProfilePage = connect(mapStateToProps)(Profile);
+
+export default ProfilePage;

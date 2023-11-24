@@ -57,7 +57,7 @@ const addressReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        address,
+        address: action.payload,
       };
 
     case ADD_ADDRESS_SUCCESS:
