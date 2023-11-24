@@ -3,167 +3,435 @@ import React from "react";
 export default function Footer() {
   return (
     <React.Fragment>
-      <footer className="footer-section-wrapper bg-white print:hidden">
-        <div className="max-w-6xl block mx-auto pt-[30px]">
-         
-          <div className="lg:flex justify-between px-4">
-            <div className="lg:w-[424px] ml-0 w-full mb-10 lg:mb-0">
-              <h1 className="text-[18] font-500 text-[#2F2F2F] mb-5">
-                About Us
-              </h1>
-              <p className="text-[#9A9A9A] text-[15px] w-[247px] leading-[28px]">
-                We know there are a lot of threa developers our but we pride
-                into a firm in the industry.
-              </p>
-            </div>
-            <div className="flex-1 lg:flex">
-              <div className="lg:w-1/3 w-full mb-10 lg:mb-0">
-                <div className="mb-5">
-                  <h6 className="text-[18] font-500 text-[#2F2F2F]">Feature</h6>
+    <div className="max-w-7xl block mx-auto pt-[40px] border-t-3 ">
+      <div className=" w-18 border-blue-800" style={{ borderTopWidth: '3px' }}>
+        <nav className=" bg-white py-4">
+          <div className="w-full mx-auto px-1 sm:px-4 max-w-screen-xl flex mb-10">
+            <div className="box-border m-0 min-w-0 flex flex-wrap justify-between">
+              <div className="w-1/5">
+                <div className="font-bold text-base mb-4">
+                  Hỗ trợ Khách hàng
                 </div>
-                <div>
-                  <ul className="flex flex-col space-y-4 ">
-                    <li>
-                      <span className="text-[#9A9A9A] text-[15px] hover:text-qblack border-b border-transparent hover:border-qblack cursor-pointer capitalize">
-                        About Us
-                      </span>
-                    </li>
-                    <li>
-                      <span className="text-[#9A9A9A] text-[15px] hover:text-qblack border-b border-transparent hover:border-qblack cursor-pointer capitalize">
-                        Terms Condition
-                      </span>
-                    </li>
-                    <li>
-                      <span className="text-[#9A9A9A] text-[15px] hover:text-qblack border-b border-transparent hover:border-qblack cursor-pointer capitalize">
-                        Best Products
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="lg:w-1/3 lg:flex lg:flex-col items-center w-full mb-10 lg:mb-0 ">
-                <div>
-                  <div className="mb-5">
-                    <h6 className="text-[18] font-500 text-[#2F2F2F]">
-                      General Links
-                    </h6>
-                  </div>
-                  <div>
-                    <ul className="flex flex-col space-y-4 ">
-                      <li>
-                        <span className="text-[#9A9A9A] text-[15px] hover:text-qblack border-b border-transparent hover:border-qblack cursor-pointer capitalize">
-                          Blog
-                        </span>
-                      </li>
-                      <li>
-                        <span className="text-[#9A9A9A] text-[15px] hover:text-qblack border-b border-transparent hover:border-qblack cursor-pointer capitalize">
-                          Tracking Order
-                        </span>
-                      </li>
-                      <li>
-                        <span className="text-[#9A9A9A] text-[15px] hover:text-qblack border-b border-transparent hover:border-qblack cursor-pointer capitalize">
-                          Become Seller
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:w-1/3 lg:flex lg:flex-col items-center w-full mb-10 lg:mb-0">
-                <div>
-                  <div className="mb-5">
-                    <h6 className="text-[18] font-500 text-[#2F2F2F]">
-                      Helpful
-                    </h6>
-                  </div>
-                  <div>
-                    <ul className="flex flex-col space-y-4 ">
-                      <li>
-                        <span className="text-[#9A9A9A] text-[15px] hover:text-qblack border-b border-transparent hover:border-qblack cursor-pointer capitalize">
-                          Flash Sale
-                        </span>
-                      </li>
-                      <li>
-                        <span className="text-[#9A9A9A] text-[15px] hover:text-qblack border-b border-transparent hover:border-qblack cursor-pointer capitalize">
-                          FAQ
-                        </span>
-                      </li>
-                      <li>
-                        <span className="text-[#9A9A9A] text-[15px] hover:text-qblack border-b border-transparent hover:border-qblack cursor-pointer capitalize">
-                          Support
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="bottom-bar border-t border-qgray-border lg:h-[82px] lg:flex justify-between items-center px-4 py-2">
-            <div className="flex lg:space-x-5 justify-between items-center mb-3">
-              <div className="flex space-x-5 items-center">
-                <a rel="noopener noreferrer" href="/#">
-                  <svg
-                    width={16}
-                    height={16}
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    className="fill-current text-qgray hover:text-qblack"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M12.1016 4.90039C12.6538 4.90039 13.1016 4.45268 13.1016 3.90039C13.1016 3.34811 12.6538 2.90039 12.1016 2.90039C11.5493 2.90039 11.1016 3.34811 11.1016 3.90039C11.1016 4.45268 11.5493 4.90039 12.1016 4.90039Z" />
-                    <path d="M8 12C5.8 12 4 10.2 4 8C4 5.8 5.8 4 8 4C10.2 4 12 5.8 12 8C12 10.2 10.2 12 8 12ZM8 6C6.9 6 6 6.9 6 8C6 9.1 6.9 10 8 10C9.1 10 10 9.1 10 8C10 6.9 9.1 6 8 6Z" />
-                    <path d="M12 16H4C1.9 16 0 14.1 0 12V4C0 1.9 1.9 0 4 0H12C14.1 0 16 1.9 16 4V12C16 14.1 14.1 16 12 16ZM4 2C3.1 2 2 3.1 2 4V12C2 13 3 14 4 14H12C12.9 14 14 12.9 14 12V4C14 3.1 12.9 2 12 2H4Z" />
-                  </svg>
-                </a>
-                <a rel="noopener noreferrer" href="/#">
-                  <svg
-                    width={10}
-                    height={16}
-                    viewBox="0 0 10 16"
-                    fill="none"
-                    className="fill-current text-qgray hover:text-qblack"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M3 16V9H0V6H3V4C3 1.3 4.7 0 7.1 0C8.3 0 9.2 0.1 9.5 0.1V2.9H7.8C6.5 2.9 6.2 3.5 6.2 4.4V6H10L9 9H6.3V16H3Z" />
-                  </svg>
-                </a>
-                <a rel="noopener noreferrer" href="/#">
-                  <svg
-                    width={16}
-                    height={12}
-                    viewBox="0 0 16 12"
-                    fill="none"
-                    className="fill-current text-qgray hover:text-qblack"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M15.8 2.8C15.6 1.5 15 0.6 13.6 0.4C11.4 8.9407e-08 8 0 8 0C8 0 4.6 8.9407e-08 2.4 0.4C1 0.6 0.3 1.5 0.2 2.8C0 4.1 0 6 0 6C0 6 0 7.9 0.2 9.2C0.4 10.5 1 11.4 2.4 11.6C4.6 12 8 12 8 12C8 12 11.4 12 13.6 11.6C15 11.3 15.6 10.5 15.8 9.2C16 7.9 16 6 16 6C16 6 16 4.1 15.8 2.8ZM6 9V3L11 6L6 9Z" />
-                  </svg>
-                </a>
-              </div>
-              <span className="sm:text-base text-[10px] text-qgray font-300">
-                ©2023
-                <b
+                <a
+                  href="#"
                   target="_blank"
-                  rel="noreferrer"
-                  className="font-500 text-black mx-1"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
                 >
-                  GradTechShop
-                </b>
-                All rights reserved
-              </span>
-            </div>
-            <div className>
-              <img
-                width={318}
-                height={28}
-                src="https://shopo-next.vercel.app/assets/images/payment-getways.png"
-                alt="payment-getways"
-              />
+                  Thẻ ưu đãi
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Hướng dẫn mua online
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Ưu đãi dành cho Doanh nghiệp
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Chính sách trả góp
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Dịch vụ sửa chữa
+                </a>
+              </div>
+              <div className="w-1/5">
+                <div className="font-bold text-base mb-4">
+                  Chính sách mua hàng
+                </div>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Điều kiện giao dịch chung
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Chính sách bảo hành
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Chính sách đổi trả
+                </a>
+                <a
+                  href="#"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Chính sách thanh toán
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Giao hàng và Lắp đặt tại nhà
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Dịch vụ lắp đặt và nâng cấp PC/ Laptop tại cửa hàng &amp;
+                  TTBH
+                </a>
+              </div>
+              <div className="w-1/5">
+                <div className="font-bold text-base mb-4">
+                  Thông tin GradTechShop
+                </div>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Giới thiệu GradTechShop
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Hệ thống cửa hàng
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Trung tâm bảo hành
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Chính sách bảo mật
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Tin công nghệ
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Hỏi đáp
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  Tuyển dụng
+                </a>
+              </div>
+
+              <div className="w-1/5">
+                <div class="font-bold text-base mb-4">Cộng đồng GradTechShop</div>
+                <div class="text-xs w-full pt-1.5 pr-1.5">
+                  Gọi mua hàng (miễn phí)
+                  <a href="#" className="text-red-500 ml-1">18006867</a>
+                </div>
+                <div class="text-xs w-full pt-1.5 pr-1.5">
+                  Gọi chăm sóc
+                  <a href="#" className="text-red-500 ml-1">18006865</a>
+                </div>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  <span
+                    size={16}
+                    color="#485992"
+                    className="inline-block w-4 h-4 bg-center bg-contain bg-no-repeat"
+                    style={{
+                      backgroundImage:
+                        "url(https://shopfront-cdn.tekoapis.com/static/4a245cee42ae6bbb.svg)",
+                    }}
+                  />
+                  <div className="w-1/25 h-1/25 ml-2" />
+                  Facebook GradTechShop
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  <span
+                    size={16}
+                    color="#cf2200"
+                    className="inline-block w-4 h-4 bg-center bg-contain bg-no-repeat"
+                    style={{
+                      backgroundImage:
+                        "url(https://shopfront-cdn.tekoapis.com/static/2d3d889a92325278.svg)",
+                    }}
+                  />
+                  <div className="w-1/25 h-1/25 ml-2" />
+                  GradTechShop Media
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  <span
+                    size={16}
+                    color="#00AFF7"
+                    className="inline-block w-4 h-4 bg-center bg-contain bg-no-repeat"
+                    style={{
+                      backgroundImage:
+                        "url(https://shopfront-cdn.tekoapis.com/static/c71967f1b568ff35.svg)",
+                    }}
+                  />
+                  <div className="w-1/25 h-1/25 ml-2" />
+                  GradTechShop Hội
+                </a>
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border-transparent border-1 border-solid select-none flex-row relative w-full text-xs text-gray-700 text-left no-underline"
+                >
+                  <span
+                    size={16}
+                    color="#0573ff"
+                    className="inline-block w-4 h-4 bg-center bg-contain bg-no-repeat"
+                    style={{
+                      backgroundImage:
+                        "url(	https://shopfront-cdn.tekoapis.com/static/20f9b470a01bcc4e.svg)",
+                    }}
+                  />
+                  <div className="w-1/25 h-1/25 ml-2" />
+                  OA GradTechShop (zalo)
+                </a>
+              </div>
+
+              <div className="w-1/5">
+                <div className="font-bold text-base mb-4">Email liên hệ</div>
+                <div className="text-xs w-full pt-1.5 pr-1.5">
+                  Hỗ trợ Khách hàng:
+                  <br /> <a href="#" className="text-red-500">cskh@gradtechshop.vn</a>
+                </div>
+                <div className="text-xs w-full pt-1.5 pr-1.5">
+                  Liên hệ báo giá:
+                  <br />{" "}
+                  <a href="#" className="text-red-500">baogia@gradtechshop.vn</a>
+                </div>
+                <div className="text-xs w-full pt-1.5 pr-1.5">
+                  Hợp tác phát triển:
+                  <br />{" "}
+                  <a href="#" className="text-red-500">hoptac@gradtechshop.vn</a>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </footer>
-    </React.Fragment>
+
+          <div className="w-full mx-auto px-1 sm:px-4 max-w-screen-xl flex mb-10">
+            <div className="box-border m-0 min-w-0 flex flex-wrap">
+              <div className="w-18">
+                <div className="font-bold text-sm mb-4">
+                  Phương thức thanh toán
+                </div>
+                <a
+                  href="#"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border border-transparent select-none flex-col relative text-sm text-left text-gray-800 max-w-72 justify-start"
+                >
+                  <span
+                    size={30}
+                    color="#3e3e3e"
+                    className="w-30 h-30 bg-center bg-contain bg-no-repeat"
+                    style={{
+                      WebkitMask:
+                        "url(https://shopfront-cdn.tekoapis.com/static/7534c48e46ec507e.svg) center center / contain no-repeat",
+                      width: "30px",
+                      height: "30px",
+                      backgroundColor: "var(--button-icon-color, #3e3e3e)",
+                    }}
+                  />
+                  <div className="h-2" />
+                  QR Code
+                </a>
+                <a
+                  href="#"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border border-transparent select-none flex-col relative text-sm text-left text-gray-800 max-w-72 justify-start"
+                >
+                  <span size={30} color="#3e3e3e" className="w-30 h-30 bg-center bg-contain bg-no-repeat"
+                    style={{
+                      WebkitMask:
+                        "url(	https://shopfront-cdn.tekoapis.com/static/0e924ede5a93187b.svg) center center / contain no-repeat",
+                      width: "30px",
+                      height: "30px",
+                      backgroundColor: "var(--button-icon-color, #3e3e3e)",
+                    }} />
+                  <div className="h-2" />
+                  Tiền mặt
+                </a>
+                <a
+                  href="#"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border border-transparent select-none flex-col relative text-sm text-left text-gray-800 max-w-72 justify-start"
+                >
+                  <span size={30} color="#3e3e3e" className="w-30 h-30 bg-center bg-contain bg-no-repeat"
+                    style={{
+                      WebkitMask:
+                        "url(https://shopfront-cdn.tekoapis.com/static/b2c29b7046b45840.svg) center center / contain no-repeat",
+                      width: "30px",
+                      height: "30px",
+                      backgroundColor: "var(--button-icon-color, #3e3e3e)",
+                    }} />
+                  <div className="h-2" />
+                  Trả góp
+                </a>
+                <a
+                  href="#"
+                  className="cursor-pointer rounded-md overflow-hidden leading-4 p-1.5 inline-flex items-center bg-transparent border border-transparent select-none flex-col relative text-sm text-left text-gray-800 max-w-72 justify-start"
+                >
+                  <span size={30} color="#3e3e3e" className="w-30 h-30 bg-center bg-contain bg-no-repeat"
+                    style={{
+                      WebkitMask:
+                        "url(https://shopfront-cdn.tekoapis.com/static/abf02ec95226fd05.svg) center center / contain no-repeat",
+                      width: "30px",
+                      height: "30px",
+                      backgroundColor: "var(--button-icon-color, #3e3e3e)",
+                    }} />
+                  <div className="h-2" />
+                  Internet Banking
+                </a>
+              </div>
+              <div className="pl-24">
+                <div className="font-bold text-base mb-4">
+                  Danh sách các ngân hàng thanh toán online
+                </div>
+                <img
+                  src="https://shopfront-cdn.tekoapis.com/static/vnpay_banks.png"
+                  alt
+                  className="css-1equo6g"
+                />
+              </div>
+            </div>
+          </div>
+        </nav>
+        <nav className="p-30 pt-0 bg-gray-200 ">
+          <div className="w-full mx-auto px-4 max-w-screen-xl flex ">
+            <div className="box-border m-0 min-w-0 flex-wrap flex w-full h-[170px]">
+              <div className="w-96 mt-5">
+                <div className="text-xs uppercase font-bold mb-15">
+                  Công ty cổ phần thương mại - dịch vụ GradTechShop
+                </div>
+                <div className="text-xs w-full pr-8">
+                  © 1997 - 2020 Công Ty Cổ Phần Thương Mại - Dịch Vụ GradTechShop
+                  <br />
+                  Giấy chứng nhận đăng ký doanh nghiệp: 0304998358 do Sở KH-ĐT
+                  TP.HCM cấp lần đầu ngày 30 tháng 05 năm 2007
+                </div>
+              </div>
+              <div className="w-106 mt-3">
+                <div>
+                  <span className="text-xs font-bold">
+                    Địa chỉ trụ sở chính
+                  </span>
+                  :
+                  <div className="text-xs w-full pr-8">
+                    Tầng 5, Số 117-119-121 Nguyễn Du, Phường Bến Thành, Quận
+                    1, Thành Phố Hồ Chí Minh
+                  </div>
+                </div>
+                <div>
+                  <span className="text-xs font-bold">
+                    Văn phòng điều hành miền Bắc
+                  </span>
+                  :
+                  <div className="text-xs w-full pr-8">
+                    Tầng 6, Số 1 Phố Thái Hà, Phường Trung Liệt, Quận Đống Đa,
+                    Hà Nội
+                  </div>
+                </div>
+                <div>
+                  <span className="text-xs font-bold">
+                    Văn phòng điều hành miền Nam
+                  </span>
+                  :
+                  <div className="text-xs w-full pr-8">
+                    677/2A Điện Biên Phủ, Phường 25 , Quận Bình Thạnh , TP. Hồ
+                    Chí Minh
+                  </div>
+                </div>
+              </div>
+              <div className="w-70 mt-3 ml-10">
+                <a
+                  href="#"
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  className="block"
+                >
+                  <img
+                    src="https://shopfront-cdn.tekoapis.com/common/da-dang-ky.png"
+                    alt="verified logo"
+                    className="w-full max-w-[140px]"
+                  />
+                </a>
+                <div className="mt-2 w-full max-w-[100px]">
+                  <a
+                    href="#"
+                    title="DMCA.com Protection Status"
+                    className="dmca-badge"
+                  >
+                    <img
+                      src="https://images.dmca.com/Badges/dmca-badge-w100-2x1-02.png?ID=53b44883-ed2a-434d-902b-5adce10aafd5"
+                      alt="DMCA.com Protection Status"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </React.Fragment>
   );
 }

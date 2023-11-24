@@ -214,7 +214,7 @@ export default function CartPage() {
                           />
                         </svg>
                       </button>
-                      <div className="relative w-full overflow-x-auto border border-[#EDEDED]">
+                      <div className="relative w-full overflow-x-auto border border-[#EDEDED] rounded-md">
                         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                           <tbody>
                             <tr className="text-[13px] font-medium text-black bg-[#F6F6F6] whitespace-nowrap px-2 border-b default-border-bottom uppercase">
@@ -278,7 +278,7 @@ export default function CartPage() {
                                 </td>
                                 <td className=" py-4">
                                   <div className="flex justify-center items-center">
-                                    <div className="w-[120px] h-[40px] px-[26px] flex items-center border border-qgray-border">
+                                    <div className="w-[120px] h-[40px] px-[26px] flex items-center border border-qgray-border rounded-md">
                                       <div className="flex justify-between items-center w-full">
                                         <button
                                           onClick={() =>
@@ -307,7 +307,7 @@ export default function CartPage() {
                                 </td>
                                 <td className="text-right py-4">
                                   <div className="flex space-x-1 items-center justify-center">
-                                    <span className="text-[15px] font-normal">
+                                    <span className="text-[15px] font-bold text-red-600">
                                       {formatPrice(
                                         item.product.price_has_dropped *
                                           item.quantity
