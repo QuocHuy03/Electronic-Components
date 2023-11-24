@@ -21,11 +21,19 @@ export const getHistorySearch = () => {
     });
     try {
       const response = await searchService.fetchHistorySearchByUserID();
-      dispatch({
-        type: SEARCH_HISTORY_SUCCESS,
-        payload: response,
-      });
-      return response;
+      if (response.status === true) {
+        dispatch({
+          type: SEARCH_HISTORY_SUCCESS,
+          payload: response.result,
+        });
+        return response.result;
+      } else {
+        dispatch({
+          type: SEARCH_HISTORY_FAILED,
+          payload: response,
+        });
+        return response;
+      }
     } catch (error) {
       dispatch({
         type: SEARCH_HISTORY_FAILED,

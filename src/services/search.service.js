@@ -27,7 +27,7 @@ const fetchPostHistorySearch = async (data) => {
 const fetchHistorySearchByUserID = async () => {
   try {
     const response = await http.get(`/search/getHistorySearchByUserID`);
-    return response.result;
+    return response;
   } catch (error) {
     console.error(error);
   }
