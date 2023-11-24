@@ -552,15 +552,14 @@ export default function SearchPage() {
                   {loadingBrand ? (
                     <Loading />
                   ) : (
-                    isBrands?.filter(
-                      (item) =>
-                        item.categoryID.slugCategory
-                          .toLowerCase()
-                          .includes(filters.query.toLowerCase()) ||
-                        item.nameBrand
+                    search
+                      ?.filter((item) =>
+                        item.nameProduct
                           .toLowerCase()
                           .includes(filters.query.toLowerCase())
-                    )?.length > 0 && (
+                      )
+                      ?.flatMap((item) => (item?.brand ? [item.brand] : []))
+                      .filter((brand) => brand).length > 0 && (
                       <div className="filter-subject-item pb-5 border-b border-gray-border mt-5">
                         <div className="subject-title mb-[20px]">
                           <h1 className="text-black text-base font-[500]">
@@ -570,105 +569,110 @@ export default function SearchPage() {
                         <div className="filter-items">
                           <ul>
                             <React.Fragment>
-                              {isBrands
-                                ?.filter(
-                                  (item) =>
-                                    item.categoryID.slugCategory
-                                      .toLowerCase()
-                                      .includes(filters.query.toLowerCase()) ||
-                                    item.nameBrand
-                                      .toLowerCase()
-                                      .includes(filters.query.toLowerCase())
+                              {Array.from(
+                                new Set(
+                                  search
+                                    ?.filter((item) =>
+                                      item.nameProduct
+                                        .toLowerCase()
+                                        .includes(filters.query.toLowerCase())
+                                    )
+                                    ?.flatMap((item) =>
+                                      item?.brand ? [item.brand] : []
+                                    )
+                                    .filter((brand) => brand)
+                                    .map((brand) =>
+                                      brand.nameBrand.toLowerCase()
+                                    )
                                 )
-                                ?.slice(0, visibleItems)
-                                .map((item) => (
-                                  <li key={item._id} className="mb-2">
-                                    <div className="flex space-x-[10px] items-center">
-                                      <input
-                                        onChange={() =>
-                                          handleFilterChange(
-                                            "brands",
-                                            item.slugBrand
-                                          )
-                                        }
-                                        checked={filters.brands.includes(
-                                          item.slugBrand
-                                        )}
-                                        type="checkbox"
-                                        name={item.nameBrand}
-                                        id={item.nameBrand}
-                                      />
-                                      <div>
-                                        <label
-                                          htmlFor={item.nameBrand}
-                                          className="text-xs font-400 capitalize"
-                                        >
-                                          {item.nameBrand}
-                                        </label>
-                                      </div>
+                              ).map((brand, index) => (
+                                <li key={index} className="mb-2">
+                                  <div className="flex space-x-[10px] items-center">
+                                    <input
+                                      onChange={() =>
+                                        handleFilterChange("brands", brand)
+                                      }
+                                      checked={filters.brands.includes(brand)}
+                                      type="checkbox"
+                                      name={brand}
+                                      id={brand}
+                                    />
+                                    <div>
+                                      <label
+                                        htmlFor={brand}
+                                        className="text-xs font-400 capitalize"
+                                      >
+                                        {brand}
+                                      </label>
                                     </div>
-                                  </li>
-                                ))}
-                              {visibleItems < isBrands.length && (
-                                <span
-                                  className="text-[#1990FF] cursor-pointer text-[0.75rem] text-center"
-                                  onClick={handleLoadMore}
-                                >
-                                  Xem thêm
-                                </span>
-                              )}
+                                  </div>
+                                </li>
+                              ))}
                             </React.Fragment>
                           </ul>
                         </div>
                       </div>
                     )
                   )}
-                  <div className="filter-subject-item pb-5 border-b border-gray-border mt-5">
-                    <div className="subject-title mb-[20px]">
-                      <h1 className="text-black text-base font-[500]">
-                        Colors
-                      </h1>
-                    </div>
-                    <div className="filter-items">
-                      <ul>
-                        {Array.from(
-                          new Set(
-                            filteredData
-                              ?.filter((item) =>
-                                item.nameProduct
-                                  .toLowerCase()
-                                  .includes(filters.query.toLowerCase())
-                              )
-                              ?.flatMap((item) => item?.colors)
-                              .filter((color) => color)
-                              .map((color) => color.nameColor.toLowerCase())
-                          )
-                        ).map((color, index) => (
-                          <li key={index} className="mb-2">
-                            <div className="flex space-x-[10px] items-center">
-                              <input
-                                onChange={() =>
-                                  handleFilterChange("colors", color)
-                                }
-                                checked={filters.colors.includes(color)}
-                                type="checkbox"
-                                name={color}
-                                id={color}
-                              />
-                              <div>
-                                <label
-                                  htmlFor={color}
-                                  className="text-xs font-400 capitalize"
-                                >
-                                  {color}
-                                </label>
+
+                  {search
+                    ?.filter((item) =>
+                      item.nameProduct
+                        .toLowerCase()
+                        .includes(filters.query.toLowerCase())
+                    )
+                    ?.flatMap((item) => item?.colors)
+                    .filter((color) => color)
+                    .map((color) => color.nameColor.toLowerCase()).length >
+                    0 && (
+                    <div className="filter-subject-item pb-5 border-b border-gray-border mt-5">
+                      <div className="subject-title mb-[20px]">
+                        <h1 className="text-black text-base font-[500]">
+                          Colors
+                        </h1>
+                      </div>
+                      <div className="filter-items">
+                        <ul>
+                          {Array.from(
+                            new Set(
+                              search
+                                ?.filter((item) =>
+                                  item.nameProduct
+                                    .toLowerCase()
+                                    .includes(filters.query.toLowerCase())
+                                )
+                                ?.flatMap((item) => item?.colors)
+                                .filter((color) => color)
+                                .map((color) => color.nameColor.toLowerCase())
+                            )
+                          ).map((color, index) => (
+                            <li key={index} className="mb-2">
+                              <div className="flex space-x-[10px] items-center">
+                                <input
+                                  onChange={() =>
+                                    handleFilterChange("colors", color)
+                                  }
+                                  checked={filters.colors.includes(color)}
+                                  type="checkbox"
+                                  name={color}
+                                  id={color}
+                                />
+                                <div>
+                                  <label
+                                    htmlFor={color}
+                                    className="text-xs font-400 capitalize"
+                                  >
+                                    {color}
+                                  </label>
+                                </div>
                               </div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                  </div>
+                  )}
+
                   <button
                     type="button"
                     className="w-10 h-10 fixed top-5 right-5 z-50 rounded lg:hidden flex justify-center items-center border border-qred text-qred"

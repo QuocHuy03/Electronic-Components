@@ -106,16 +106,23 @@ export default function HeaderCenter() {
     setSearchTerm(event.target.value);
   };
   const handleSearchQuery = useCallback(() => {
-    dispatch(postHistorySearch(searchTerm));
-    dispatch(getHistorySearch());
-    history.push(`/search?query=${encodeURIComponent(searchTerm)}`);
+    if (searchTerm) { // Check if searchTerm is not empty or falsy
+      dispatch(postHistorySearch(searchTerm));
+      dispatch(getHistorySearch());
+      history.push(`/search?query=${encodeURIComponent(searchTerm)}`);
+    } else {
+      console.log('Search term is empty or falsy. Not sending the request.');
+    }
   }, [dispatch, history, searchTerm]);
-
+  
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearchQuery();
     }
   };
+
+
+  
 
   const handleDeleteHistory = useCallback(() => {
     dispatch(deleteAllHistorySearch());
