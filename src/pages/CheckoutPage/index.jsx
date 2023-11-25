@@ -57,12 +57,6 @@ export default function CheckoutPage() {
   const [inputs, setInputs] = useState(initialValues());
   const [isAddressItem, setIsAddressItem] = useState(null);
 
-  useEffect(() => {
-    if (billings && billings.length > 0) {
-      setIsAddressItem(billings.filter((item) => item.default === true)[0]?._id);
-    }
-  }, [billings, isEditAddress]);
-
   const handleEditModalAddress = (item) => {
     setInputs(initialValues(item));
     setSelectedProvince(item.city);
@@ -82,6 +76,12 @@ export default function CheckoutPage() {
     dispatch({ type: SET_EDIT_MODE, payload: false });
     setIsAddressPageOpen(false);
   };
+
+  useEffect(() => {
+    if (isAddressItem === null && billings.length > 0) {
+      setIsAddressItem(billings[0]._id);
+    }
+  }, [isAddressItem]);
 
   const handleActionAddress = useCallback((id) => {
     setIsAddressItem(id);
@@ -124,7 +124,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     dispatch(getAddress());
-  }, [billings]);
+  }, []);
 
   const handleInputChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
@@ -232,7 +232,7 @@ export default function CheckoutPage() {
     }),
     [code, totalAmountAll, activePaymentItem, isAddressItem, products]
   );
-
+  console.log(orderData);
   const handleSubmitOrder = useCallback(
     async (e) => {
       e.preventDefault();
@@ -294,9 +294,7 @@ export default function CheckoutPage() {
                             type="line"
                             width={137}
                             height={40}
-
                             className=" relative flex items-stretch overflow-y-hidden w-full border-b-2 border-solid border-gray-300"
-
                           >
                             <div className="p-2 cursor-pointer flex justify-center items-center bg-white flex-row">
                               <div
@@ -975,12 +973,12 @@ export default function CheckoutPage() {
                                       className="teko-col teko-col-3 flex-grow"
                                       style={{ textAlign: "right" }}
                                     >
-
-                                      <div type="body" color="success500"
+                                      <div
+                                        type="body"
+                                        color="success500"
                                         className=" border-solid border-transparent border-1 opacity-100 text-blue-600 font-medium text-base leading-5 overflow-hidden line-clamp-none max-w-none min-w-none transition-colors duration-300"
                                       >
                                         Miễn phí
-
                                       </div>
                                     </div>
                                   </div>
@@ -1113,10 +1111,9 @@ export default function CheckoutPage() {
                             <span className="text-[16px] text-qgraytwo mb-3 block">
                               Phí vận chuyển
                             </span>
-                            
                           </div>
                           <p className="text-[15px] font-medium text-blue-700">
-                           Miễn phí
+                            Miễn phí
                           </p>
                         </div>
                         <div className="w-full h-[1px] bg-[#EDEDED]" />
@@ -1124,12 +1121,13 @@ export default function CheckoutPage() {
                     </div>
                     <div className="mt-[30px]">
                       <div className=" flex justify-between mb-5">
-                        <p className="text-2xl font-medium text-black">Thành tiền</p>
+                        <p className="text-2xl font-medium text-black">
+                          Thành tiền
+                        </p>
                         <p className="text-2xl font-medium text-qred text-blue-800 text-bold">
                           {" "}
                           {formatPrice(totalAmountAll)}
                         </p>
-
                       </div>
                     </div>
                     <div className="shipping mt-[30px]">

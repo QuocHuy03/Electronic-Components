@@ -198,7 +198,7 @@ function Profile() {
 
   useEffect(() => {
     dispatch(getAddress());
-  }, [billings]);
+  }, []);
 
   const handleInputChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
@@ -259,23 +259,21 @@ function Profile() {
         }
         setValidationErrors(response.errors);
       }
+      dispatch(getAddress());
     },
     [isEditAddress, inputs]
   );
 
-  const handleDeleteAddress = useCallback(
-    async (id) => {
-      const response = await dispatch(deleteAddress(id));
-      if (response.status === true) {
-        createNotification("success", "topRight", response.message);
-      } else {
-        if (response.status === false) {
-          createNotification("error", "topRight", response.message);
-        }
+  const handleDeleteAddress = async (id) => {
+    const response = await dispatch(deleteAddress(id));
+    if (response.status === true) {
+      createNotification("success", "topRight", response.message);
+    } else {
+      if (response.status === false) {
+        createNotification("error", "topRight", response.message);
       }
-    },
-    [dispatch]
-  );
+    }
+  };
 
   const ListOrder = ({ isOrders }) => {
     const renderOrderItem = (item, index) => {
@@ -353,7 +351,6 @@ function Profile() {
           <td className="text-center py-4">
             <button
               disabled={item.orderStatus !== OrderStatus.PROCESSING}
-              to={`/order/${item.code}`}
               className={`p-1 text-sm rounded-sm ${
                 item.orderStatus !== OrderStatus.PROCESSING
                   ? "bg-gray-300"
