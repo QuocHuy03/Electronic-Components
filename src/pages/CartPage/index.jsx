@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import Layout from "../../components/Layout";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   deleteToCartAll,
   deleteToCartItem,
@@ -20,6 +20,7 @@ import createNotification from "../../utils/notification";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import Modal from "../../components/Modal";
 import { couponService } from "../../services/coupon.service";
+import { productService } from "../../services/product.service";
 import { useQuery } from "@tanstack/react-query";
 import { Empty } from "antd";
 import formatDate from "../../utils/fomatDate";
@@ -33,6 +34,7 @@ import { COLOR } from "../../constants/style.constants";
 
 export default function CartPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { carts, coupons, discounts } = useContext(AppContext);
   const [isDiscountPageOpen, setIsDiscountPageOpen] = useState(false);
   const modalDiscountRef = useRef();
@@ -59,7 +61,7 @@ export default function CartPage() {
       delete updatedItem._id;
       const response = await dispatch(updateToCart(updatedItem));
       if (response.status === true) {
-        // Xử lý logic thành công
+        // thông báo vào đây
       } else {
         createNotification("error", "topRight", response.message);
       }
@@ -102,6 +104,15 @@ export default function CartPage() {
   const { data: isCoupons, isloading: loadingCoupon } = useQuery(
     ["listCoupon"],
     () => couponService.fetchAllCoupons(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
+
+  const { data: isProducts, isloading: loadingProduct } = useQuery(
+    ["product"],
+    () => productService.fetchAllProducts(),
     {
       retry: 3,
       retryDelay: 1000,
@@ -153,6 +164,28 @@ export default function CartPage() {
     },
     [discounts]
   );
+
+  const getProductQuantity = (productId) => {
+    const product = isProducts?.find((p) => p._id === productId);
+    return product ? parseInt(product.quantityProduct) : null;
+  };
+
+  const handleOrder = useCallback(async () => {
+    const isStockAvailable = carts.every((item) => {
+      const quantityProduct = getProductQuantity(item.productID);
+      return quantityProduct !== null && item.quantity <= quantityProduct;
+    });
+
+    if (isStockAvailable) {
+      navigate(`/checkout/${uuidv4()}`);
+    } else {
+      createNotification(
+        "error",
+        "topRight",
+        "Một số sản phẩm trong giỏ hàng không còn đủ tồn kho."
+      );
+    }
+  }, []);
 
   return (
     <Layout>
@@ -528,15 +561,15 @@ export default function CartPage() {
                           </p>
                         </div>
                       </div>
-                      <Link
-                        to={`/checkout/${uuidv4()}`}
+                      <button
+                        onClick={handleOrder}
                         className="w-full h-[50px] bg-black text-white flex justify-center items-center rounded-md"
                         style={{ background: COLOR.BLUE }}
                       >
                         <span className="text-sm font-semibold">
                           Tiếp tục thanh toán
                         </span>
-                      </Link>
+                      </button>
                     </div>
                   </div>
                 </div>
