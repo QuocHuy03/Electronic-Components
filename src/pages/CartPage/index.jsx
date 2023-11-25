@@ -109,7 +109,7 @@ export default function CartPage() {
   );
   useEffect(() => {
     dispatch(getDiscount());
-  }, []);
+  }, [isDiscountPageOpen]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -120,7 +120,7 @@ export default function CartPage() {
       }
     };
     fetchData();
-  }, [carts, isCoupons]);
+  }, [carts, isCoupons, isDiscountPageOpen]);
 
   const totalDiscount = carts?.reduce((total, cartItem) => {
     const productDiscount = discounts?.find(
