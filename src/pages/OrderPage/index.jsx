@@ -1,4 +1,3 @@
-
 import React, {
   useCallback,
   useContext,
@@ -18,6 +17,7 @@ export default function OrderPage() {
   const { order } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isCheckOrder, setIsCheckOrder] = useState();
   const queryParams = useMemo(
     () => new URLSearchParams(location.search),
     [location.search]
@@ -55,7 +55,6 @@ export default function OrderPage() {
   );
 
   const dispatchOrder = useCallback(async () => {
-    console.log('dispatchOrder function called');
     const data = {
       ...order,
       ...(paymentMomo && paymentMomo.transId !== null ? { paymentMomo } : {}),
@@ -65,37 +64,50 @@ export default function OrderPage() {
     };
     try {
       const response = await dispatch(orders(data, paymentMethod));
-      console.log(response);
       if (response.status === true) {
-        createNotification("success", "topRight", response.message);
+        setIsCheckOrder(response);
       } else {
-        createNotification("error", "topRight", response.message);
-        // navigate(`/checkout/${uuidv4()}`);
+        setIsCheckOrder(response);
+        navigate(`/checkout/${uuidv4()}`);
       }
     } catch (error) {
       console.error(error);
-      // navigate(`/checkout/${uuidv4()}`);
+      setIsCheckOrder(response);
+      navigate(`/checkout/${uuidv4()}`);
     }
   }, [dispatch, order, paymentMomo, paymentVnpay, paymentMethod]);
 
   useEffect(() => {
-    console.log('useEffect triggered');
     dispatchOrder();
   }, []);
+
+  console.log(isCheckOrder);
 
   return (
     <Layout>
       <div className="bg-gray-100">
         <div className="bg-white p-6  md:mx-auto">
-          <svg
-            viewBox="0 0 24 24"
-            className="text-green-600 w-16 h-16 mx-auto my-6"
-          >
-            <path
-              fill="currentColor"
-              d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
-            ></path>
+          {isCheckOrder?.status === true ? (
+            <svg
+              viewBox="0 0 24 24"
+              className="text-green-600 w-16 h-16 mx-auto my-6"
+            >
+              <path
+                fill="currentColor"
+                d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
+              ></path>
+            </svg>
+          ) : isCheckOrder?.status === false ? (
+            <svg className="w-16 h-16 mx-auto my-6" viewBox="0 0 512 512">
+            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
           </svg>
+          ) : (
+            <svg className="w-16 h-16 mx-auto my-6" viewBox="0 0 512 512">
+            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+          </svg>
+          )}
+         
+
           <div className="text-center">
             <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">
               Payment Done!

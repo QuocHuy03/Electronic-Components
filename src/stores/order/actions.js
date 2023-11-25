@@ -1,19 +1,10 @@
 import { orderService } from "../../services/order.service";
 import { paymentService } from "../../services/payment.service";
 import createNotification from "../../utils/notification";
-import {
-  ORDER_REQUEST,
-  ORDER_SUCCESS,
-  ORDER_FAILED,
-  ORDER_UPDATE,
-} from "./types";
+import { ORDER_REQUEST, ORDER_SUCCESS, ORDER_FAILED } from "./types";
 
 export const redirectPayment = (data) => {
-  return async (dispatch) => {
-    dispatch({
-      type: ORDER_SUCCESS,
-      payload: data,
-    });
+  return async () => {
     try {
       if (data.paymentID === "64f98dfe26535a0cff5054ea") {
         const response = await paymentService.fetchPostVNPAYAPI(
@@ -55,49 +46,44 @@ export const redirectPayment = (data) => {
         );
       }
     } catch (error) {
-      dispatch({
-        type: ORDER_FAILED,
-        payload: {
-          status: false,
-          message: error.message,
-        },
-      });
+      console.error(error);
     }
   };
 };
-
-export const orders = (data, paymentMethod) => {
+export const dataOrder = (data) => {
   return async (dispatch) => {
     dispatch({
       type: ORDER_REQUEST,
       payload: data,
     });
     try {
+      dispatch({
+        type: ORDER_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: ORDER_FAILED,
+        payload: error,
+      });
+    }
+  };
+};
+
+export const orders = (data, paymentMethod) => {
+  return async () => {
+    try {
       const response = await orderService.fetchPostOrder(paymentMethod, data);
       if (response.status === true) {
-        dispatch({
-          type: ORDER_SUCCESS,
-          payload: response,
-        });
         return {
           status: true,
           message: response.message,
         };
       } else {
-        dispatch({
-          type: ORDER_FAILED,
-          payload: response,
-        });
         return response;
       }
     } catch (error) {
-      dispatch({
-        type: ORDER_FAILED,
-        payload: {
-          status: false,
-          message: error.message,
-        },
-      });
+      console.error(error);
     }
   };
 };

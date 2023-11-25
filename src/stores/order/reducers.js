@@ -1,6 +1,5 @@
 import {
   ORDER_FAILED,
-  ORDER_UPDATE,
   ORDER_REQUEST,
   ORDER_SUCCESS,
 } from "./types";
@@ -15,8 +14,6 @@ const orderReducer = (state = initialState, action) => {
   switch (action.type) {
     case ORDER_REQUEST:
       return { ...state, loading: true };
-    case ORDER_UPDATE:
-      return { ...state, orders: action.payload };
     case ORDER_SUCCESS:
       return {
         ...state,
@@ -31,8 +28,9 @@ const orderReducer = (state = initialState, action) => {
         error: action.payload,
       };
     default:
-      return initialState;
+      return state; 
   }
 };
+
 
 export default orderReducer;
