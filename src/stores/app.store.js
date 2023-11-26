@@ -13,7 +13,7 @@ import searchReducer from "./search/reducers";
 const persistConfig = {
   key: "root",
   storage,
-  // whitelist: ["auth"],
+  whitelist: ["auth"],
 };
 
 const rootReducer = combineReducers({
