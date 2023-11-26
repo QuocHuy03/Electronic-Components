@@ -85,6 +85,15 @@ export default function DetailProductPage() {
 
   const queryKey = useMemo(() => ["edit-product", isSlug], [isSlug]);
 
+  const { data: blogData } = useQuery(
+    ["blog"],
+    () => blogService.fetchAllBlogs(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
+
   const { data: detailProductData, isLoading: isDetailProductLoading } =
     useQuery(
       queryKey,
@@ -683,22 +692,7 @@ export default function DetailProductPage() {
                                         <div className="comment-author flex justify-between items-center mb-3">
                                           <div className="flex space-x-3 items-center mt-3 ml-3">
                                             <div className="w-[40px] h-[40px] rounded-full overflow-hidden relative">
-                                              <span
-                                                style={{
-                                                  boxSizing: "border-box",
-                                                  display: "block",
-                                                  overflow: "hidden",
-                                                  width: "initial",
-                                                  height: "initial",
-                                                  background: "none",
-                                                  opacity: 1,
-                                                  border: 0,
-                                                  margin: 0,
-                                                  padding: 0,
-                                                  position: "absolute",
-                                                  inset: 0,
-                                                }}
-                                              >
+                                              <span>
                                                 <img
                                                   alt
                                                   sizes="100vw"
@@ -706,21 +700,6 @@ export default function DetailProductPage() {
                                                   decoding="async"
                                                   data-nimg="fill"
                                                   className="w-full h-full object-cover"
-                                                  style={{
-                                                    position: "absolute",
-                                                    inset: 0,
-                                                    boxSizing: "border-box",
-                                                    padding: 0,
-                                                    border: "none",
-                                                    margin: "auto",
-                                                    display: "block",
-                                                    width: 0,
-                                                    height: 0,
-                                                    minWidth: "100%",
-                                                    maxWidth: "100%",
-                                                    minHeight: "100%",
-                                                    maxHeight: "100%",
-                                                  }}
                                                 />
                                               </span>
                                             </div>
@@ -964,34 +943,46 @@ export default function DetailProductPage() {
                   <p className="py-[15px] sm:text-[15px] text-sm sm:block border-b font-medium cursor-pointer">
                     Tin tức mới nhất
                   </p>
-                  <div className="py-[20px] leading-[18px]" style={{
-                    borderBottom: "1px solid #E5EAF1",
-                  }}>
-                    <Link href="/cau-hinh-may-tinh-do-hoa" className="text-center mb-[12px] block">
-                      <img
-                        src="https://hoanghapccdn.com/media/news/14_pc_do_hoa_hoanghapc_min.jpg"
-                        alt="100+ Cấu Hình Máy Tính Đồ Họa Theo Ngân Sách✔️"
-                        width={352}
-                        height={235}
-                        className="w-auto h-auto block m-auto"
-                      />
-                    </Link>
-                    <div>
-                      <a
-                        href="/cau-hinh-may-tinh-do-hoa"
-                        className="font-[600] text-[16px] leading-[20px] mb-[4px]"
+                  {blogData
+                    ?.filter((item) => item.outstandingBlog === "outstanding")
+                    .map((item, index) => (
+                      <div
+                        key={index}
+                        className="py-[20px] leading-[18px]"
+                        style={{
+                          borderBottom: "1px solid #E5EAF1",
+                        }}
                       >
-                        100+ Cấu Hình Máy Tính Đồ Họa Theo Ngân Sách✔️
-                      </a>
-                      <div className="text-ellipsis overflow-hidden line-clamp-2" style={{
-                        
-                      }}>
-                        Cấu hình máy tính đồ họa chuyên dụng cho công việc thiết
-                        kế đồ họa, làm phim, Render và xử lý các thuật toán AI
-                        trí tuệ nhân tạo phù hợp nhất mọi công việc.
+                        <Link
+                          to={`/tin-tuc/${item.slugBlog}`}
+                          className="text-center mb-[12px] block"
+                        >
+                          <img
+                            src={item.imageBlog}
+                            alt={item.titleBlog}
+                            width={352}
+                            height={235}
+                            className="w-auto h-auto block m-auto"
+                          />
+                        </Link>
+                        <div>
+                          <Link
+                            to={`/tin-tuc/${item.slugBlog}`}
+                            className="font-[600] text-[16px] leading-[20px] mb-[4px]"
+                          >
+                            {item.titleBlog}.
+                          </Link>
+                          <div
+                            className="text-ellipsis overflow-hidden line-clamp-2"
+                            dangerouslySetInnerHTML={{
+                              __html: item.contentBlog,
+                            }}
+                          >
+                            
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    ))}
                 </div>
               </div>
             </div>
