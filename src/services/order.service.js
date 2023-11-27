@@ -20,6 +20,15 @@ const fetchOrderByUserID = async () => {
   }
 };
 
+const fetchOrderCancel = async (code) => {
+  try {
+    const response = await http.post(`/order/cancel_order/${code}`, {});
+    return response;
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const fetchPostOrder = async (method, data) => {
   try {
     const response = await http.post(`/order/postOrder?method=${method}&source=web`, data);
@@ -40,6 +49,7 @@ const fetchOrderByCode = async (code) => {
 
 export const orderService = {
   fetchAllOrders,
+  fetchOrderCancel,
   fetchOrderByUserID,
   fetchOrderByCode,
   fetchPostOrder,

@@ -87,3 +87,15 @@ export const orders = (data, paymentMethod) => {
     }
   };
 };
+
+export const cancelOrder = (code) => {
+  return async () => {
+    try {
+      const response = await orderService.fetchOrderCancel(code);
+      return response;
+      
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
