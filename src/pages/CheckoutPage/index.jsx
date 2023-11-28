@@ -274,7 +274,7 @@ export default function CheckoutPage() {
 
                       <span>
                         <a href="/checkout">
-                          <span className="mx-1 capitalize">checkout</span>
+                          <span className="mx-1 capitalize">Thanh toán</span>
                         </a>
                       </span>
                     </div>

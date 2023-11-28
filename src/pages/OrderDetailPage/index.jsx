@@ -148,7 +148,7 @@ export default function OrderDetailPage() {
                       <span className="sperator">/</span>
                       <span>
                         <a href="/cart">
-                          <span className="mx-1 capitalize">Order</span>
+                          <span className="mx-1 capitalize">Đơn hàng</span>
                         </a>
                         <span className="sperator">/ {isOrder?.code}</span>
                       </span>
@@ -166,63 +166,6 @@ export default function OrderDetailPage() {
           <div class="max-w-6xl mx-auto">
             <div class="w-full screen-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md flex items-center space-x-4">
               <div class="flex items-center space-x-28 ml-28">
-                {/* <div>
-                  <div className="relative">
-                    <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-5">
-                      <img
-                        src="https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/orders-icon.png"
-                        alt=""
-                      />
-                    </div>
-                    <div class="absolute top-1/2 left-[63%] w-[190px] h-1 bg-green-500 transform -translate-y-1/2"></div>
-                  </div>
-                  <div class="flex flex-col mr-2">
-                    <p class="font-bold">{isOrder?.orderStatus === OrderStatus.PROCESSING && "Đã Đặt Hàng"}</p>
-                    <p class="text-gray-500">{formatDate(isOrder?.createdAt)}</p>
-                  </div>
-                </div>
-                <div>
-                  <div className="relative">
-                    <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-7">
-                      <img
-                        src="https://icon-library.com/images/money-order-icon/money-order-icon-14.jpg"
-                        alt=""
-                      />
-                    </div>
-                    <div class="absolute top-1/2 left-[71%] w-[175px] h-1 bg-green-500 transform -translate-y-1/2"></div>
-                  </div>
-                  <div class="flex flex-col">
-                    <p class="font-bold">Đã xác nhận đơn </p>
-                    <p class="text-gray-500">{formatDate(isOrder?.updatedAt)}</p>
-                  </div>
-                </div>
-                <div>
-                  <div className="relative">
-                  <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-6">
-                    <img
-                      src="https://cdn.iconscout.com/icon/premium/png-256-thumb/successful-delivery-1786644-1522008.png"
-                      alt=""
-                    />
-                  </div>
-                  <div class="absolute top-1/2 left-[67%] w-[180px] h-1 bg-green-500 transform -translate-y-1/2"></div>
-                  </div>
-                  <div class="flex flex-col">
-                    <p class="font-bold">Đã giao cho ĐVVC</p>
-                    <p class="text-gray-500">{formatDate(isOrder?.updatedAt)}</p>
-                  </div>
-                </div>
-                <div>
-                  <div class="w-16 h-16 border-4 border-green-500 rounded-full p-3 flex-shrink-0 order-first ml-6">
-                    <img
-                      src="https://cdn.iconscout.com/icon/premium/png-256-thumb/order-received-3112928-2602187.png?f=webp"
-                      alt=""
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <p class="font-bold">Đã nhận được hàng</p>
-                    <p class="text-gray-500">{formatDate(isOrder?.updatedAt)}</p>
-                  </div>
-                </div> */}
                 {getOrderStatus(OrderStatus.PROCESSING, "Đã đặt hàng")}
                 {getOrderStatus(
                   [OrderStatus.SHIPPED, OrderStatus.SHIPPED_CONFIRMED],
@@ -242,20 +185,20 @@ export default function OrderDetailPage() {
                     <tbody>
                       <tr className="text-[13px] font-medium text-black bg-[#F6F6F6] whitespace-nowrap px-2 border-b default-border-bottom uppercase">
                         <td className="py-4 pl-10 block whitespace-nowrap min-w-[300px]">
-                          product
+                          Sản phẩm
                         </td>
                         <td className="py-4 whitespace-nowrap text-center">
-                          color
+                      màu sắc
                         </td>
 
                         <td className="py-4 whitespace-nowrap text-center">
-                          price
+                          giá
                         </td>
                         <td className="py-4 whitespace-nowrap text-center">
-                          quantity
+                          số lượng
                         </td>
                         <td className="py-4 whitespace-nowrap text-center">
-                          total
+                          Tổng tiền
                         </td>
                         <td className="py-4 whitespace-nowrap text-right w-[114px]" />
                       </tr>
@@ -336,7 +279,7 @@ export default function OrderDetailPage() {
 
                           <td className=" py-4">
                             <div className="flex justify-center items-center">
-                              <div className="w-[61px] h-[40px] px-[26px] flex items-center border border-qgray-border">
+                              <div className="w-[61px] h-[40px] px-[26px] flex items-center border border-qgray-border rounded-md">
                                 <div className="flex justify-between items-center w-full">
                                   <span className="text-qblack">
                                     {" "}
@@ -348,7 +291,7 @@ export default function OrderDetailPage() {
                           </td>
                           <td className="text-right py-4">
                             <div className="flex space-x-1 items-center justify-center">
-                              <span className="text-[15px] font-normal">
+                              <span className="text-[15px]  text-blue-700 font-bold">
                                 {formatPrice(
                                   item.huydev.price_has_dropped * item.quantity
                                 )}
@@ -366,7 +309,7 @@ export default function OrderDetailPage() {
                 <div className="sm:w-[635px] h-[250px] w-full border border-[#EDEDED] px-[30px] py-[26px] mr-auto">
                   <h2 className="text-2xl font-semibold">Địa chỉ nhận hàng</h2>
                   <div className="mt-3">
-                    <p className="text-gray-600 text-xl font-semibold mb-1">
+                    <p className="text-gray-800 text-xl font-bold mb-1">
                       {isOrder?.user.fullname}
                     </p>
                     <p className="text-gray-600  mb-1">
@@ -417,7 +360,7 @@ export default function OrderDetailPage() {
                       <p className="text-[15px] font-medium text-qblack">
                         Thành tiền
                       </p>
-                      <p className="text-[15px] font-medium text-qred">
+                      <p className="text-[18px] font-bold text-blue-700">
                         {formatPrice(isOrder?.totalPrice - 15000)}
                       </p>
                     </div>
@@ -428,7 +371,7 @@ export default function OrderDetailPage() {
                       <p className="text-[15px] font-medium text-qblack">
                         Phương thức thanh toán
                       </p>
-                      <p className="text-[15px] font-medium text-qred">
+                      <p className="text-[16px] font-bold text-blue-700">
                         {isOrder?.payment.namePayment}
                       </p>
                     </div>

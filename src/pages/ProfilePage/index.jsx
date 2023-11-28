@@ -416,7 +416,7 @@ function Profile() {
                   <span className="sperator">/</span>
                   <span>
                     <a href="/profile">
-                      <span className="mx-1 capitalize">profile</span>
+                      <span className="mx-1 capitalize">Hồ sơ</span>
                     </a>
                   </span>
                 </div>
