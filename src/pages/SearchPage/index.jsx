@@ -288,7 +288,7 @@ export default function SearchPage() {
                   display: "inline",
                 }}
               >
-                ACER
+               {item.brand.nameBrand}
               </div>
             </div>
             <div className="h-12">

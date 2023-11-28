@@ -111,7 +111,7 @@ export default function LoginPage() {
                       </svg>
                     </div>
                   </div>
-                  <form onSubmit={handleSubmit} className="input-area">
+                  <form onSubmit={handleSubmit} className="input-area" autocomplete="off">
                     <div className="input-item mb-5">
                       <div className="input-com w-full h-full">
                         <label

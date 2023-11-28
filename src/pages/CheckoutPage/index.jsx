@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { paymentService } from "../../services/payment.service";
 import Loading from "../../components/Loading";
 import { useDispatch } from "react-redux";
-import { redirectPayment } from "../../stores/order/actions";
+import { dataOrder, redirectPayment } from "../../stores/order/actions";
 import { history } from "../../helpers/history";
 import Modal from "../../components/Modal";
 import {
@@ -39,7 +39,7 @@ const initialValues = (user) => ({
 
 export default function CheckoutPage() {
   const { code } = useParams();
-  const { carts, billings, isEditAddress } = useContext(AppContext);
+  const { user, carts, billings, isEditAddress } = useContext(AppContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isAddressPageOpen, setIsAddressPageOpen] = useState(false);
@@ -78,10 +78,10 @@ export default function CheckoutPage() {
   };
 
   useEffect(() => {
-    if (isAddressItem === null && billings.length > 0) {
+    if (billings.length > 0) {
       setIsAddressItem(billings[0]._id);
     }
-  }, [isAddressItem]);
+  }, [billings]);
 
   const handleActionAddress = useCallback((id) => {
     setIsAddressItem(id);
@@ -232,19 +232,23 @@ export default function CheckoutPage() {
     }),
     [code, totalAmountAll, activePaymentItem, isAddressItem, products]
   );
-  console.log(orderData);
+
   const handleSubmitOrder = useCallback(
     async (e) => {
       e.preventDefault();
-
-      const paymentResponse = await dispatch(redirectPayment(orderData));
-      if (paymentResponse && paymentResponse.paymentMethod === true) {
-        history.push(paymentResponse.result);
-      } else {
-        navigate(paymentResponse.result);
+      try {
+        dispatch(dataOrder(orderData));
+        const paymentResponse = await dispatch(redirectPayment(orderData));
+        if (paymentResponse && paymentResponse.paymentMethod === true) {
+          history.push(paymentResponse.result);
+        } else {
+          navigate(paymentResponse.result);
+        }
+      } catch (error) {
+        console.error("Error submitting order:", error);
       }
     },
-    [orderData, navigate, history]
+    [orderData]
   );
 
   return (
@@ -1008,7 +1012,7 @@ export default function CheckoutPage() {
                                       flex: "1 1 0%",
                                     }}
                                     className="text-[13px] border-none"
-                                    defaultValue="admin@gmail.com"
+                                    defaultValue={user?.email}
                                   />
                                   <div
                                     height={40}

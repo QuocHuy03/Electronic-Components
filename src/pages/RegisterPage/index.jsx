@@ -113,7 +113,7 @@ export default function RegisterPage() {
                       </svg>
                     </div>
                   </div>
-                  <form onSubmit={handleSubmit} className="input-area">
+                  <form onSubmit={handleSubmit} className="input-area" autocomplete="off">
                     <div className="flex sm:flex-row flex-col space-y-5 sm:space-y-0 sm:space-x-5 mb-5">
                       <div className="input-com w-full h-full">
                         <label

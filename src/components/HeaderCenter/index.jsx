@@ -27,6 +27,7 @@ import { useDebounce } from "../../hooks/useDebounce";
 
 export default function HeaderCenter() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { carts } = useContext(AppContext);
   const { search, historySearch, loading } = useSelector(
     (state) => state.filter
@@ -109,7 +110,7 @@ export default function HeaderCenter() {
     if (searchTerm) { // Check if searchTerm is not empty or falsy
       dispatch(postHistorySearch(searchTerm));
       dispatch(getHistorySearch());
-      history.push(`/search?query=${encodeURIComponent(searchTerm)}`);
+      navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
     } else {
       console.log('Search term is empty or falsy. Not sending the request.');
     }

@@ -290,7 +290,7 @@ export default function FilterPage() {
                   display: "inline",
                 }}
               >
-                ACER
+                 {item.brand.nameBrand}
               </div>
             </div>
             <div className="h-12">
