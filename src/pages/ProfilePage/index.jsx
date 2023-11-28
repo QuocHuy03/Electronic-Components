@@ -49,7 +49,7 @@ function Profile() {
   const dispatch = useDispatch();
   const { user, refreshToken, billings, isEditAddress } =
     useContext(AppContext);
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState(0);
   const [provinces, setProvinces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
@@ -140,7 +140,6 @@ function Profile() {
       createNotification("error", "topRight", response.message);
     }
     queryClient.invalidateQueries(["orders"]);
-
   };
 
   const filteredDistricts = useMemo(
@@ -404,13 +403,17 @@ function Profile() {
           <div className="max-w-6xl mx-auto">
             <div className="w-full my-10">
               <div>
-                <div className="breadcrumb-wrapper font-400 text-[13px] text-qblack mb-[23px]">
-                  <span>
-                    <a href="/">
-                      <span className="mx-1 capitalize">home</span>
-                    </a>
-                    <span className="sperator">/</span>
-                  </span>
+                <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
+                  <a href="/" className="capitalize">
+                    <img
+                      src="https://i.imgur.com/FFjafxI.png"
+                      alt=""
+                      width="17"
+                      height="17"
+                      className="mx-1 mb-2"
+                    />
+                  </a>
+                  <span className="sperator">/</span>
                   <span>
                     <a href="/profile">
                       <span className="mx-1 capitalize">profile</span>

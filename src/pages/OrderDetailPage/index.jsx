@@ -31,7 +31,7 @@ export default function OrderDetailPage() {
       OrderStatus.DELIVERED,
       OrderStatus.CANCELLED,
     ];
-    
+
     return statusList.indexOf(status);
   }
 
@@ -71,10 +71,13 @@ export default function OrderDetailPage() {
     );
   }
   function getImageUrl(status) {
-    if (status.includes(OrderStatus.SHIPPED) || status.includes(OrderStatus.SHIPPED_CONFIRMED)) {
+    if (
+      status.includes(OrderStatus.SHIPPED) ||
+      status.includes(OrderStatus.SHIPPED_CONFIRMED)
+    ) {
       return "https://icon-library.com/images/money-order-icon/money-order-icon-14.jpg";
     }
-  
+
     switch (status) {
       case OrderStatus.PROCESSING:
         return "https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/orders-icon.png";
@@ -86,12 +89,12 @@ export default function OrderDetailPage() {
         return "";
     }
   }
-  
+
   function getLeftPosition(status) {
-    if (status.includes('SHIPPED') || status.includes('SHIPPED_CONFIRMED')) {
+    if (status.includes("SHIPPED") || status.includes("SHIPPED_CONFIRMED")) {
       return 71;
     }
-  
+
     switch (status) {
       case "PROCESSING":
         return 63;
@@ -103,12 +106,12 @@ export default function OrderDetailPage() {
         return 0;
     }
   }
-  
+
   function getWidth(status) {
-    if (status.includes('SHIPPED') || status.includes('SHIPPED_CONFIRMED')) {
+    if (status.includes("SHIPPED") || status.includes("SHIPPED_CONFIRMED")) {
       return 175;
     }
-  
+
     switch (status) {
       case "PROCESSING":
         return 190;
@@ -120,7 +123,6 @@ export default function OrderDetailPage() {
         return 0;
     }
   }
-  
 
   return (
     <Layout>
@@ -133,13 +135,17 @@ export default function OrderDetailPage() {
               <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>
-                    <div className="breadcrumb-wrapper font-400 text-[13px] text-qblack mb-[23px]">
-                      <span>
-                        <a href="/">
-                          <span className="mx-1 capitalize">home</span>
-                        </a>
-                        <span className="sperator">/</span>
-                      </span>
+                    <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
+                      <a href="/" className="capitalize">
+                        <img
+                          src="https://i.imgur.com/FFjafxI.png"
+                          alt=""
+                          width="17"
+                          height="17"
+                          className="mx-1 mb-2"
+                        />
+                      </a>
+                      <span className="sperator">/</span>
                       <span>
                         <a href="/cart">
                           <span className="mx-1 capitalize">Order</span>

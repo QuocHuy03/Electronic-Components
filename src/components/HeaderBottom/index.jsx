@@ -145,19 +145,19 @@ export default function HeaderBottom() {
                   <li className="relative ">
                     <Link to={URL_CONSTANTS.HOME}>
                       <span className="flex items-center text-sm font-600 cursor-pointer text-white">
-                        <span>Home</span>
+                        <span>Trang Chủ</span>
                       </span>
                     </Link>
                   </li>
                   <li>
                     <span className="flex items-center text-sm font-600 cursor-pointer text-white">
-                      <span>About</span>
+                      <span>Chính Sách</span>
                     </span>
                   </li>
                   <li>
                     <Link to={URL_CONSTANTS.BLOG}>
                       <span className="flex items-center text-sm font-600 cursor-pointer text-white">
-                        <span>Blog</span>
+                        <span>Tin Tức</span>
                       </span>
 
                     </Link>
@@ -165,7 +165,7 @@ export default function HeaderBottom() {
                   <li>
                     <Link to={URL_CONSTANTS.CONTACT}>
                       <span className="flex items-center text-sm font-600 cursor-pointer text-white">
-                        <span>Contact</span>
+                        <span>Liên Hệ</span>
                       </span>
                     </Link>
                   </li>
@@ -173,9 +173,9 @@ export default function HeaderBottom() {
               </div>
             </div>
             <div className="become-seller-btn">
-              <div className="bg-black text-white w-[161px] h-[40px] flex justify-center items-center cursor-pointer">
+              <div className="bg-blue-400 text-white w-[161px] h-[40px] flex justify-center items-center cursor-pointer rounded-md">
                 <div className="flex space-x-2 items-center">
-                  <span className="text-sm font-600">Become a Seller</span>
+                  <span className="text-sm font-600">Trở Thành Đối Tác</span>
                   <span className="pt-1">
                     <svg
                       className="fill-current"

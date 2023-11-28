@@ -196,13 +196,18 @@ export default function CartPage() {
               <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>
-                    <div className="breadcrumb-wrapper font-400 text-[13px] text-qblack mb-[23px]">
-                      <span>
-                        <a href="/">
-                          <span className="mx-1 capitalize">Trang chủ</span>
-                        </a>
-                        <span className="sperator">/</span>
-                      </span>
+                    <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
+                      <a href="/" className="capitalize">
+                        <img
+                          src="https://i.imgur.com/FFjafxI.png"
+                          alt=""
+                          width="17"
+                          height="17"
+                          className="mx-1 mb-2"
+                        />
+                      </a>
+                      <span className="sperator">/</span>
+
                       <span>
                         <a href="/cart">
                           <span className="mx-1 capitalize">Giỏ hàng</span>

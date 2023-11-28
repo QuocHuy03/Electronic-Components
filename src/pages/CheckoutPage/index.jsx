@@ -260,13 +260,18 @@ export default function CheckoutPage() {
               <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>
-                    <div className="breadcrumb-wrapper font-400 text-[13px] text-black mb-[23px]">
-                      <span>
-                        <a href="/">
-                          <span className="mx-1 capitalize">home</span>
-                        </a>
-                        <span className="sperator">/</span>
-                      </span>
+                    <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
+                      <a href="/" className="capitalize">
+                        <img
+                          src="https://i.imgur.com/FFjafxI.png"
+                          alt=""
+                          width="17"
+                          height="17"
+                          className="mx-1 mb-2"
+                        />
+                      </a>
+                      <span className="sperator">/</span>
+
                       <span>
                         <a href="/checkout">
                           <span className="mx-1 capitalize">checkout</span>
@@ -288,7 +293,7 @@ export default function CheckoutPage() {
               <div className="w-full lg:flex lg:space-x-[30px] pt-4">
                 <div className="lg:w-1/2 w-full">
                   <h1 className="sm:text-2xl text-xl text-black font-medium mb-5">
-                    Billing Details
+                    Thông tin địa chỉ
                   </h1>
                   <div className="w-full px-5 py-[30px] border border-[#EDEDED]">
                     <div className="border-none border-1 border-transparent opacity-100 rounded-8 bg-white relative">
@@ -1172,8 +1177,8 @@ export default function CheckoutPage() {
                       type="submit"
                       className="w-full h-[50px] bg-blue-700 text-white flex justify-center items-center rounded-lg"
                     >
-                      <span className="text-sm font-semibold">
-                        Place Order Now
+                      <span className="text-[24px] font-semibold">
+                        Đặt hàng ngay
                       </span>
                     </button>
                   </form>

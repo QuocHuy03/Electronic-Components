@@ -34,6 +34,7 @@ export default function BlogPage() {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
+  console.log(data)
 
   return (
     <Layout>
@@ -44,13 +45,17 @@ export default function BlogPage() {
               <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>
-                    <div className="breadcrumb-wrapper font-400 text-[13px] text-qblack mb-[23px]">
-                      <span>
-                        <a href="/">
-                          <span className="mx-1 capitalize">home</span>
-                        </a>
-                        <span className="sperator">/</span>
-                      </span>
+                    <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
+                      <a href="/" className="capitalize">
+                        <img
+                          src="https://i.imgur.com/FFjafxI.png"
+                          alt=""
+                          width="17"
+                          height="17"
+                          className="mx-1 mb-2"
+                        />
+                      </a>
+                      <span className="sperator">/</span>
                       <span>
                         <a href="/blogs">
                           <span className="mx-1 capitalize">tin tức</span>
