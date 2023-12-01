@@ -3,6 +3,27 @@ import { paymentService } from "../../services/payment.service";
 import createNotification from "../../utils/notification";
 import { ORDER_REQUEST, ORDER_SUCCESS, ORDER_FAILED } from "./types";
 
+export const dataOrder = (data, callback) => {
+  return async (dispatch) => {
+    dispatch({
+      type: ORDER_REQUEST,
+      payload: data,
+    });
+    try {
+      callback({
+        type: ORDER_SUCCESS,
+        payload: data,  
+      });
+
+    } catch (error) {
+      callback({
+        type: ORDER_FAILED,
+        payload: error,
+      });
+    }
+  };
+};
+
 export const redirectPayment = (data) => {
   return async () => {
     try {
@@ -50,25 +71,6 @@ export const redirectPayment = (data) => {
     }
   };
 };
-export const dataOrder = (data) => {
-  return async (dispatch) => {
-    dispatch({
-      type: ORDER_REQUEST,
-      payload: data,
-    });
-    try {
-      dispatch({
-        type: ORDER_SUCCESS,
-        payload: data,
-      });
-    } catch (error) {
-      dispatch({
-        type: ORDER_FAILED,
-        payload: error,
-      });
-    }
-  };
-};
 
 export const orders = (data, paymentMethod) => {
   return async () => {
@@ -82,6 +84,18 @@ export const orders = (data, paymentMethod) => {
       } else {
         return response;
       }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const cancelOrder = (code) => {
+  return async () => {
+    try {
+      const response = await orderService.fetchOrderCancel(code);
+      return response;
+      
     } catch (error) {
       console.error(error);
     }

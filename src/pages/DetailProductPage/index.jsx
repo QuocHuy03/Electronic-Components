@@ -85,6 +85,15 @@ export default function DetailProductPage() {
 
   const queryKey = useMemo(() => ["edit-product", isSlug], [isSlug]);
 
+  const { data: blogData } = useQuery(
+    ["blog"],
+    () => blogService.fetchAllBlogs(),
+    {
+      retry: 3,
+      retryDelay: 1000,
+    }
+  );
+
   const { data: detailProductData, isLoading: isDetailProductLoading } =
     useQuery(
       queryKey,
@@ -256,13 +265,19 @@ export default function DetailProductPage() {
               <div class="breadcrumb-wrapper w-full ">
                 <div className="max-w-6xl mx-auto">
                   <div>
-                    <div className="breadcrumb-wrapper font-400 text-[13px] text-qblack mb-[23px]">
-                      <span>
+                  <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
                         <a href="/">
-                          <span className="mx-1 capitalize">home</span>
+                          <span className="capitalize">
+                            <img
+                              src="https://i.imgur.com/FFjafxI.png"
+                              alt=""
+                              width="17"
+                              height="17"
+                              className="mx-1 mb-2"
+                            />
+                          </span>
                         </a>
                         <span className="sperator">/</span>
-                      </span>
                       <span>
                         <a href="/single-product">
                           <span className="mx-1 capitalize">
@@ -373,7 +388,7 @@ export default function DetailProductPage() {
                               )}
                             </div>
                             <span className="text-[13px] font-normal text-black">
-                              {isComment?.length} Reviews
+                              {isComment?.length} Đánh giá
                             </span>
                           </div>
 
@@ -400,7 +415,7 @@ export default function DetailProductPage() {
                             className="colors mb-[30px] aos-init aos-animate"
                           >
                             <span className="text-sm font-normal uppercase text-gray-500 mb-[14px] inline-block">
-                              COLOR
+                              MÀU SẮC
                             </span>
                             <div className="flex space-x-2 items-center">
                               {detailProduct?.colors.map((item, index) => (
@@ -473,7 +488,7 @@ export default function DetailProductPage() {
                             className="mb-[20px] aos-init aos-animate"
                           >
                             <p className="text-[13px] text-gray-500 leading-7">
-                              <span className="text-qblack">Category :</span>{" "}
+                              <span className="text-qblack">Danh mục :</span>{" "}
                               {detailProduct?.category.nameCategory}
                             </p>
                             <p className="text-[13px] text-gray-500 leading-7">
@@ -503,7 +518,7 @@ export default function DetailProductPage() {
                               type="button"
                               className="text-qred font-semibold text-[13px]"
                             >
-                              Report This Item
+                              Báo cáo
                             </button>
                           </div>
                           <div
@@ -511,7 +526,7 @@ export default function DetailProductPage() {
                             className="social-share flex items-center w-full aos-init aos-animate"
                           >
                             <span className="text-qblack text-[13px] mr-[17px] inline-block">
-                              Share This
+                              Chia sẻ
                             </span>
                             <div className="flex space-x-5 items-center">
                               <span>
@@ -683,22 +698,7 @@ export default function DetailProductPage() {
                                         <div className="comment-author flex justify-between items-center mb-3">
                                           <div className="flex space-x-3 items-center mt-3 ml-3">
                                             <div className="w-[40px] h-[40px] rounded-full overflow-hidden relative">
-                                              <span
-                                                style={{
-                                                  boxSizing: "border-box",
-                                                  display: "block",
-                                                  overflow: "hidden",
-                                                  width: "initial",
-                                                  height: "initial",
-                                                  background: "none",
-                                                  opacity: 1,
-                                                  border: 0,
-                                                  margin: 0,
-                                                  padding: 0,
-                                                  position: "absolute",
-                                                  inset: 0,
-                                                }}
-                                              >
+                                              <span>
                                                 <img
                                                   alt
                                                   sizes="100vw"
@@ -706,21 +706,6 @@ export default function DetailProductPage() {
                                                   decoding="async"
                                                   data-nimg="fill"
                                                   className="w-full h-full object-cover"
-                                                  style={{
-                                                    position: "absolute",
-                                                    inset: 0,
-                                                    boxSizing: "border-box",
-                                                    padding: 0,
-                                                    border: "none",
-                                                    margin: "auto",
-                                                    display: "block",
-                                                    width: 0,
-                                                    height: 0,
-                                                    minWidth: "100%",
-                                                    maxWidth: "100%",
-                                                    minHeight: "100%",
-                                                    maxHeight: "100%",
-                                                  }}
                                                 />
                                               </span>
                                             </div>
@@ -964,34 +949,44 @@ export default function DetailProductPage() {
                   <p className="py-[15px] sm:text-[15px] text-sm sm:block border-b font-medium cursor-pointer">
                     Tin tức mới nhất
                   </p>
-                  <div className="py-[20px] leading-[18px]" style={{
-                    borderBottom: "1px solid #E5EAF1",
-                  }}>
-                    <Link href="/cau-hinh-may-tinh-do-hoa" className="text-center mb-[12px] block">
-                      <img
-                        src="https://hoanghapccdn.com/media/news/14_pc_do_hoa_hoanghapc_min.jpg"
-                        alt="100+ Cấu Hình Máy Tính Đồ Họa Theo Ngân Sách✔️"
-                        width={352}
-                        height={235}
-                        className="w-auto h-auto block m-auto"
-                      />
-                    </Link>
-                    <div>
-                      <a
-                        href="/cau-hinh-may-tinh-do-hoa"
-                        className="font-[600] text-[16px] leading-[20px] mb-[4px]"
+                  {blogData
+                    ?.filter((item) => item.outstandingBlog === "outstanding")
+                    .map((item, index) => (
+                      <div
+                        key={index}
+                        className="py-[20px] leading-[18px]"
+                        style={{
+                          borderBottom: "1px solid #E5EAF1",
+                        }}
                       >
-                        100+ Cấu Hình Máy Tính Đồ Họa Theo Ngân Sách✔️
-                      </a>
-                      <div className="text-ellipsis overflow-hidden line-clamp-2" style={{
-                        
-                      }}>
-                        Cấu hình máy tính đồ họa chuyên dụng cho công việc thiết
-                        kế đồ họa, làm phim, Render và xử lý các thuật toán AI
-                        trí tuệ nhân tạo phù hợp nhất mọi công việc.
+                        <Link
+                          to={`/tin-tuc/${item.slugBlog}`}
+                          className="text-center mb-[12px] block"
+                        >
+                          <img
+                            src={item.imageBlog}
+                            alt={item.titleBlog}
+                            width={352}
+                            height={235}
+                            className="w-auto h-auto block m-auto"
+                          />
+                        </Link>
+                        <div>
+                          <Link
+                            to={`/tin-tuc/${item.slugBlog}`}
+                            className="font-[600] text-[16px] leading-[20px] mb-[4px]"
+                          >
+                            {item.titleBlog}.
+                          </Link>
+                          <div
+                            className="text-ellipsis overflow-hidden line-clamp-2"
+                            dangerouslySetInnerHTML={{
+                              __html: item.contentBlog,
+                            }}
+                          ></div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    ))}
                 </div>
               </div>
             </div>
@@ -1000,7 +995,7 @@ export default function DetailProductPage() {
               <div className="max-w-6xl mx-auto">
                 <div className="w-full py-[60px]">
                   <h1 className="sm:text-2xl text-xl font-600 text-qblacktext leading-none mb-[30px]">
-                    Related Product
+                  Sản phẩm liên quan
                   </h1>
                   {filteredRelated.length > 0 ? (
                     <Slider

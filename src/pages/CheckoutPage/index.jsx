@@ -25,6 +25,7 @@ import {
 } from "../../stores/address/actions";
 import createNotification from "../../utils/notification";
 import { SET_EDIT_MODE } from "../../stores/address/types";
+import { ORDER_SUCCESS } from "../../stores/order/types";
 
 const initialValues = (user) => ({
   id: user?._id,
@@ -118,9 +119,12 @@ export default function CheckoutPage() {
     }
   );
 
-  const handleClickPayment = (itemId) => {
-    setActivePaymentItem(itemId);
-  };
+  const handleClickPayment = useMemo(
+    () => (itemId) => {
+      setActivePaymentItem(itemId);
+    },
+    [setActivePaymentItem]
+  );
 
   useEffect(() => {
     dispatch(getAddress());
@@ -237,13 +241,35 @@ export default function CheckoutPage() {
     async (e) => {
       e.preventDefault();
       try {
-        dispatch(dataOrder(orderData));
-        const paymentResponse = await dispatch(redirectPayment(orderData));
-        if (paymentResponse && paymentResponse.paymentMethod === true) {
-          history.push(paymentResponse.result);
-        } else {
-          navigate(paymentResponse.result);
-        }
+        await new Promise(async (resolve) => {
+          dispatch(
+            dataOrder(orderData, async (orderResponse) => {
+              if (orderResponse && orderResponse.type === ORDER_SUCCESS) {
+                // Dispatch action ORDER_SUCCESS với dữ liệu đã được truyền
+                dispatch({
+                  type: ORDER_SUCCESS,
+                  payload: orderData,
+                });
+                // Resolve promise để tiếp tục
+                resolve();
+              } else {
+                console.error(
+                  "Error reducer order:",
+                  orderResponse && orderResponse.payload.error
+                );
+                // Có lỗi, cũng cần resolve promise để tiếp tục
+                resolve();
+              }
+            })
+          );
+          const paymentResponse = await dispatch(redirectPayment(orderData));
+
+          if (paymentResponse && paymentResponse.paymentMethod === true) {
+            history.push(paymentResponse.result);
+          } else {
+            navigate(paymentResponse.result);
+          }
+        });
       } catch (error) {
         console.error("Error submitting order:", error);
       }
@@ -260,16 +286,21 @@ export default function CheckoutPage() {
               <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>
-                    <div className="breadcrumb-wrapper font-400 text-[13px] text-black mb-[23px]">
-                      <span>
-                        <a href="/">
-                          <span className="mx-1 capitalize">home</span>
-                        </a>
-                        <span className="sperator">/</span>
-                      </span>
+                    <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
+                      <a href="/" className="capitalize">
+                        <img
+                          src="https://i.imgur.com/FFjafxI.png"
+                          alt=""
+                          width="17"
+                          height="17"
+                          className="mx-1 mb-2"
+                        />
+                      </a>
+                      <span className="sperator">/</span>
+
                       <span>
                         <a href="/checkout">
-                          <span className="mx-1 capitalize">checkout</span>
+                          <span className="mx-1 capitalize">Thanh toán</span>
                         </a>
                       </span>
                     </div>
@@ -277,7 +308,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-center">
                   <h1 className="text-3xl font-semibold text-black">
-                    Checkout
+                    Thanh toán
                   </h1>
                 </div>
               </div>
@@ -288,7 +319,7 @@ export default function CheckoutPage() {
               <div className="w-full lg:flex lg:space-x-[30px] pt-4">
                 <div className="lg:w-1/2 w-full">
                   <h1 className="sm:text-2xl text-xl text-black font-medium mb-5">
-                    Billing Details
+                    Thông tin địa chỉ
                   </h1>
                   <div className="w-full px-5 py-[30px] border border-[#EDEDED]">
                     <div className="border-none border-1 border-transparent opacity-100 rounded-8 bg-white relative">
@@ -1172,8 +1203,8 @@ export default function CheckoutPage() {
                       type="submit"
                       className="w-full h-[50px] bg-blue-700 text-white flex justify-center items-center rounded-lg"
                     >
-                      <span className="text-sm font-semibold">
-                        Place Order Now
+                      <span className="text-[24px] font-semibold">
+                        Đặt hàng ngay
                       </span>
                     </button>
                   </form>

@@ -15,7 +15,7 @@ import UpdateProfile from "../../components/UpdateProfile";
 import createNotification from "../../utils/notification";
 import { orderService } from "../../services/order.service";
 import formatDate from "../../utils/fomatDate";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import OrderStatus from "../../types/order.type";
 import { formatPrice } from "../../utils/fomatPrice";
 import { persistor } from "../../stores/app.store";
@@ -32,6 +32,7 @@ import {
 } from "../../stores/address/actions";
 import Modal from "../../components/Modal";
 import { SET_EDIT_MODE } from "../../stores/address/types";
+import { cancelOrder } from "../../stores/order/actions";
 
 const initialValues = (user) => ({
   id: user?._id,
@@ -48,6 +49,7 @@ function Profile() {
   const dispatch = useDispatch();
   const { user, refreshToken, billings, isEditAddress } =
     useContext(AppContext);
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState(0);
   const [provinces, setProvinces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
@@ -130,14 +132,14 @@ function Profile() {
     [dispatch, refreshToken, handleChangePasswordData]
   );
 
-  const handleCancel = () => {
-    // Reset the form
-    setInputChangePass({
-      old_password: "",
-      password: "",
-      confirm_password: "",
-    });
-    setValidationErrors([]);
+  const handleCancel = async (code) => {
+    const response = await dispatch(cancelOrder(code));
+    if (response.status === true) {
+      createNotification("success", "topRight", response.message);
+    } else {
+      createNotification("error", "topRight", response.message);
+    }
+    queryClient.invalidateQueries(["orders"]);
   };
 
   const filteredDistricts = useMemo(
@@ -350,6 +352,7 @@ function Profile() {
           </td>
           <td className="text-center py-4">
             <button
+              onClick={() => handleCancel(item.code)}
               disabled={item.orderStatus !== OrderStatus.PROCESSING}
               className={`p-1 text-sm rounded-sm ${
                 item.orderStatus !== OrderStatus.PROCESSING
@@ -400,16 +403,20 @@ function Profile() {
           <div className="max-w-6xl mx-auto">
             <div className="w-full my-10">
               <div>
-                <div className="breadcrumb-wrapper font-400 text-[13px] text-qblack mb-[23px]">
-                  <span>
-                    <a href="/">
-                      <span className="mx-1 capitalize">home</span>
-                    </a>
-                    <span className="sperator">/</span>
-                  </span>
+                <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
+                  <a href="/" className="capitalize">
+                    <img
+                      src="https://i.imgur.com/FFjafxI.png"
+                      alt=""
+                      width="17"
+                      height="17"
+                      className="mx-1 mb-2"
+                    />
+                  </a>
+                  <span className="sperator">/</span>
                   <span>
                     <a href="/profile">
-                      <span className="mx-1 capitalize">profile</span>
+                      <span className="mx-1 capitalize">Hồ sơ</span>
                     </a>
                   </span>
                 </div>
@@ -855,14 +862,6 @@ function Profile() {
                                         </div>
                                       </button>
                                     </div>
-                                    <button
-                                      onClick={handleCancel}
-                                      type="button"
-                                    >
-                                      <div className="w-full text-sm font-semibold text-black mb-5 sm:mb-0">
-                                        Quay lại
-                                      </div>
-                                    </button>
                                   </div>
                                 </div>
                               </div>

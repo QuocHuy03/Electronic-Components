@@ -290,7 +290,7 @@ export default function FilterPage() {
                   display: "inline",
                 }}
               >
-                 {item.brand.nameBrand}
+                {item.brand.nameBrand}
               </div>
             </div>
             <div className="h-12">
@@ -412,17 +412,23 @@ export default function FilterPage() {
         <div className="products-page-wrapper w-full">
           <div className="max-w-6xl mx-auto">
             <div>
-              <div className="breadcrumb-wrapper font-[400] text-[13px] text-black mb-[23px]">
-                <span>
-                  <a href="/">
-                    <span className="mx-1 capitalize">home</span>
-                  </a>
-                  <span className="sperator capitalize">
-                    / Filter / {isSlug}
-                  </span>
-                </span>
+              <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
+                <a href="/" className="capitalize">
+                  <img
+                    src="https://i.imgur.com/FFjafxI.png"
+                    alt=""
+                    width="17"
+                    height="17"
+                    className="mx-1 mb-2"
+                  />
+                </a>
+                <span className="mx-1 capitalize">/</span>
+                <span className="mx-1 capitalize">Filter</span>
+                <span className="mx-1 capitalize">/</span>
+                <span className="mx-1 capitalize">{isSlug}</span>
               </div>
             </div>
+
             <div className="w-full lg:flex lg:space-x-[20px]">
               <div className="lg:w-[250px]">
                 <div className="filter-widget w-full fixed lg:relative left-0 top-0 h-screen z-10 lg:h-auto overflow-y-scroll lg:overflow-y-auto bg-white px-[30px] hidden lg:block">
@@ -538,7 +544,7 @@ export default function FilterPage() {
                   <div className="filter-subject-item pb-5 border-b border-qgray-border mt-5">
                     <div className="subject-title mb-[20px]">
                       <h1 className="text-black text-base font-[500]">
-                        Price Range
+                        Khoảng giá
                       </h1>
                     </div>
                     <div className="price-range mb-5">
@@ -550,7 +556,7 @@ export default function FilterPage() {
                       </div>
                     </div>
                     <p className="text-xs text-black font-[400]">
-                      Price: {priceRange[0].toLocaleString()} -{" "}
+                      Giá: {priceRange[0].toLocaleString()} -{" "}
                       {priceRange[1].toLocaleString()}
                     </p>
                   </div>
@@ -558,7 +564,7 @@ export default function FilterPage() {
                   <div className="filter-subject-item pb-5 border-b border-gray-border mt-5">
                     <div className="subject-title mb-[20px]">
                       <h1 className="text-black text-base font-[500]">
-                        Brands
+                        Thương hiệu
                       </h1>
                     </div>
                     <div className="filter-items">
@@ -621,7 +627,7 @@ export default function FilterPage() {
                   <div className="filter-subject-item pb-5 border-b border-gray-border mt-5">
                     <div className="subject-title mb-[20px]">
                       <h1 className="text-black text-base font-[500]">
-                        Colors
+                        Màu sắc
                       </h1>
                     </div>
                     <div className="filter-items">
@@ -676,9 +682,9 @@ export default function FilterPage() {
                 <div className="products-sorting w-full bg-white md:h-[70px] flex md:flex-row flex-col md:space-y-0 space-y-5 md:justify-between md:items-center p-[20px] mb-[20px]">
                   <div>
                     <p className="font-400 text-[13px]">
-                      <span className="text-qgray"> Showing</span> 1–
-                      {filteredData ? filteredData?.length : 0} of{" "}
-                      {isProducts?.length} results
+                      <span className="text-qgray"> Hiển thị</span> 1–
+                      {filteredData ? filteredData?.length : 0} trên{" "}
+                      {isProducts?.length} kết quả
                     </p>
                   </div>
 

@@ -27,15 +27,51 @@ export default function BlogDetail() {
   React.useEffect(() => {
     refetch();
   }, [slug]);
+  console.log(data);
 
-  
   return (
     <Layout>
       <div className="w-full  pt-0 pb-0">
+        <div className="blogs-wrapper w-full-width">
+          <div className="title-bar">
+            <div className="page-title-wrapper bg-[#D3EFFF] w-full h-[173px] py-10">
+              <div className="max-w-6xl mx-auto">
+                <div className="mb-5">
+                  <div>
+                    <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
+                      <a href="/" className="capitalize">
+                        <img
+                          src="https://i.imgur.com/FFjafxI.png"
+                          alt=""
+                          width="17"
+                          height="17"
+                          className="mx-1 mb-2"
+                        />
+                      </a>
+                      <span className="sperator">/</span>
+                      <span>
+                        <a href="/blogs">
+                          <span className="mx-1 capitalize">tin tức</span>
+                        </a>
+                      </span>
+                      <span className="mx-1 capitalize">/</span>
+                      <span className="mx-1 capitalize">{data.slugBlog}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <h1 className="text-3xl font-semibold text-qblack">
+                    Chi tiết tin tức
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="w-full py-[20px]">
           <div className="max-w-6xl mx-auto">
             <div className="w-full">
-            <div className="max-w-6xl mx-auto flex flex-col lg:flex-row">
+              <div className="max-w-6xl mx-auto flex flex-col lg:flex-row">
                 {/* Cột 1 */}
                 {isLoading ? (
                   <Loading />
