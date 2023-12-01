@@ -50,7 +50,7 @@ export default function ForgotPasswordPage() {
                 <div className="w-full">
                   <div className="title-area flex flex-col justify-center items-center relative text-center mb-7">
                     <h1 className="text-[34px] font-bold leading-[74px] text-qblack">
-                      Forgot Password
+                      Quên mật khẩu
                     </h1>
                     <div className="shape -mt-6">
                       <svg
@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="email"
                         >
-                          Email Address*
+                          Email *
                         </label>
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                           <input
@@ -98,9 +98,9 @@ export default function ForgotPasswordPage() {
                       <div className="flex justify-center">
                         <button
                           type="submit"
-                          className="bg-black  mb-6 text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center"
+                          className="bg-blue-800  mb-6 text-sm text-white w-full h-[50px] font-semibold flex justify-center bg-purple items-center rounded-md"
                         >
-                          <span>{submitted ? <Loading/> : "Forgot Password"}</span>
+                          <span>{submitted ? <Loading/> : "Lấy lại mật khẩu"}</span>
                         </button>
                       </div>
                     </div>

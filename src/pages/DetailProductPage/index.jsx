@@ -265,13 +265,19 @@ export default function DetailProductPage() {
               <div class="breadcrumb-wrapper w-full ">
                 <div className="max-w-6xl mx-auto">
                   <div>
-                    <div className="breadcrumb-wrapper font-400 text-[13px] text-qblack mb-[23px]">
-                      <span>
+                  <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
                         <a href="/">
-                          <span className="mx-1 capitalize">home</span>
+                          <span className="capitalize">
+                            <img
+                              src="https://i.imgur.com/FFjafxI.png"
+                              alt=""
+                              width="17"
+                              height="17"
+                              className="mx-1 mb-2"
+                            />
+                          </span>
                         </a>
                         <span className="sperator">/</span>
-                      </span>
                       <span>
                         <a href="/single-product">
                           <span className="mx-1 capitalize">
@@ -382,7 +388,7 @@ export default function DetailProductPage() {
                               )}
                             </div>
                             <span className="text-[13px] font-normal text-black">
-                              {isComment?.length} Reviews
+                              {isComment?.length} Đánh giá
                             </span>
                           </div>
 
@@ -409,7 +415,7 @@ export default function DetailProductPage() {
                             className="colors mb-[30px] aos-init aos-animate"
                           >
                             <span className="text-sm font-normal uppercase text-gray-500 mb-[14px] inline-block">
-                              COLOR
+                              MÀU SẮC
                             </span>
                             <div className="flex space-x-2 items-center">
                               {detailProduct?.colors.map((item, index) => (
@@ -482,7 +488,7 @@ export default function DetailProductPage() {
                             className="mb-[20px] aos-init aos-animate"
                           >
                             <p className="text-[13px] text-gray-500 leading-7">
-                              <span className="text-qblack">Category :</span>{" "}
+                              <span className="text-qblack">Danh mục :</span>{" "}
                               {detailProduct?.category.nameCategory}
                             </p>
                             <p className="text-[13px] text-gray-500 leading-7">
@@ -512,7 +518,7 @@ export default function DetailProductPage() {
                               type="button"
                               className="text-qred font-semibold text-[13px]"
                             >
-                              Report This Item
+                              Báo cáo
                             </button>
                           </div>
                           <div
@@ -520,7 +526,7 @@ export default function DetailProductPage() {
                             className="social-share flex items-center w-full aos-init aos-animate"
                           >
                             <span className="text-qblack text-[13px] mr-[17px] inline-block">
-                              Share This
+                              Chia sẻ
                             </span>
                             <div className="flex space-x-5 items-center">
                               <span>
@@ -977,9 +983,7 @@ export default function DetailProductPage() {
                             dangerouslySetInnerHTML={{
                               __html: item.contentBlog,
                             }}
-                          >
-                            
-                          </div>
+                          ></div>
                         </div>
                       </div>
                     ))}
@@ -991,7 +995,7 @@ export default function DetailProductPage() {
               <div className="max-w-6xl mx-auto">
                 <div className="w-full py-[60px]">
                   <h1 className="sm:text-2xl text-xl font-600 text-qblacktext leading-none mb-[30px]">
-                    Related Product
+                  Sản phẩm liên quan
                   </h1>
                   {filteredRelated.length > 0 ? (
                     <Slider

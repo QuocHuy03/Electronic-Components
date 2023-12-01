@@ -11,16 +11,20 @@ export default function ContactPage() {
               <div className="max-w-6xl mx-auto">
                 <div className="mb-5">
                   <div>
-                    <div className="breadcrumb-wrapper font-400 text-[13px] text-qblack mb-[23px]">
-                      <span>
-                        <a href="/">
-                          <span className="mx-1 capitalize">home</span>
-                        </a>
-                        <span className="sperator">/</span>
-                      </span>
+                    <div className="flex items-center font-[400] text-[13px] text-black mb-[23px]">
+                      <a href="/" className="capitalize">
+                        <img
+                          src="https://i.imgur.com/FFjafxI.png"
+                          alt=""
+                          width="17"
+                          height="17"
+                          className="mx-1 mb-2"
+                        />
+                      </a>
+                      <span className="sperator">/</span>
                       <span>
                         <a href="/contact">
-                          <span className="mx-1 capitalize">contact</span>
+                          <span className="mx-1 capitalize">liên hệ</span>
                         </a>
                       </span>
                     </div>
@@ -28,7 +32,7 @@ export default function ContactPage() {
                 </div>
                 <div className="flex justify-center">
                   <h1 className="text-3xl font-semibold text-qblack">
-                    Contact
+                    Liên hệ với chúng tôi
                   </h1>
                 </div>
               </div>
@@ -39,11 +43,11 @@ export default function ContactPage() {
               <div className="main-wrapper w-full lg:flex lg:space-x-[30px]">
                 <div className="lg:w-1/2 w-full">
                   <h1 className="text-[22px] font-semibold text-qblack leading-[30px] mb-1">
-                    Contact Information
+                    Thông tin liên lạc
                   </h1>
                   <p className="text-[15px] text-qgraytwo leading-[30px] mb-5">
-                    Fill the form below or write us .We will help you as soon as
-                    possible.
+                    Điền vào mẫu dưới đây hoặc viết thư cho chúng tôi. Chúng tôi
+                    sẽ giúp bạn sớm nhất có thể.
                   </p>
                   <div className="xl:flex xl:space-x-[30px] mb-[30px]">
                     <div className="xl:w-1/2 w-full h-[196px] flex flex-col item justify-center bg-[#FFEAE5] p-5">
@@ -74,7 +78,7 @@ export default function ContactPage() {
                         </svg>
                       </div>
                       <p className="text-[22px] text-black leading-[30px] text-center font-semibold">
-                        Phone
+                        Điện Thoại
                       </p>
                       <p className="text-[15px] text-black leading-[30px] text-center">
                         +(84) 965 788 523
@@ -148,7 +152,7 @@ export default function ContactPage() {
                       </span>
                       <div>
                         <h1 className="text-[22px] font-semibold text-qblack leading-[30px] mb-2">
-                          Address
+                          Địa chỉ
                         </h1>
                         <p className="text-[15px] text-qblack leading-[30px]">
                           137 Nguyễn Thị Thập, Thanh Khê Tây, Liên Chiểu, Đà
@@ -173,7 +177,7 @@ export default function ContactPage() {
                 <div className="flex-1 bg-white sm:p-10 p-3">
                   <div className="title flex flex-col items-center">
                     <h1 className="text-[34px] font-bold text-qblack">
-                      Get In Touch
+                      Liên lạc
                     </h1>
                     <span className="-mt-5 block">
                       <svg
@@ -199,11 +203,11 @@ export default function ContactPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="first_name"
                         >
-                          Frist Name*
+                          Họ và tên *
                         </label>
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                           <input
-                            placeholder="Demo Name"
+                            placeholder="Nguyễn Văn A"
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                             id="first_name"
                           />
@@ -216,7 +220,7 @@ export default function ContactPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="email"
                         >
-                          Email Address*
+                          Địa chỉ Email *
                         </label>
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                           <input
@@ -233,11 +237,11 @@ export default function ContactPage() {
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
                           htmlFor="subject"
                         >
-                          Subject*
+                          Chủ đề *
                         </label>
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative ">
                           <input
-                            placeholder="Your Subject here"
+                            placeholder="Nhập chủ đề bạn ở đây..."
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                             id="subject"
                           />
@@ -246,19 +250,20 @@ export default function ContactPage() {
                     </div>
                     <div className="mb-5">
                       <h6 className="input-label text-qgray capitalize text-[13px] font-normal block mb-2 ">
-                        Message*
+                        Thông điệp *
                       </h6>
                       <textarea
-                        placeholder="Type your message here"
+                        placeholder="Nhập thông điệp của bạn..."
                         className="w-full h-[105px] focus:ring-0 focus:outline-none p-3 border border-qgray-border placeholder:text-sm"
                       />
                     </div>
-                    <div>
-                      <a href="#">
-                        <div className="black-btn text-sm font-semibold w-full h-[50px] flex justify-center items-center">
-                          <span>Send Now</span>
+                    <div className="float-right">
+                      <div className="bg-blue-700 text-white w-[110px] h-[35px] flex justify-center items-center cursor-pointer rounded-md">
+                        <div className="flex space-x-2 items-center">
+                          <span className="text-sm font-600">Gửi ngay</span>
+                          <a href="#"></a>
                         </div>
-                      </a>
+                      </div>
                     </div>
                   </div>
                 </div>

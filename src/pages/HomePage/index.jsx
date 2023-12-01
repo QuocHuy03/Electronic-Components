@@ -260,10 +260,10 @@ export default function HomePage() {
                   </div>
                   <div>
                     <p className="text-black text-[15px] font-700 tracking-wide mb-1">
-                      Free Shipping
+                      Miễn phí vận chuyển
                     </p>
                     <p className="text-sm text-qgray">
-                      When ordering over $100
+                     Khi đặt hàng trị giá trên <a className="text-red-500 font-bold">1.000.000 VNĐ</a>
                     </p>
                   </div>
                 </div>
@@ -297,10 +297,10 @@ export default function HomePage() {
                   </div>
                   <div>
                     <p className="text-black text-[15px] font-700 tracking-wide mb-1">
-                      Free Return
+                      Hoàn trả miễn phí
                     </p>
                     <p className="text-sm text-qgray">
-                      Get Return within 30 days
+                    Nhận hoàn trả trong vòng 30 ngày
                     </p>
                   </div>
                 </div>
@@ -342,10 +342,10 @@ export default function HomePage() {
                   </div>
                   <div>
                     <p className="text-black text-[15px] font-700 tracking-wide mb-1">
-                      Secure Payment
+                    Thanh toán an toàn
                     </p>
                     <p className="text-sm text-qgray">
-                      100% Secure Online Payment
+                    Thanh toán trực tuyến an toàn 100%
                     </p>
                   </div>
                 </div>
@@ -398,10 +398,10 @@ export default function HomePage() {
                   </div>
                   <div>
                     <p className="text-black text-[15px] font-700 tracking-wide mb-1">
-                      Best Quality
+                    Chất lượng tốt nhất
                     </p>
                     <p className="text-sm text-qgray">
-                      Original Product Guarenteed
+                    Đảm bảo sản phẩm chính hãng
                     </p>
                   </div>
                 </div>
@@ -430,16 +430,7 @@ export default function HomePage() {
               >
                 <div className="box-title">
                   <div className="box-tab-menu">
-                    <p
-                      data-key="flashsale_bf24110"
-                      className={`box-tab-item button__select-tab ${
-                        selectedDate === "flashsale_bf24110" ? "active" : ""
-                      }`}
-                      style={{ backgroundColor: "rgb(215, 0, 24)" }}
-                      onClick={() => handleTabClick("flashsale_bf24110")}
-                    >
-                      24.11
-                    </p>
+                    
                     <p
                       data-key="flashsale_bf25111"
                       className={`box-tab-item button__select-tab ${
