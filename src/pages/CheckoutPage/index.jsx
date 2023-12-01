@@ -25,6 +25,7 @@ import {
 } from "../../stores/address/actions";
 import createNotification from "../../utils/notification";
 import { SET_EDIT_MODE } from "../../stores/address/types";
+import { ORDER_SUCCESS } from "../../stores/order/types";
 
 const initialValues = (user) => ({
   id: user?._id,
@@ -118,9 +119,12 @@ export default function CheckoutPage() {
     }
   );
 
-  const handleClickPayment = (itemId) => {
-    setActivePaymentItem(itemId);
-  };
+  const handleClickPayment = useMemo(
+    () => (itemId) => {
+      setActivePaymentItem(itemId);
+    },
+    [setActivePaymentItem]
+  );
 
   useEffect(() => {
     dispatch(getAddress());
@@ -237,13 +241,35 @@ export default function CheckoutPage() {
     async (e) => {
       e.preventDefault();
       try {
-        dispatch(dataOrder(orderData));
-        const paymentResponse = await dispatch(redirectPayment(orderData));
-        if (paymentResponse && paymentResponse.paymentMethod === true) {
-          history.push(paymentResponse.result);
-        } else {
-          navigate(paymentResponse.result);
-        }
+        await new Promise(async (resolve) => {
+          dispatch(
+            dataOrder(orderData, async (orderResponse) => {
+              if (orderResponse && orderResponse.type === ORDER_SUCCESS) {
+                // Dispatch action ORDER_SUCCESS với dữ liệu đã được truyền
+                dispatch({
+                  type: ORDER_SUCCESS,
+                  payload: orderData,
+                });
+                // Resolve promise để tiếp tục
+                resolve();
+              } else {
+                console.error(
+                  "Error reducer order:",
+                  orderResponse && orderResponse.payload.error
+                );
+                // Có lỗi, cũng cần resolve promise để tiếp tục
+                resolve();
+              }
+            })
+          );
+          const paymentResponse = await dispatch(redirectPayment(orderData));
+
+          if (paymentResponse && paymentResponse.paymentMethod === true) {
+            history.push(paymentResponse.result);
+          } else {
+            navigate(paymentResponse.result);
+          }
+        });
       } catch (error) {
         console.error("Error submitting order:", error);
       }
