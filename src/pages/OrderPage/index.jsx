@@ -67,7 +67,7 @@ export default function OrderPage() {
       if (
         paymentMethod === "momo" &&
         paymentMomo &&
-        paymentMomo.resultCode !== "0"
+        paymentMomo.resultCode === 0
       ) {
         const response = await dispatch(orders(data, paymentMethod));
         if (response.status === true) {
