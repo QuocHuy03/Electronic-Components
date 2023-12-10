@@ -40,25 +40,28 @@ export default function OrderDetailPage() {
     const statusIndex = getOrderStatusIndex(status);
     const isActive = currentStatusIndex >= statusIndex;
     let timeDisplay = null;
+    console.log(isOrder.approvedAt)
     switch (status) {
+ 
       case OrderStatus.PENDING:
-        timeDisplay = formatDate(isOrder?.pendingAt);
+        timeDisplay = isOrder?.createdAt ? formatDate(isOrder.createdAt) : '00:00 0-0-0000';
         break;
       case OrderStatus.APPROVED:
-        timeDisplay = formatDate(isOrder?.approvedAt);
+        timeDisplay = isOrder?.approvedAt ? formatDate(isOrder.approvedAt) : '00:00 0-0-0000';
         break;
       case OrderStatus.PROCESSING:
-        timeDisplay = formatDate(isOrder?.processingAt);
+        timeDisplay = isOrder?.processingAt ? formatDate(isOrder.processingAt) : '00:00 0-0-0000';
         break;
       case OrderStatus.SHIPPED:
-        timeDisplay = formatDate(isOrder?.shippedAt);
+        timeDisplay = isOrder?.shippedAt ? formatDate(isOrder.shippedAt) : '00:00 0-0-0000';
         break;
       case OrderStatus.DELIVERED:
-        timeDisplay = formatDate(isOrder?.deliveredAt);
+        timeDisplay = isOrder?.deliveredAt ? formatDate(isOrder.deliveredAt) : '00:00 0-0-0000';
         break;
       default:
         break;
     }
+         
     return (
       <div>
         <div className="relative">
@@ -88,7 +91,7 @@ export default function OrderDetailPage() {
           >
             {label}
           </p>
-          <p className="text-gray-500">{formatDate(isOrder?.createdAt)}</p>
+          {timeDisplay && <p className="text-gray-500">{timeDisplay}</p>}
         </div>
       </div>
     );
