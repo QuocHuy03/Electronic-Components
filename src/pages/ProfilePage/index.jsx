@@ -283,10 +283,19 @@ function Profile() {
       let statusText = "";
 
       switch (item.orderStatus) {
+        case OrderStatus.PENDING:
+          statusClass += "bg-zinc-500 bg-zinc-100";
+          statusText = "Đợi Xử Lý";
+          break;
         case OrderStatus.DELIVERED:
           statusClass += "text-green-500 bg-green-100";
           statusText = "Đã Giao Hàng";
           break;
+
+        case OrderStatus.APPROVED:
+            statusClass += "text-teal-500 bg-teal-100";
+            statusText = "Đã Xử Lý";
+            break;
 
         case OrderStatus.PROCESSING:
           statusClass += "text-blue-500 bg-blue-100";
@@ -294,7 +303,6 @@ function Profile() {
           break;
 
         case OrderStatus.SHIPPED:
-        case OrderStatus.SHIPPED_CONFIRMED:
           statusClass += "text-yellow-500 bg-yellow-100";
           statusText = "Đang Giao Hàng";
           break;

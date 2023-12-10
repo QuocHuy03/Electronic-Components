@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 import { categoryService } from "../../services/category.service";
-import {COLOR} from "../../constants/style.constants"
+import { COLOR } from "../../constants/style.constants";
 
 export default function HeaderBottom() {
   const dropdownRef = useRef();
@@ -30,7 +30,7 @@ export default function HeaderBottom() {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  
+
   const { data: isCategories, isloading: loadingCategory } = useQuery(
     ["categories"],
     () => categoryService.fetchAllCategories(),
@@ -41,9 +41,12 @@ export default function HeaderBottom() {
   );
 
   return (
-    <div className={`nav-widget-wrapper w-full  h-[60px] relative z-30 quomodo-shop-nav-bar lg:block hidden`} style={{
-      background: COLOR.BLUE
-    }}>
+    <div
+      className={`nav-widget-wrapper w-full  h-[60px] relative z-30 quomodo-shop-nav-bar lg:block hidden`}
+      style={{
+        background: COLOR.BLUE,
+      }}
+    >
       <div className="max-w-6xl mx-auto h-full">
         <div className="w-full h-full relative">
           <div className="w-full h-full flex justify-between items-center">
@@ -149,17 +152,12 @@ export default function HeaderBottom() {
                       </span>
                     </Link>
                   </li>
-                  <li>
-                    <span className="flex items-center text-sm font-600 cursor-pointer text-white">
-                      <span>Chính Sách</span>
-                    </span>
-                  </li>
+              
                   <li>
                     <Link to={URL_CONSTANTS.BLOG}>
                       <span className="flex items-center text-sm font-600 cursor-pointer text-white">
                         <span>Tin Tức</span>
                       </span>
-
                     </Link>
                   </li>
                   <li>
@@ -170,39 +168,6 @@ export default function HeaderBottom() {
                     </Link>
                   </li>
                 </ul>
-              </div>
-            </div>
-            <div className="become-seller-btn">
-              <div className="bg-blue-400 text-white w-[161px] h-[40px] flex justify-center items-center cursor-pointer rounded-md">
-                <div className="flex space-x-2 items-center">
-                  <span className="text-sm font-600">Trở Thành Đối Tác</span>
-                  <span className="pt-1">
-                    <svg
-                      className="fill-current"
-                      width={6}
-                      height={10}
-                      viewBox="0 0 6 10"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect
-                        x="1.08984"
-                        width="6.94106"
-                        height="1.54246"
-                        transform="rotate(45 1.08984 0)"
-                        fill="white"
-                      />
-                      <rect
-                        x={6}
-                        y="4.9082"
-                        width="6.94106"
-                        height="1.54246"
-                        transform="rotate(135 6 4.9082)"
-                        fill="white"
-                      />
-                    </svg>
-                  </span>
-                </div>
               </div>
             </div>
           </div>

@@ -40,7 +40,6 @@ export default function OrderDetailPage() {
     const statusIndex = getOrderStatusIndex(status);
     const isActive = currentStatusIndex >= statusIndex;
     let timeDisplay = null;
-    console.log(isOrder.approvedAt)
     switch (status) {
  
       case OrderStatus.PENDING:
