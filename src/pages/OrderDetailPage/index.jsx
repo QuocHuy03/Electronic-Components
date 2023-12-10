@@ -25,11 +25,11 @@ export default function OrderDetailPage() {
   });
   function getOrderStatusIndex(status) {
     const statusList = [
+      OrderStatus.PENDING,
       OrderStatus.PROCESSING,
+      OrderStatus.APPROVED,
       OrderStatus.SHIPPED,
-      OrderStatus.SHIPPED_CONFIRMED,
       OrderStatus.DELIVERED,
-      OrderStatus.CANCELLED,
     ];
 
     return statusList.indexOf(status);
@@ -39,6 +39,26 @@ export default function OrderDetailPage() {
     const currentStatusIndex = getOrderStatusIndex(isOrder?.orderStatus);
     const statusIndex = getOrderStatusIndex(status);
     const isActive = currentStatusIndex >= statusIndex;
+    let timeDisplay = null;
+    switch (status) {
+      case OrderStatus.PENDING:
+        timeDisplay = formatDate(isOrder?.pendingAt);
+        break;
+      case OrderStatus.APPROVED:
+        timeDisplay = formatDate(isOrder?.approvedAt);
+        break;
+      case OrderStatus.PROCESSING:
+        timeDisplay = formatDate(isOrder?.processingAt);
+        break;
+      case OrderStatus.SHIPPED:
+        timeDisplay = formatDate(isOrder?.shippedAt);
+        break;
+      case OrderStatus.DELIVERED:
+        timeDisplay = formatDate(isOrder?.deliveredAt);
+        break;
+      default:
+        break;
+    }
     return (
       <div>
         <div className="relative">
@@ -50,9 +70,12 @@ export default function OrderDetailPage() {
             <img src={getImageUrl(status)} alt="" />
           </div>
           <div
-            className={`absolute top-1/2 left-[${getLeftPosition(
+          style={{
+            left: getLeftPosition(
               status
-            )}%] w-[${getWidth(status)}px] h-1 ${
+            )
+          }}
+            className={`absolute top-1/2 w-[${getWidth(status)}px] h-1 ${
               isActive ? "bg-green-500" : "bg-gray-300"
             } transform -translate-y-1/2`}
           ></div>
@@ -71,19 +94,16 @@ export default function OrderDetailPage() {
     );
   }
   function getImageUrl(status) {
-    if (
-      status.includes(OrderStatus.SHIPPED) ||
-      status.includes(OrderStatus.SHIPPED_CONFIRMED)
-    ) {
-      return "https://icon-library.com/images/money-order-icon/money-order-icon-14.jpg";
-    }
-
     switch (status) {
+      case OrderStatus.PENDING:
+        return "https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/orders-icon.png";
       case OrderStatus.PROCESSING:
         return "https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/orders-icon.png";
-      case OrderStatus.DELIVERED:
+      case OrderStatus.APPROVED:
+        return "https://icon-library.com/images/money-order-icon/money-order-icon-14.jpg";
+      case OrderStatus.SHIPPED:
         return "https://cdn.iconscout.com/icon/premium/png-256-thumb/successful-delivery-1786644-1522008.png";
-      case OrderStatus.CANCELLED:
+      case OrderStatus.DELIVERED:
         return "https://cdn.iconscout.com/icon/premium/png-256-thumb/order-received-3112928-2602187.png?f=webp";
       default:
         return "";
@@ -91,16 +111,16 @@ export default function OrderDetailPage() {
   }
 
   function getLeftPosition(status) {
-    if (status.includes("SHIPPED") || status.includes("SHIPPED_CONFIRMED")) {
-      return 71;
-    }
-
     switch (status) {
+      case "PENDING":
+        return 80;
       case "PROCESSING":
-        return 63;
+        return 80;
+      case "APPROVED":
+        return 80;
+      case "SHIPPED":
+        return 80;
       case "DELIVERED":
-        return 67;
-      case "CANCELLED":
         return 0;
       default:
         return 0;
@@ -108,16 +128,16 @@ export default function OrderDetailPage() {
   }
 
   function getWidth(status) {
-    if (status.includes("SHIPPED") || status.includes("SHIPPED_CONFIRMED")) {
-      return 175;
-    }
-
     switch (status) {
+      case "PENDING":
+        return 170;
       case "PROCESSING":
-        return 190;
-      case "DELIVERED":
+        return 170;
+      case "APPROVED":
         return 180;
-      case "CANCELLED":
+      case "SHIPPED":
+        return 170;
+      case "DELIVERED":
         return 0;
       default:
         return 0;
@@ -165,14 +185,12 @@ export default function OrderDetailPage() {
           </div>
           <div class="max-w-6xl mx-auto">
             <div class="w-full screen-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md flex items-center space-x-4">
-              <div class="flex items-center space-x-28 ml-28">
-                {getOrderStatus(OrderStatus.PROCESSING, "Đã đặt hàng")}
-                {getOrderStatus(
-                  [OrderStatus.SHIPPED, OrderStatus.SHIPPED_CONFIRMED],
-                  "Đã xác nhận đơn"
-                )}
-                {getOrderStatus(OrderStatus.DELIVERED, "Đã giao cho ĐVVC")}
-                {getOrderStatus(OrderStatus.CANCELLED, "Đã nhận được hàng")}
+              <div class="flex items-center space-x-28 ml-8">
+                {getOrderStatus(OrderStatus.PENDING, "Đã đặt hàng")}
+                {getOrderStatus(OrderStatus.PROCESSING, "Đã xác nhận đơn")}
+                {getOrderStatus(OrderStatus.APPROVED, "Đã giao cho ĐVVC")}
+                {getOrderStatus(OrderStatus.SHIPPED, "Đang Giao Hàng")}
+                {getOrderStatus(OrderStatus.DELIVERED, "Đã nhận được hàng")}
               </div>
             </div>
           </div>
@@ -188,7 +206,7 @@ export default function OrderDetailPage() {
                           Sản phẩm
                         </td>
                         <td className="py-4 whitespace-nowrap text-center">
-                      màu sắc
+                          màu sắc
                         </td>
 
                         <td className="py-4 whitespace-nowrap text-center">
@@ -341,7 +359,7 @@ export default function OrderDetailPage() {
                         Phí vận chuyển
                       </p>
                       <p className="text-[15px] font-medium text-qred">
-                        {formatPrice(15000)}
+                        {formatPrice(0)}
                       </p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />

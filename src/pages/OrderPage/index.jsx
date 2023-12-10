@@ -65,9 +65,12 @@ export default function OrderPage() {
     };
     try {
       if (
-        paymentMethod === "momo" &&
-        paymentMomo &&
-        paymentMomo.resultCode === 0
+        (paymentMethod === "momo" &&
+          paymentMomo &&
+          paymentMomo.resultCode === "0") ||
+        (paymentMethod === "vnpay" &&
+          paymentMethod &&
+          paymentMethod.vnp_TransactionStatus === "00")
       ) {
         const response = await dispatch(orders(data, paymentMethod));
         if (response.status === true) {
@@ -89,8 +92,6 @@ export default function OrderPage() {
   useEffect(() => {
     dispatchOrder();
   }, []);
-
-  console.log(isCheckOrder);
 
   return (
     <Layout>
