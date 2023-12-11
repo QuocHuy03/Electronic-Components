@@ -31,6 +31,7 @@ export default function OrderPage() {
   const paymentMomo = useMemo(
     () => ({
       partnerCode: queryParams.get("partnerCode"),
+      resultCode: queryParams.get("resultCode"),
       orderId: queryParams.get("orderId"),
       requestId: queryParams.get("requestId"),
       amount: queryParams.get("amount"),
@@ -63,12 +64,23 @@ export default function OrderPage() {
         : {}),
     };
     try {
-      const response = await dispatch(orders(data, paymentMethod));
-      if (response.status === true) {
-        setIsCheckOrder(response);
+      if (
+        (paymentMethod === "momo" &&
+          paymentMomo &&
+          paymentMomo.resultCode === "0") ||
+        (paymentMethod === "vnpay" &&
+          paymentMethod &&
+          paymentMethod.vnp_TransactionStatus === "00")
+      ) {
+        const response = await dispatch(orders(data, paymentMethod));
+        if (response.status === true) {
+          setIsCheckOrder(response);
+        } else {
+          setIsCheckOrder(response);
+          navigate(`/checkout/${uuidv4()}`);
+        }
       } else {
-        setIsCheckOrder(response);
-        navigate(`/checkout/${uuidv4()}`);
+        setIsCheckOrder(paymentMomo.message);
       }
     } catch (error) {
       console.error(error);
@@ -80,8 +92,6 @@ export default function OrderPage() {
   useEffect(() => {
     dispatchOrder();
   }, []);
-
-  console.log(isCheckOrder);
 
   return (
     <Layout>
