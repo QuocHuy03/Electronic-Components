@@ -70,7 +70,8 @@ export default function OrderPage() {
           paymentMomo.resultCode === "0") ||
         (paymentMethod === "vnpay" &&
           paymentMethod &&
-          paymentMethod.vnp_TransactionStatus === "00")
+          paymentMethod.vnp_TransactionStatus === "00") ||
+        paymentMethod === "receive"
       ) {
         const response = await dispatch(orders(data, paymentMethod));
         if (response.status === true) {
