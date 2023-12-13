@@ -22,7 +22,7 @@ const fetchOrderByUserID = async () => {
 
 const fetchOrderCancel = async (code) => {
   try {
-    const response = await http.post(`/order/cancel_order/${code}`, {});
+    const response = await http.post(`/order/cancelOrder/${code}`, {});
     return response;
   } catch (error) {
     console.error(error)

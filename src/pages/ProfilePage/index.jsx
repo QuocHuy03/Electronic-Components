@@ -675,7 +675,7 @@ function Profile() {
                                   isOrders?.filter(
                                     (item) =>
                                       item.orderStatus ===
-                                      OrderStatus.PROCESSING
+                                      OrderStatus.PENDING
                                   ).length
                                 }
                               </span>
@@ -710,9 +710,7 @@ function Profile() {
                                   isOrders?.filter(
                                     (item) =>
                                       item.orderStatus ===
-                                        OrderStatus.SHIPPED ||
-                                      item.orderStatus ===
-                                        OrderStatus.SHIPPED_CONFIRMED
+                                        OrderStatus.SHIPPED
                                   ).length
                                 }
                               </span>
