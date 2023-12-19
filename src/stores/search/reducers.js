@@ -9,6 +9,7 @@ import {
   SEARCH_POST_HISTORY_SUCCESS,
   SEARCH_REQUEST,
   SEARCH_SUCCESS,
+  DELETE_SEARCH
 } from "./types";
 
 const initialState = {
@@ -44,6 +45,12 @@ const searchReducer = (state = initialState, action) => {
         search: updatedSearch,
       };
 
+    case DELETE_SEARCH:
+        return {
+          ...state,
+          loading: false,
+          search: [],
+        };
     case SEARCH_POST_HISTORY_SUCCESS:
       const { result } = action.payload;
       const isInHistory = state.historySearch.some(
@@ -81,7 +88,7 @@ const searchReducer = (state = initialState, action) => {
           return acc;
         },
         [...historySearch]
-      ); 
+      );
 
       return {
         ...state,

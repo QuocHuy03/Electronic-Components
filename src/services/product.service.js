@@ -1,10 +1,8 @@
 import Http from "../helpers/http";
 
-const http = new Http();
-
 const fetchAllProducts = async () => {
   try {
-    const response = await http.get(`/product/getAllProducts`);
+    const response = await Http.get(`/product/getAllProducts`);
     return response.result;
   } catch (error) {
     console.error(error);
@@ -13,7 +11,7 @@ const fetchAllProducts = async () => {
 
 const getProductOfBrand = async (brandID) => {
   try {
-    const response = await http.get(`/product/getProductOfBrand/${brandID}`);
+    const response = await Http.get(`/product/getProductOfBrand/${brandID}`);
     return response.result;
   } catch (error) {
     console.error(error);
@@ -22,7 +20,7 @@ const getProductOfBrand = async (brandID) => {
 
 const fetchProductBySlug = async (slug) => {
   try {
-    const response = await http.get(`/product/getProductBySlug/${slug}`);
+    const response = await Http.get(`/product/getProductBySlug/${slug}`);
     return response.result;
   } catch (error) {
     console.error(error);
@@ -31,7 +29,7 @@ const fetchProductBySlug = async (slug) => {
 
 const fetchProductsByCategory = async (category) => {
   try {
-    const response = await http.get(
+    const response = await Http.get(
       `/product/getProductsOfCategory/${category}`
     );
     return response.result;

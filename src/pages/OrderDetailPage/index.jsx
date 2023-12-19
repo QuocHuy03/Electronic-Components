@@ -7,15 +7,26 @@ import Loading from "../../components/Loading";
 import { formatPrice } from "../../utils/fomatPrice";
 import formatDate from "../../utils/fomatDate";
 import OrderStatus from "../../types/order.type";
+import huydev from "../../json/address.json";
 
 export default function OrderDetailPage() {
   const { slug } = useParams();
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [provinces, setProvinces] = useState([]);
   const [isSlug, setSlug] = useState(null);
+  
   useEffect(() => {
     if (slug) {
       setSlug(slug);
     }
   }, [slug]);
+  
+  useEffect(() => {
+    setProvinces(huydev.provinces);
+    setDistricts(huydev.districts);
+    setWards(huydev.wards);
+  }, []);
 
   const { data: isOrder, isloading: loadingOrder } = useQuery({
     queryKey: ["detailOrder", isSlug],
@@ -41,26 +52,35 @@ export default function OrderDetailPage() {
     const isActive = currentStatusIndex >= statusIndex;
     let timeDisplay = null;
     switch (status) {
- 
       case OrderStatus.PENDING:
-        timeDisplay = isOrder?.createdAt ? formatDate(isOrder.createdAt) : '00:00 0-0-0000';
+        timeDisplay = isOrder?.createdAt
+          ? formatDate(isOrder.createdAt)
+          : "00:00 0-0-0000";
         break;
       case OrderStatus.APPROVED:
-        timeDisplay = isOrder?.approvedAt ? formatDate(isOrder.approvedAt) : '00:00 0-0-0000';
+        timeDisplay = isOrder?.approvedAt
+          ? formatDate(isOrder.approvedAt)
+          : "00:00 0-0-0000";
         break;
       case OrderStatus.PROCESSING:
-        timeDisplay = isOrder?.processingAt ? formatDate(isOrder.processingAt) : '00:00 0-0-0000';
+        timeDisplay = isOrder?.processingAt
+          ? formatDate(isOrder.processingAt)
+          : "00:00 0-0-0000";
         break;
       case OrderStatus.SHIPPED:
-        timeDisplay = isOrder?.shippedAt ? formatDate(isOrder.shippedAt) : '00:00 0-0-0000';
+        timeDisplay = isOrder?.shippedAt
+          ? formatDate(isOrder.shippedAt)
+          : "00:00 0-0-0000";
         break;
       case OrderStatus.DELIVERED:
-        timeDisplay = isOrder?.deliveredAt ? formatDate(isOrder.deliveredAt) : '00:00 0-0-0000';
+        timeDisplay = isOrder?.deliveredAt
+          ? formatDate(isOrder.deliveredAt)
+          : "00:00 0-0-0000";
         break;
       default:
         break;
     }
-         
+
     return (
       <div>
         <div className="relative">
@@ -72,11 +92,9 @@ export default function OrderDetailPage() {
             <img src={getImageUrl(status)} alt="" />
           </div>
           <div
-          style={{
-            left: getLeftPosition(
-              status
-            )
-          }}
+            style={{
+              left: getLeftPosition(status),
+            }}
             className={`absolute top-1/2 w-[${getWidth(status)}px] h-1 ${
               isActive ? "bg-green-500" : "bg-gray-300"
             } transform -translate-y-1/2`}
@@ -230,43 +248,11 @@ export default function OrderDetailPage() {
                           <td className="pl-10 py-4 w-[380px]">
                             <div className="flex space-x-6 items-center">
                               <div className="w-[80px] h-[80px] overflow-hidden flex justify-center items-center border border-[#EDEDED] relative">
-                                <span
-                                  style={{
-                                    boxSizing: "border-box",
-                                    display: "block",
-                                    overflow: "hidden",
-                                    width: "initial",
-                                    height: "initial",
-                                    background: "none",
-                                    opacity: 1,
-                                    border: 0,
-                                    margin: 0,
-                                    padding: 0,
-                                    position: "absolute",
-                                    inset: 0,
-                                  }}
-                                >
+                                <span>
                                   <img
                                     alt="product"
                                     src={item.huydev.images[0].imagePath}
-                                    decoding="async"
-                                    data-nimg="fill"
                                     className="w-full h-full object-contain"
-                                    style={{
-                                      position: "absolute",
-                                      inset: 0,
-                                      boxSizing: "border-box",
-                                      padding: 0,
-                                      border: "none",
-                                      margin: "auto",
-                                      display: "block",
-                                      width: 0,
-                                      height: 0,
-                                      minWidth: "100%",
-                                      maxWidth: "100%",
-                                      minHeight: "100%",
-                                      maxHeight: "100%",
-                                    }}
                                     sizes="100vw"
                                   />
                                   <noscript />
@@ -339,7 +325,24 @@ export default function OrderDetailPage() {
                       (+84): {isOrder?.user.phone}
                     </p>
                     <p className="text-gray-600">
-                      Địa chỉ: {isOrder?.user.address}
+                      Địa chỉ: {isOrder?.address.address},{" "}
+                      {
+                        wards.find(
+                          (commune) => commune.id === Number(isOrder?.address.commune)
+                        )?.name
+                      }
+                      ,{" "}
+                      {
+                        districts.find(
+                          (district) => district.id === Number(isOrder?.address.district)
+                        )?.name
+                      }
+                      ,{" "}
+                      {
+                        provinces.find((city) => city.id === Number(isOrder?.address.city))
+                          ?.name
+                      }
+                     
                     </p>
                   </div>
                 </div>

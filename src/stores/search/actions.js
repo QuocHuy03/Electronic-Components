@@ -12,6 +12,7 @@ import {
   SEARCH_POST_HISTORY_SUCCESS,
   SEARCH_REQUEST,
   SEARCH_SUCCESS,
+  DELETE_SEARCH,
 } from "./types";
 
 export const getHistorySearch = () => {
@@ -134,5 +135,13 @@ export const valueSearch = (data) => {
       });
       console.log(error);
     }
+  };
+};
+
+export const deleteSearch = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: DELETE_SEARCH,
+    });
   };
 };

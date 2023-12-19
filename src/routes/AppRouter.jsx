@@ -20,6 +20,7 @@ import OrderPage from "../pages/OrderPage";
 import OrderDetailPage from "../pages/OrderDetailPage";
 import { google } from "../stores/authentication/actions";
 import SearchPage from "../pages/SearchPage";
+import useScrollToTop from "../hooks/useScrollToTop";
 
 const privateRoutes = [
   { path: URL_CONSTANTS.PROFILE, component: ProfilePage },
@@ -62,6 +63,7 @@ const AppRouter = () => {
   const auth = useSelector((state) => state.auth);
   return (
     <Routes>
+      {useScrollToTop()}
       {auth &&
         privateRoutes.map((route) => (
           <Route

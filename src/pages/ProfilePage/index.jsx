@@ -284,7 +284,7 @@ function Profile() {
 
       switch (item.orderStatus) {
         case OrderStatus.PENDING:
-          statusClass += "bg-zinc-500 bg-zinc-100";
+          statusClass += "text-zinc-500 bg-zinc-100";
           statusText = "Đợi Xử Lý";
           break;
         case OrderStatus.DELIVERED:
@@ -361,9 +361,9 @@ function Profile() {
           <td className="text-center py-4">
             <button
               onClick={() => handleCancel(item.code)}
-              disabled={item.orderStatus !== OrderStatus.PROCESSING}
+              disabled={item.orderStatus !== OrderStatus.PENDING}
               className={`p-1 text-sm rounded-sm ${
-                item.orderStatus !== OrderStatus.PROCESSING
+                item.orderStatus !== OrderStatus.PENDING
                   ? "bg-gray-300"
                   : "bg-red-600"
               } text-white font-bold`}
@@ -675,7 +675,7 @@ function Profile() {
                                   isOrders?.filter(
                                     (item) =>
                                       item.orderStatus ===
-                                      OrderStatus.PROCESSING
+                                      OrderStatus.PENDING
                                   ).length
                                 }
                               </span>
@@ -710,9 +710,7 @@ function Profile() {
                                   isOrders?.filter(
                                     (item) =>
                                       item.orderStatus ===
-                                        OrderStatus.SHIPPED ||
-                                      item.orderStatus ===
-                                        OrderStatus.SHIPPED_CONFIRMED
+                                        OrderStatus.SHIPPED
                                   ).length
                                 }
                               </span>

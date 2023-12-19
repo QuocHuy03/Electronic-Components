@@ -1,10 +1,8 @@
 import Http from "../helpers/http";
 
-const http = new Http();
-
 const fetchAllCoupons = async () => {
   try {
-    const response = await http.get(`/coupon/getAllCoupons`);
+    const response = await Http.get(`/coupon/getAllCoupons`);
     return response.result;
   } catch (error) {
     console.error(error);
@@ -13,7 +11,7 @@ const fetchAllCoupons = async () => {
 
 const fetchCouponByUserID = async () => {
   try {
-    const response = await http.get(`/coupon-user/getCouponUserByUserID`);
+    const response = await Http.get(`/coupon-user/getCouponUserByUserID`);
     return response.result;
   } catch (error) {
     console.error(error);
@@ -22,7 +20,7 @@ const fetchCouponByUserID = async () => {
 
 const fetchPostCoupon = async (data) => {
   try {
-    const response = await http.post(`/coupon-user/postCouponUser`, data);
+    const response = await Http.post(`/coupon-user/postCouponUser`, data);
     return response;
   } catch (error) {
     console.error(error);
@@ -31,7 +29,7 @@ const fetchPostCoupon = async (data) => {
 
 const fetchDeleteCoupon = async (id) => {
   try {
-    const response = await http.delete(`/coupon-user/deleteCouponUser/${id}`);
+    const response = await Http.delete(`/coupon-user/deleteCouponUser/${id}`);
     return response;
   } catch (error) {
     console.error(error);

@@ -1,10 +1,8 @@
 import Http from "../helpers/http";
 
-const http = new Http();
-
 const fetchSearchFilterProducts = async (search) => {
   try {
-    const response = await http.get(
+    const response = await Http.get(
       `/product/getAllSearchFilter?query=${search}`
     );
     return response;
@@ -15,7 +13,7 @@ const fetchSearchFilterProducts = async (search) => {
 
 const fetchPostHistorySearch = async (data) => {
   try {
-    const response = await http.post(`/search/postHistorySearch`, {
+    const response = await Http.post(`/search/postHistorySearch`, {
       nameSearch: data,
     });
     return response;
@@ -26,7 +24,7 @@ const fetchPostHistorySearch = async (data) => {
 
 const fetchHistorySearchByUserID = async () => {
   try {
-    const response = await http.get(`/search/getHistorySearchByUserID`);
+    const response = await Http.get(`/search/getHistorySearchByUserID`);
     return response;
   } catch (error) {
     console.error(error);
@@ -35,7 +33,7 @@ const fetchHistorySearchByUserID = async () => {
 
 const fetchDeleteAllHistorySearch = async () => {
   try {
-    const response = await http.delete(`/search/deleteHistorySearchAll`);
+    const response = await Http.delete(`/search/deleteHistorySearchAll`);
     return response;
   } catch (error) {
     console.error(error);
