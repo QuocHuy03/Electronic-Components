@@ -9,6 +9,16 @@ import cartReducer from "./cart/reducers";
 import orderReducer from "./order/reducers";
 import addressReducer from "./address/reducers";
 import searchReducer from "./search/reducers";
+import { deleteSearch } from "./search/actions";
+
+function middlewareDeleteSearch(dispatch) {
+  return (next) => (action) => {
+    if (action.type === '@@router/LOCATION_CHANGE') {
+      dispatch(deleteSearch());
+    }
+    return next(action);
+  };
+}
 
 const persistConfig = {
   key: "root",
@@ -29,10 +39,10 @@ const rootReducer = combineReducers({
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const configureStore = () => {
-  const middlewares = [thunk];
-  const middlewareEnhancer = applyMiddleware(...middlewares);
 
+const configureStore = () => {
+  const middlewares = [thunk, middlewareDeleteSearch];
+  const middlewareEnhancer = applyMiddleware(...middlewares);
   return createStore(persistedReducer, composeEnhancers(middlewareEnhancer));
 };
 

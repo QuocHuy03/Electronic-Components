@@ -1,10 +1,8 @@
 import Http from "../helpers/http";
 
-const http = new Http();
-
 const fetchCartByUserID = async () => {
   try {
-    const response = await http.get(`/cart/getCartByUserId`);
+    const response = await Http.get(`/cart/getCartByUserId`);
     return response;
   } catch (error) {
     console.error(error);
@@ -13,7 +11,7 @@ const fetchCartByUserID = async () => {
 
 const fetchPostCart = async (data) => {
   try {
-    const response = await http.post(`/cart/addCart`, data);
+    const response = await Http.post(`/cart/addCart`, data);
     return response;
   } catch (error) {
     console.error(error);
@@ -22,7 +20,7 @@ const fetchPostCart = async (data) => {
 
 const fetchUpdateCart = async (data) => {
   try {
-    const response = await http.update(`/cart/updateCart`, data);
+    const response = await Http.update(`/cart/updateCart`, data);
     return response;
   } catch (error) {
     console.error(error);
@@ -31,7 +29,7 @@ const fetchUpdateCart = async (data) => {
 
 const fetchDeleteCartByID = async (id) => {
   try {
-    const response = await http.delete(`/cart/deleteCartById/${id}`);
+    const response = await Http.delete(`/cart/deleteCartById/${id}`);
     return response;
   } catch (error) {
     console.error(error);
@@ -40,7 +38,7 @@ const fetchDeleteCartByID = async (id) => {
 
 const fetchDeleteCartAllByUserID = async () => {
   try {
-    const response = await http.delete(`/cart/deleteCartAllByUserId`);
+    const response = await Http.delete(`/cart/deleteCartAllByUserId`);
     return response;
   } catch (error) {
     console.error(error);

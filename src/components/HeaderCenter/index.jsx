@@ -19,6 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 import { history } from "../../helpers/history";
 import {
   deleteAllHistorySearch,
+  deleteSearch,
   getHistorySearch,
   postHistorySearch,
   valueSearch,
@@ -106,24 +107,27 @@ export default function HeaderCenter() {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
-  const handleSearchQuery = useCallback(() => {
-    if (searchTerm) { // Check if searchTerm is not empty or falsy
+  
+  useEffect(() => {
+    dispatch(deleteSearch());
+  }, [location.pathname, dispatch]);
+
+
+  const handleSearchQuery = useCallback(async () => {
+    if (searchTerm) {
       dispatch(postHistorySearch(searchTerm));
       dispatch(getHistorySearch());
       navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
     } else {
-      console.log('Search term is empty or falsy. Not sending the request.');
+      console.log("Search term is empty.");
     }
   }, [dispatch, history, searchTerm]);
-  
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearchQuery();
     }
   };
-
-
-  
 
   const handleDeleteHistory = useCallback(() => {
     dispatch(deleteAllHistorySearch());

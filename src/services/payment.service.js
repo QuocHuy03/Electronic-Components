@@ -1,10 +1,8 @@
 import Http from "../helpers/http";
 
-const http = new Http();
-
 const fetchAllPayments = async () => {
   try {
-    const response = await http.get(`/payment/getAllPayments`);
+    const response = await Http.get(`/payment/getAllPayments`);
     return response.result;
   } catch (error) {
     console.error(error);
@@ -13,7 +11,7 @@ const fetchAllPayments = async () => {
 
 const fetchPaymentById = async (id) => {
   try {
-    const response = await http.get(`/payment/getPaymentById/${id}`);
+    const response = await Http.get(`/payment/getPaymentById/${id}`);
     return response.result;
   } catch (error) {
     console.error(error);
@@ -22,7 +20,7 @@ const fetchPaymentById = async (id) => {
 
 const fetchPostVNPAYAPI = async (amount) => {
   try {
-    const response = await http.post(`/methodPayment/vnPay`, { amount });
+    const response = await Http.post(`/methodPayment/vnPay`, { amount });
     return response;
   } catch (error) {
     throw error;
@@ -31,7 +29,7 @@ const fetchPostVNPAYAPI = async (amount) => {
 
 const fetchPostMOMOAPI = async (amount) => {
   try {
-    const response = await http.post(`/methodPayment/momo`, { amount });
+    const response = await Http.post(`/methodPayment/momo`, { amount });
     return response;
   } catch (error) {
     throw error;

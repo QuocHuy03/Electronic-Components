@@ -15,6 +15,7 @@ export default function OrderDetailPage() {
   const [wards, setWards] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [isSlug, setSlug] = useState(null);
+  
   useEffect(() => {
     if (slug) {
       setSlug(slug);

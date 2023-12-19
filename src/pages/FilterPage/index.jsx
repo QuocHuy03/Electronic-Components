@@ -133,7 +133,6 @@ export default function FilterPage() {
         (Array.isArray(value) && value.length > 0) ||
         (value !== "" && key !== "sorts" && key !== "prices")
       ) {
-        // If the value is an array with items, add multiple key-value pairs with the same key
         value.forEach((item) => {
           queryArray.push(`${key}=${encodeURIComponent(item)}`);
         });
@@ -141,8 +140,6 @@ export default function FilterPage() {
         queryArray.push(`${key}=${encodeURIComponent(value)}`);
       }
     }
-
-    // Join all key-value pairs with "&" to create the final query string
     const query = queryArray.join("&");
 
     const currentPath = window.location.pathname;

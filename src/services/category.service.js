@@ -1,10 +1,8 @@
 import Http from "../helpers/http";
 
-const http = new Http();
-
 const fetchAllCategories = async () => {
   try {
-    const response = await http.get(`/category/getAllCategories`);
+    const response = await Http.get(`/category/getAllCategories`);
     return response.result;
   } catch (error) {
     console.error(error);
@@ -13,7 +11,7 @@ const fetchAllCategories = async () => {
 
 const fetchCategoryBySlug = async (slug) => {
   try {
-    const response = await http.get(`/category/getCategoryBySlug/${slug}`);
+    const response = await Http.get(`/category/getCategoryBySlug/${slug}`);
     return response.result;
   } catch (error) {
     console.error(error);
