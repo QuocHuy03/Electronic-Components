@@ -144,7 +144,7 @@ export default function BlogDetail() {
                   <div className="w-full lg:w-3/12">
                     <div className="bg-white p-4 shadow-md flex flex-col rounded-md">
                       <p className="bg-blue-700 text-white py-0.5 px-1 mb-2 w-[256px] rounded-md text-center text-[20px]">
-                        Bài viết nổi bật
+                        Bài viết nổi bật 
                       </p>
                       <img
                         src="https://phongvu.vn/cong-nghe/wp-content/uploads/2023/11/danh-gia-laptop-msi-cyborg-300x300.png"
