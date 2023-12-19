@@ -85,8 +85,9 @@ export default function CheckoutPage() {
   }, [billings]);
 
   const handleActionAddress = useCallback((id) => {
-    setIsAddressItem(id);
-  }, []);
+    setIsAddressItem((prevId) => (prevId === id ? null : id));
+  }, [setIsAddressItem]);
+  
 
   const handleDocumentClick = (event) => {
     if (
