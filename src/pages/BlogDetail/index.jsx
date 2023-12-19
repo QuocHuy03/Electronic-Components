@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-
 import Layout from "../../components/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { blogService } from "../../services/blog.service";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Loading from "../../components/Loading";
+import formatDate from "../../utils/fomatDate";
 
 export default function BlogDetail() {
   const { slug } = useParams();
-  const { pathname } = useLocation();
   const [isSlug, setSlug] = useState(null);
-
 
   useEffect(() => {
     if (slug) {
@@ -26,7 +24,7 @@ export default function BlogDetail() {
       retryDelay: 1000,
     }
   );
-  const { data: titleBlog } = useQuery(
+  const { data: blogAll } = useQuery(
     ["allBlogs"],
     () => blogService.fetchAllBlogs(isSlug),
     {
@@ -100,25 +98,10 @@ export default function BlogDetail() {
                             </h2>
                             <p className="text-gray-600 mb-1">
                               Tác giả: <b>{data.userBlog}</b> | Ngày:{" "}
-                              {data.updatedAt}
+                              {formatDate(data.createdAt)}
                             </p>
                             <div className="img w-full h-[457px] relative mb-5 mt-5 ">
-                              <span
-                                style={{
-                                  boxSizing: "border-box",
-                                  display: "block",
-                                  overflow: "hidden",
-                                  width: "initial",
-                                  height: "initial",
-                                  background: "none",
-                                  opacity: 1,
-                                  border: 0,
-                                  margin: 0,
-                                  padding: 0,
-                                  position: "absolute",
-                                  inset: 0,
-                                }}
-                              >
+                              <span>
                                 <img
                                   alt="blog"
                                   sizes="100vw"
@@ -168,7 +151,7 @@ export default function BlogDetail() {
                         alt="Mô tả ảnh"
                         className="w-full h-40 object-cover mb-4 rounded-md"
                       />
-                      {titleBlog?.map((item, index) => (
+                      {blogAll?.filter((item) => item.outstandingBlog === "outstanding").map((item, index) => (
                         <div>
                           <ul
                             className="list-decimal text-gray-600 flex-1"

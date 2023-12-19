@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { blogService } from "./../../services/blog.service";
 import { Link } from "react-router-dom";
 import Loading from "../../components/Loading";
+import formatDate from "../../utils/fomatDate";
 
 export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -109,7 +110,7 @@ export default function BlogPage() {
                             {/* Thông tin người viết */}
                             <p className="text-gray-600 mb-1">
                               Tác giả: <b>{item.userBlog}</b> | Ngày:{" "}
-                              {item.updatedAt}
+                              {formatDate(item.updatedAt)}
                             </p>
 
                             {/* Nội dung tin tức */}
@@ -132,7 +133,7 @@ export default function BlogPage() {
                   {/* Nội dung cột 2 */}
                   <div className="bg-white p-4 shadow-md flex flex-col rounded-md">
                     <p className="bg-blue-700 text-white py-0.5 px-1 mb-2 w-[256px] rounded-md text-center text-[23px]">
-                      Tin tức xem nhiều
+                      Tin tức nổi bật
                     </p>
 
                     <img
@@ -143,7 +144,7 @@ export default function BlogPage() {
                     {isLoading ? (
                       <Loading />
                     ) : (
-                      data?.map((item, index) => (
+                      data?.filter((item) => item.outstandingBlog === "outstanding").map((item, index) => (
                         <div>
                           <ul
                             className="list-decimal text-gray-600 flex-1"
