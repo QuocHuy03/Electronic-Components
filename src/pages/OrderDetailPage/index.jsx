@@ -278,7 +278,7 @@ export default function OrderDetailPage() {
                           <td className="text-center py-4 px-2">
                             <div className="flex space-x-1 items-center justify-center">
                               <span className="text-[15px] font-normal">
-                                {formatPrice(item.huydev.price_has_dropped)}
+                                {formatPrice(item.price)}
                               </span>
                             </div>
                           </td>
@@ -299,7 +299,7 @@ export default function OrderDetailPage() {
                             <div className="flex space-x-1 items-center justify-center">
                               <span className="text-[15px]  text-blue-700 font-bold">
                                 {formatPrice(
-                                  item.huydev.price_has_dropped * item.quantity
+                                  item.price * item.quantity
                                 )}
                               </span>
                             </div>

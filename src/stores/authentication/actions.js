@@ -177,7 +177,6 @@ export const register = (data) => {
 export const logout = (data) => {
   return async (dispatch) => {
     try {
-      console.log(data);
       const response = await userService.logout(data);
       if (response.status === true) {
         dispatch({

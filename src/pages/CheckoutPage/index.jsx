@@ -216,13 +216,13 @@ export default function CheckoutPage() {
     },
     [isEditAddress, inputs]
   );
-
   const products = useMemo(
     () =>
       carts?.map((cart) => ({
         color: cart.color,
         productID: cart.productID,
         quantity: cart.quantity,
+        price: cart.product.price_has_dropped,
       })),
     [carts]
   );
