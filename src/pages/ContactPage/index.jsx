@@ -1,7 +1,57 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import Layout from "../../components/Layout";
+import { aboutService } from "../../services/about.service";
+import Loading from "../../components/Loading";
+import createNotification from "../../utils/notification";
+
+const initialValues = () => ({
+  fullname: "",
+  email: "",
+  topic: "",
+  message: "",
+});
 
 export default function ContactPage() {
+  const [submitted, setSubmitted] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
+
+  const [inputs, setInputs] = useState(initialValues());
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
+  }, []);
+
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setSubmitted(true);
+      let data = {
+        fullname: inputs.fullname,
+        email: inputs.email,
+        topic: inputs.topic,
+        message: inputs.message,
+      };
+
+      try {
+        const response = await aboutService.fetchPostAbout(data);
+        if (response.status === true) {
+          setValidationErrors([]);
+          setInputs(initialValues());
+          createNotification("success", "topRight", response.message);
+        } else {
+          if (response?.status === false) {
+            setValidationErrors([]);
+            createNotification("error", "topRight", response.message);
+          }
+          setValidationErrors(response.errors);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      setSubmitted(false);
+    },
+    [inputs]
+  );
   return (
     <Layout>
       <div className="w-full overflow-x-hidden">
@@ -196,12 +246,12 @@ export default function ContactPage() {
                       </svg>
                     </span>
                   </div>
-                  <div className="inputs mt-5">
+                  <form onSubmit={handleSubmit} className="inputs mt-5">
                     <div className="mb-4">
                       <div className="input-com w-full h-full">
                         <label
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
-                          htmlFor="first_name"
+                          htmlFor="fullname"
                         >
                           Họ và tên *
                         </label>
@@ -209,9 +259,17 @@ export default function ContactPage() {
                           <input
                             placeholder="Nguyễn Văn A"
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                            id="first_name"
+                            id="fullname"
+                            name="fullname"
+                            value={inputs.fullname}
+                            onChange={handleChange}
                           />
                         </div>
+                        {validationErrors && validationErrors.fullname && (
+                          <p className="mt-1 text-red-500">
+                            <li>{validationErrors.fullname.msg}</li>
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="mb-4">
@@ -227,15 +285,23 @@ export default function ContactPage() {
                             placeholder="info@gmail.com"
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
                             id="email"
+                            name="email"
+                            value={inputs.email}
+                            onChange={handleChange}
                           />
                         </div>
+                        {validationErrors && validationErrors.email && (
+                          <p className="mt-1 text-red-500">
+                            <li>{validationErrors.email.msg}</li>
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="mb-4">
                       <div className="input-com w-full h-full">
                         <label
                           className="input-label capitalize block  mb-2 text-qgray text-[13px] font-normal"
-                          htmlFor="subject"
+                          htmlFor="topic"
                         >
                           Chủ đề *
                         </label>
@@ -243,9 +309,17 @@ export default function ContactPage() {
                           <input
                             placeholder="Nhập chủ đề bạn ở đây..."
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[50px]"
-                            id="subject"
+                            id="topic"
+                            name="topic"
+                            value={inputs.topic}
+                            onChange={handleChange}
                           />
                         </div>
+                        {validationErrors && validationErrors.topic && (
+                          <p className="mt-1 text-red-500">
+                            <li>{validationErrors.topic.msg}</li>
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="mb-5">
@@ -253,19 +327,28 @@ export default function ContactPage() {
                         Thông điệp *
                       </h6>
                       <textarea
+                        id="message"
+                        name="message"
+                        value={inputs.message}
+                        onChange={handleChange}
                         placeholder="Nhập thông điệp của bạn..."
                         className="w-full h-[105px] focus:ring-0 focus:outline-none p-3 border border-qgray-border placeholder:text-sm"
                       />
+                      {validationErrors && validationErrors.message && (
+                        <p className="mt-1 text-red-500">
+                          <li>{validationErrors.message.msg}</li>
+                        </p>
+                      )}
                     </div>
                     <div className="float-right">
-                      <div className="bg-blue-700 text-white w-[110px] h-[35px] flex justify-center items-center cursor-pointer rounded-md">
-                        <div className="flex space-x-2 items-center">
-                          <span className="text-sm font-600">Gửi ngay</span>
-                          <a href="#"></a>
-                        </div>
-                      </div>
+                      <button
+                        type="submit"
+                        className="bg-blue-700 text-white w-[110px] h-[35px] flex justify-center items-center cursor-pointer rounded-md text-sm font-600"
+                      >
+                        {submitted ? <Loading /> : "Gửi ngay"}
+                      </button>
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>

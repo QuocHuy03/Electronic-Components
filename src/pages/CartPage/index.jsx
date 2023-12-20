@@ -185,7 +185,7 @@ export default function CartPage() {
         "Một số sản phẩm trong giỏ hàng không còn đủ tồn kho."
       );
     }
-  }, [carts]);
+  }, [carts, isProducts]);
 
   return (
     <Layout>

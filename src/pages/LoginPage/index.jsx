@@ -24,6 +24,12 @@ const getGoogleAuthUrl = () => {
   const qs = new URLSearchParams(query);
   return `${url}?${qs.toString()}`;
 };
+
+const initialValues = () => ({
+  email: "",
+  password: "",
+});
+
 export default function LoginPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = useCallback(() => {
@@ -39,10 +45,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [validationErrors, setValidationErrors] = useState([]);
   const dispatch = useDispatch();
-  const [inputs, setInputs] = useState({
-    email: "",
-    password: "",
-  });
+  const [inputs, setInputs] = useState(initialValues());
   const loading = useSelector((state) => state.auth.loading);
   const { redirectTo } = useSelector((state) => state.redirect);
 
@@ -125,6 +128,7 @@ export default function LoginPage() {
                             placeholder="example@gmail.com"
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                             type="email"
+                            value={inputs.email}
                             onChange={handleChange}
                             name="email"
                           />

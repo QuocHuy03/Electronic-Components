@@ -69,6 +69,7 @@ export default function RegisterPage() {
         const response = await dispatch(register(data));
         if (response.status === true) {
           setValidationErrors([]);
+          setInputs(initialValues());
           createNotification("success", "topRight", response.message);
           navigate(URL_CONSTANTS.LOGIN);
         } else {
@@ -128,6 +129,7 @@ export default function RegisterPage() {
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full  font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                             type="text"
                             onChange={handleChange}
+                            value={inputs.fullname}
                             name="fullname"
                           />
                         </div>
@@ -149,6 +151,7 @@ export default function RegisterPage() {
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
                             type="text"
                             onChange={handleChange}
+                            value={inputs.username}
                             placeholder="Username"
                             name="username"
                           />
@@ -171,6 +174,7 @@ export default function RegisterPage() {
                         <div className="input-wrapper border border-qgray-border w-full h-full overflow-hidden relative rounded-md ">
                           <input
                             onChange={handleChange}
+                            value={inputs.email}
                             placeholder="Email"
                             name="email"
                             className="input-field placeholder:text-sm text-sm px-6 text-dark-gray w-full  font-normal bg-white focus:ring-0 focus:outline-none h-[40px]"
