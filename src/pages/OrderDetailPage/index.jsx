@@ -384,7 +384,7 @@ export default function OrderDetailPage() {
                         Thành tiền
                       </p>
                       <p className="text-[18px] font-bold text-blue-700">
-                        {formatPrice(isOrder?.totalPrice - 15000)}
+                        {formatPrice(isOrder?.totalPrice)}
                       </p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />
