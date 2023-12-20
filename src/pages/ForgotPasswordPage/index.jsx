@@ -4,12 +4,14 @@ import { userService } from "../../services/user.service";
 import createNotification from "../../utils/notification";
 import Loading from "../../components/Loading";
 
+const initialValues = () => ({
+  email: "",
+});
+
 export default function ForgotPasswordPage() {
   const [validationErrors, setValidationErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);
-  const [inputs, setInputs] = useState({
-    email: "",
-  });
+  const [inputs, setInputs] = useState(initialValues());
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -40,6 +42,7 @@ export default function ForgotPasswordPage() {
     }
     setSubmitted(false)
   }, [inputs]);
+
   return (
     <Layout>
       <div className="w-full  pt-0 pb-0">
@@ -83,6 +86,7 @@ export default function ForgotPasswordPage() {
                             type="email"
                             id="email"
                             name="email"
+                            value={inputs.email}
                             onChange={handleChange}
                           />
                         </div>

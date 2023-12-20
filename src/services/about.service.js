@@ -2,14 +2,13 @@ import Http from "../helpers/http";
 
 const fetchPostAbout = async (data) => {
   try {
-    const response = await Http.post(`/about/postAbout`, data);
+    const response = await Http.post(`/about/addAbout`, data);
     return response;
-    return response.result;
   } catch (error) {
     console.error(error);
   }
 };
 
-export const bannerService = {
+export const aboutService = {
   fetchPostAbout,
 };

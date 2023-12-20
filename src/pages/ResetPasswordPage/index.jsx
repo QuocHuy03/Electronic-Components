@@ -7,6 +7,11 @@ import createNotification from "../../utils/notification";
 import Loading from "../../components/Loading";
 import { URL_CONSTANTS } from "../../constants/url.constants";
 
+const initialValues = () => ({
+  password: "",
+  confirm_password: "",
+});
+
 export default function ResetPasswordPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,10 +39,7 @@ export default function ResetPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
   const [validationErrors, setValidationErrors] = useState([]);
 
-  const [inputs, setInputs] = useState({
-    password: "",
-    confirm_password: "",
-  });
+  const [inputs, setInputs] = useState(initialValues());
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -62,6 +64,7 @@ export default function ResetPasswordPage() {
         const response = await userService.resetPassword(data);
         if (response.status === true) {
           setValidationErrors([]);
+          setInputs(initialValues());
           createNotification("success", "topRight", response.message);
           navigate(URL_CONSTANTS.LOGIN)
         } else {
