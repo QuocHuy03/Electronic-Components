@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 export const usePagination = (data, itemsPerPage) => {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const maxPages = Math.ceil(data.length / itemsPerPage);
+  const maxPages = Math.ceil(data.length / itemsPerPage); // tính số lượng trang tối đa
 
   const currentData = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;

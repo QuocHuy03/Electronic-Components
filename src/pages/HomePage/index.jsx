@@ -29,7 +29,7 @@ export default function HomePage() {
       retryDelay: 1000,
     }
   );
-  console.log(data)
+  
   const { data: dataCateories, isloading: loadingCategories } = useQuery(
     ["category"],
     () => categoryService.fetchAllCategories(),
@@ -57,10 +57,6 @@ export default function HomePage() {
   );
 
   const targetDate = new Date("December 31, 2023 23:59:59");
-  const [selectedDate, setSelectedDate] = useState("flashsale_bf24110");
-  const handleTabClick = (dateKey) => {
-    setSelectedDate(dateKey);
-  };
 
   const renderProductOutStandingItem = (item, index) => {
     return (
@@ -434,34 +430,14 @@ export default function HomePage() {
                     
                     <p
                       data-key="flashsale_bf25111"
-                      className={`box-tab-item button__select-tab ${
-                        selectedDate === "flashsale_bf25111" ? "active" : ""
-                      }`}
+                      className={`box-tab-item button__select-tab`}
                       style={{ color: "rgb(215, 0, 24)" }}
-                      onClick={() => handleTabClick("flashsale_bf25111")}
+                     
                     >
-                      25.11
+                      22.12
                     </p>
-                    <p
-                      data-key="flashsale_bf26112"
-                      className={`box-tab-item button__select-tab ${
-                        selectedDate === "flashsale_bf26112" ? "active" : ""
-                      }`}
-                      style={{ color: "rgb(215, 0, 24)" }}
-                      onClick={() => handleTabClick("flashsale_bf26112")}
-                    >
-                      26.11
-                    </p>
-                    <p
-                      data-key="flashsale_bf27113"
-                      className={`box-tab-item button__select-tab ${
-                        selectedDate === "flashsale_bf27113" ? "active" : ""
-                      }`}
-                      style={{ color: "rgb(215, 0, 24)" }}
-                      onClick={() => handleTabClick("flashsale_bf27113")}
-                    >
-                      27.11
-                    </p>
+                    
+                    
                   </div>{" "}
                   <div className="title-image">
                     <div style={{ textAlign: "center" }}>
@@ -481,18 +457,12 @@ export default function HomePage() {
                 </div>{" "}
                 <div className="below-title">
                   <div className="box-tab-menu">
-                    <p
-                      data-key="NaN"
-                      className="box-tab-item button__select-tab active"
-                      style={{ color: "rgb(215, 0, 24)" }}
-                    >
-                      09:00 - 11:00
-                    </p>
+                   
                     <p
                       data-key="NaN"
                       className="box-tab-item button__select-tab"
                     >
-                      14:00 - 16:00
+                      10:00 - 12:00
                     </p>
                   </div>{" "}
                   <p className="text-note desktop">
