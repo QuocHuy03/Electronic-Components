@@ -29,6 +29,7 @@ export default function HomePage() {
       retryDelay: 1000,
     }
   );
+  console.log(data)
   const { data: dataCateories, isloading: loadingCategories } = useQuery(
     ["category"],
     () => categoryService.fetchAllCategories(),
@@ -523,7 +524,7 @@ export default function HomePage() {
                         },
                       }}
                     >
-                      {data?.map((item, index) => (
+                      {data?.filter((item) => parseInt(item.quantityProduct) < 10).map((item, index) => (
                         <SwiperSlide key={index}>
                           <div
                             data-aos="fade-up"
