@@ -372,7 +372,7 @@ export default function OrderDetailPage() {
                   <div className="sub-total mb-3">
                     <div className=" flex justify-between mb-4">
                       <p className="text-[15px] font-medium text-qblack">
-                        Vocher của shop
+                        Voucher của shop
                       </p>
                       <p className="text-[15px] font-medium text-qred">0</p>
                     </div>
