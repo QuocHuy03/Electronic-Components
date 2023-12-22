@@ -47,7 +47,7 @@ const initialValues = (user) => ({
 
 function Profile() {
   const dispatch = useDispatch();
-  const { user, refreshToken, billings, isEditAddress } =
+  const { user,accessToken, refreshToken, billings, isEditAddress } =
     useContext(AppContext);
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState(0);
@@ -76,7 +76,13 @@ function Profile() {
 
   const { data: isOrders, isloading: loadingOrder } = useQuery(
     ["orders"],
-    () => orderService.fetchOrderByUserID(),
+    () => {
+      if (accessToken && user?.verify == 1) {
+        return orderService.fetchOrderByUserID();
+      } else {
+        return [];
+      }
+    },
     {
       retry: 3,
       retryDelay: 1000,
@@ -293,9 +299,9 @@ function Profile() {
           break;
 
         case OrderStatus.APPROVED:
-            statusClass += "text-teal-500 bg-teal-100";
-            statusText = "Đã Xử Lý";
-            break;
+          statusClass += "text-teal-500 bg-teal-100";
+          statusText = "Đã Xử Lý";
+          break;
 
         case OrderStatus.PROCESSING:
           statusClass += "text-blue-500 bg-blue-100";
@@ -674,8 +680,7 @@ function Profile() {
                                 {
                                   isOrders?.filter(
                                     (item) =>
-                                      item.orderStatus ===
-                                      OrderStatus.PENDING
+                                      item.orderStatus === OrderStatus.PENDING
                                   ).length
                                 }
                               </span>
@@ -709,8 +714,7 @@ function Profile() {
                                 {
                                   isOrders?.filter(
                                     (item) =>
-                                      item.orderStatus ===
-                                        OrderStatus.SHIPPED
+                                      item.orderStatus === OrderStatus.SHIPPED
                                   ).length
                                 }
                               </span>
