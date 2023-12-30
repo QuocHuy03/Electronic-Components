@@ -28,7 +28,6 @@ import { blogService } from "../../services/blog.service";
 
 export default function DetailProductPage() {
   const { accessToken } = useContext(AppContext);
-
   const [isSeeMore, setIsSeeMore] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [rating, setRating] = useState(1);

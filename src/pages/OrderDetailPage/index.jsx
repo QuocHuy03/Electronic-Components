@@ -278,7 +278,7 @@ export default function OrderDetailPage() {
                           <td className="text-center py-4 px-2">
                             <div className="flex space-x-1 items-center justify-center">
                               <span className="text-[15px] font-normal">
-                                {formatPrice(item.huydev.price_has_dropped)}
+                                {formatPrice(item.price)}
                               </span>
                             </div>
                           </td>
@@ -299,7 +299,7 @@ export default function OrderDetailPage() {
                             <div className="flex space-x-1 items-center justify-center">
                               <span className="text-[15px]  text-blue-700 font-bold">
                                 {formatPrice(
-                                  item.huydev.price_has_dropped * item.quantity
+                                  item.price * item.quantity
                                 )}
                               </span>
                             </div>
@@ -372,7 +372,7 @@ export default function OrderDetailPage() {
                   <div className="sub-total mb-3">
                     <div className=" flex justify-between mb-4">
                       <p className="text-[15px] font-medium text-qblack">
-                        Vocher của shop
+                        Voucher của shop
                       </p>
                       <p className="text-[15px] font-medium text-qred">0</p>
                     </div>
@@ -384,7 +384,7 @@ export default function OrderDetailPage() {
                         Thành tiền
                       </p>
                       <p className="text-[18px] font-bold text-blue-700">
-                        {formatPrice(isOrder?.totalPrice - 15000)}
+                        {formatPrice(isOrder?.totalPrice)}
                       </p>
                     </div>
                     <div className="w-full h-[1px] bg-[#EDEDED]" />

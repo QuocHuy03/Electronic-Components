@@ -3,7 +3,6 @@ import Layout from "../../components/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { URL_CONSTANTS } from "../../constants/url.constants";
-import { history } from "../../helpers/history";
 import { register } from "../../stores/authentication/actions";
 import createNotification from "../../utils/notification";
 import Loading from "../../components/Loading";
@@ -47,7 +46,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (accessToken) {
-      history.push(URL_CONSTANTS.LOGIN);
+      navigate(URL_CONSTANTS.LOGIN);
     }
   }, [dispatch, accessToken]);
 
